@@ -1,0 +1,168 @@
+{
+  "extensionName": {
+    "message": "unMute(언뮤트)"
+  },
+  "extensionDescription": {
+    "message": "Manually/Automatically Mute Your Tabs for Chrome"
+  },
+
+  "command_muteCurrentTab": {
+    "message": "현재 탭 음소거/음소거 해제"
+  },
+  "command_autoMute": {
+    "message": "자동 음소거 켜기/끄기"
+  },
+  "command_autoMode": {
+    "message": "자동 음소거 모드 변경"
+  },
+  "command_autoFix": {
+    "message": "지정된 탭을 현재 탭으로 바꾸기"
+  },
+  "command_muteAllTabs": {
+    "message": "항상 모든 탭 음소거 켜기/끄기"
+  },
+  "command_toggleAllTabs": {
+    "message": "모든 탭 토글"
+  },
+
+  "notificationTitle": {
+    "message": "Updated"
+  },
+
+  "contextMenu_muteCurrentTab": {
+    "message": "현재 탭 음소거"
+  },
+  "contextMenu_unmuteCurrentTab": {
+    "message": "현재 탭 음소거 해제"
+  },
+  "contextMenu_autoMute": {
+    "message": "자동 음소거"
+  },
+  "contextMenu_autoOn": {
+    "message": "켜기"
+  },
+  "contextMenu_autoOff": {
+    "message": "끄기"
+  },
+  "contextMenu_autoMode": {
+    "message": "자동 음소거 모드"
+  },
+  "contextMenu_current": {
+    "message": "현재 탭을 제외한 모든 탭을 음소거"
+  },
+  "contextMenu_recent": {
+    "message": "최근 소리나는 탭을 제외한 모든 탭을 음소거"
+  },
+  "contextMenu_fix": {
+    "message": "지정한 하나의 탭을 제외한 모든 탭을 음소거"
+  },
+  "contextMenu_all": {
+    "message": "항상 모든 탭을 음소거"
+  },
+  "contextMenu_muteAllTabs": {
+    "message": "항상 모든 탭 음소거 켜기"
+  },
+  "contextMenu_unmuteAllTabs": {
+    "message": "항상 모든 탭 음소거 끄기"
+  },
+  "contextMenu_toggleAllTabs": {
+    "message": "모든 탭 토글"
+  },
+  "contextMenu_shortcutSetting": {
+    "message": "단축키 설정"
+  },
+
+  "option_actionMode": {
+    "message": "사용자 버튼 설정"
+  },
+  "option_actionMode_muteCurrentTab": {
+    "message": "현재 탭 음소거/음소거 해제"
+  },
+  "option_actionMode_autoMute": {
+    "message": "자동 음소거 켜기/끄기"
+  },
+  "option_actionMode_autoMode": {
+    "message": "자동 음소거 모드 변경"
+  },
+  "option_actionMode_fixTab": {
+    "message": "탭 지정하기"
+  },
+  "option_actionMode_muteAllTabs": {
+    "message": "모든 탭 음소거/음소거 해제"
+  },
+  "option_actionMode_toggleAllTabs": {
+    "message": "모든 탭 토글"
+  },
+  "option_autoMuteOp": {
+    "message": "자동 모드 설정"
+  },
+  "option_autoMute_autoState": {
+    "message": "$mode$자동 음소거",
+    "placeholders": {
+      "mode": {
+        "content": "$1"
+      }
+    }
+  },
+  "option_currentTab": {
+    "message": "현재"
+  },
+  "option_recentTab": {
+    "message": "최근 소리나는"
+  },
+  "option_fixTab": {
+    "message": "고정된"
+  },
+  "option_autoMute_current": {
+    "message": "자동 음소거 모드 : 현재 탭을 제외한 모든 탭을 음소거"
+  },
+  "option_autoMute_recent": {
+    "message": "자동 음소거 모드 : 최근 소리나는 탭을 제외한 모든 탭을 음소거"
+  },
+  "option_autoMute_fix": {
+    "message": "자동 음소거 모드 : 지정한 하나의 탭을 제외한 모든 탭을 음소거"
+  },
+  "option_autoMute_all": {
+    "message": "자동 음소거 모드 : 항상 모든 탭 음소거"
+  },
+  "option_autoOff": {
+    "message": "자동 음소거 껐을 시 동작"
+  },
+  "option_autoOff_release": {
+    "message": "모든 탭 음소거 해제"
+  },
+  "option_autoOff_notRelease": {
+    "message": "모든 탭 현상 유지"
+  },
+  "option_reset": {
+    "message": "초기화"
+  },
+
+  "feature1": {
+    "message": "현재 탭 음소거/음소거 해제"
+  },
+  "feature2": {
+    "message": "현재/최근 소리나는/지정된 탭 제외하고 모든 탭 자동 음소거"
+  },
+  "feature3": {
+    "message": "모든 탭 음소거/음소거 해제"
+  },
+  "feature4": {
+    "message": "모든 탭 토글"
+  },
+  "feature5": {
+    "message": "사용자 버튼 설정(확장자 아이콘 버튼)"
+  },
+
+  "changelog_1_0_0": {
+    "message": "test"
+  },
+
+  "knownIssue1": {
+    "message": "간혈적으로 확정자가 멈춤"
+  },
+
+  "todo1": {
+    "message": ""
+  }
+}

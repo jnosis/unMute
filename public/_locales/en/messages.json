@@ -1,0 +1,168 @@
+{
+  "extensionName": {
+    "message": "unMute"
+  },
+  "extensionDescription": {
+    "message": "Manually/Automatically Mute Your Tabs for Chrome."
+  },
+
+  "command_muteCurrentTab": {
+    "message": "Mute/unMute Current Tab"
+  },
+  "command_autoMute": {
+    "message": "Auto Mute ON/OFF"
+  },
+  "command_autoMode": {
+    "message": "Change Auto Mute Mode"
+  },
+  "command_autoFix": {
+    "message": "Change Current Tab to Specified Tab"
+  },
+  "command_muteAllTabs": {
+    "message": "Always Mute All Tabs ON/OFF"
+  },
+  "command_toggleAllTabs": {
+    "message": "Toggle All Tabs"
+  },
+
+  "notificationTitle": {
+    "message": "Updated"
+  },
+
+  "contextMenu_muteCurrentTab": {
+    "message": "Mute Current Tab"
+  },
+  "contextMenu_unmuteCurrentTab": {
+    "message": "unMute Current Tab"
+  },
+  "contextMenu_autoMute": {
+    "message": "Auto Mute"
+  },
+  "contextMenu_autoOn": {
+    "message": "ON"
+  },
+  "contextMenu_autoOff": {
+    "message": "OFF"
+  },
+  "contextMenu_autoMode": {
+    "message": "Auto Mute Mode"
+  },
+  "contextMenu_current": {
+    "message": "except the Current Tab"
+  },
+  "contextMenu_recent": {
+    "message": "except the Recent-Audible Tab"
+  },
+  "contextMenu_fix": {
+    "message": "except one Specified Tab"
+  },
+  "contextMenu_all": {
+    "message": "Always Mute All Tabs"
+  },
+  "contextMenu_muteAllTabs": {
+    "message": "Always Mute All Tabs On"
+  },
+  "contextMenu_unmuteAllTabs": {
+    "message": "Always Mute All Tabs Off"
+  },
+  "contextMenu_toggleAllTabs": {
+    "message": "Toggle All Tabs"
+  },
+  "contextMenu_shortcutSetting": {
+    "message": "Shortcut Setting"
+  },
+
+  "option_actionMode": {
+    "message": "User Button Action Setting"
+  },
+  "option_actionMode_muteCurrentTab": {
+    "message": "Mute/unMute Current Tab"
+  },
+  "option_actionMode_autoMute": {
+    "message": "Auto Mute ON/OFF"
+  },
+  "option_actionMode_autoMode": {
+    "message": "Change Auto Mute Mode"
+  },
+  "option_actionMode_fixTab": {
+    "message": "Change Current Tab to Specified Tab"
+  },
+  "option_actionMode_muteAllTabs": {
+    "message": "Mute/unMute All Tabs"
+  },
+  "option_actionMode_toggleAllTabs": {
+    "message": "Toggle All Tabs"
+  },
+  "option_autoMuteOp": {
+    "message": "Auto Mode Setting"
+  },
+  "option_autoMute_autoState": {
+    "message": "$mode$Auto Mute",
+    "placeholders": {
+      "mode": {
+        "content": "$1"
+      }
+    }
+  },
+  "option_currentTab": {
+    "message": "Current"
+  },
+  "option_recentTab": {
+    "message": "Recent-Audible"
+  },
+  "option_fixTab": {
+    "message": "Fixed"
+  },
+  "option_autoMute_current": {
+    "message": "Auto Mute Mode : except Current Tab"
+  },
+  "option_autoMute_recent": {
+    "message": "Auto Mute Mode : except Recent-Audible Tab"
+  },
+  "option_autoMute_fix": {
+    "message": "Auto Mute Mode : except one Specified Tab"
+  },
+  "option_autoMute_all": {
+    "message": "Auto Mute Mode : Mute All Tabs"
+  },
+  "option_autoOff": {
+    "message": "Action when Auto Mode off"
+  },
+  "option_autoOff_release": {
+    "message": "unMute All Tab"
+  },
+  "option_autoOff_notRelease": {
+    "message": "Keep Mute State"
+  },
+  "option_reset": {
+    "message": "RESET"
+  },
+
+  "feature1": {
+    "message": "Mute/unMute Current Tab"
+  },
+  "feature2": {
+    "message": "Auto Mute All Tabs except Current/Recent-Audible/Specified Tab"
+  },
+  "feature3": {
+    "message": "Mute/unMute All Tabs"
+  },
+  "feature4": {
+    "message": "Toggle state All Tabs"
+  },
+  "feature5": {
+    "message": "Change User Button Action(Extension Icon Button a.k.a Page Action)"
+  },
+
+  "changelog_1_0_0": {
+    "message": "test"
+  },
+
+  "knownIssue1": {
+    "message": "Sometimes extensions freezing"
+  },
+
+  "todo1": {
+    "message": ""
+  }
+}
