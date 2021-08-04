@@ -15,7 +15,7 @@
   "command_autoMode": {
     "message": "자동 음소거 모드 변경"
   },
-  "command_autoFix": {
+  "command_fixTab": {
     "message": "지정된 탭을 현재 탭으로 바꾸기"
   },
   "command_muteAllTabs": {

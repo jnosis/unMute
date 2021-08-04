@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.9.9.0",
+  "version": "1.9.9.1",
   "version_name": "2.0.0",
 
   "default_locale": "en",
@@ -32,6 +32,24 @@
         "default": "Alt+M"
       },
       "description": "__MSG_command_muteCurrentTab__"
+    },
+    "autoMute": {
+      "suggested_key": {
+        "default": "Alt+A"
+      },
+      "description": "__MSG_command_autoMute__"
+    },
+    "autoMode": {
+      "description": "__MSG_command_autoMode__"
+    },
+    "fixTab": {
+      "description": "__MSG_command_fixTab__"
+    },
+    "toggleAllTabs": {
+      "suggested_key": {
+        "default": "Alt+Shift+M"
+      },
+      "description": "__MSG_command_toggleAllTabs__"
     }
   },
 

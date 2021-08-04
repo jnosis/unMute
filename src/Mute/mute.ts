@@ -5,4 +5,17 @@ export default abstract class Mute {
       await chrome.tabs.update(tabId, { muted });
     });
   }
+  static toggleAllTab() {
+    chrome.tabs.query({ audible: true }, (tabs) => {
+      tabs.forEach((tab) => tab.id && this.toggleMute(tab.id));
+    });
+  }
+
+  static releaseAllMute() {
+    chrome.tabs.query({ audible: true, muted: true }, (tabs) =>
+      tabs.forEach(
+        (tab) => tab.id && chrome.tabs.update(tab.id, { muted: false })
+      )
+    );
+  }
 }

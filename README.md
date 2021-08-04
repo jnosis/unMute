@@ -8,7 +8,7 @@ Manually/Automatically Mute your tabs for Chrome.
 - Auto Mute All Tabs except Current/Recent-Audible/Specified Tab
 - Always Mute All Tabs
 - Toggle state All Tabs
-- Change User Button Action(Page Action)
+- Change User Button Action
 
 ### ChangeLog
 

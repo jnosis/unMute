@@ -15,7 +15,7 @@
   "command_autoMode": {
     "message": "Change Auto Mute Mode"
   },
-  "command_autoFix": {
+  "command_fixTab": {
     "message": "Change Current Tab to Specified Tab"
   },
   "command_muteAllTabs": {
