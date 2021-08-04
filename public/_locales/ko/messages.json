@@ -38,10 +38,10 @@
   "contextMenu_autoMute": {
     "message": "자동 음소거"
   },
-  "contextMenu_autoOn": {
+  "contextMenu_on": {
     "message": "켜기"
   },
-  "contextMenu_autoOff": {
+  "contextMenu_off": {
     "message": "끄기"
   },
   "contextMenu_autoMode": {
@@ -59,6 +59,27 @@
   "contextMenu_all": {
     "message": "항상 모든 탭을 음소거"
   },
+  "contextMenu_actionMode": {
+    "message": "사용자 버튼 설정"
+  },
+  "contextMenu_actionMode_muteCurrentTab": {
+    "message": "현재 탭 음소거/음소거 해제"
+  },
+  "contextMenu_actionMode_autoMute": {
+    "message": "자동 음소거 켜기/끄기"
+  },
+  "contextMenu_actionMode_autoMode": {
+    "message": "자동 음소거 모드 변경"
+  },
+  "contextMenu_actionMode_fixTab": {
+    "message": "탭 지정하기"
+  },
+  "contextMenu_actionMode_muteAllTabs": {
+    "message": "모든 탭 음소거/음소거 해제"
+  },
+  "contextMenu_actionMode_toggleAllTabs": {
+    "message": "모든 탭 토글"
+  },
   "contextMenu_muteAllTabs": {
     "message": "항상 모든 탭 음소거 켜기"
   },
@@ -68,8 +89,11 @@
   "contextMenu_toggleAllTabs": {
     "message": "모든 탭 토글"
   },
-  "contextMenu_shortcutSetting": {
+  "contextMenu_shortcuts": {
     "message": "단축키 설정"
+  },
+  "contextMenu_changelog": {
+    "message": "changelog"
   },
 
   "option_actionMode": {
@@ -104,13 +128,13 @@
       }
     }
   },
-  "option_currentTab": {
+  "option_current": {
     "message": "현재"
   },
-  "option_recentTab": {
+  "option_recent": {
     "message": "최근 소리나는"
   },
-  "option_fixTab": {
+  "option_fix": {
     "message": "고정된"
   },
   "option_autoMute_current": {

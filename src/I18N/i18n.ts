@@ -4,20 +4,21 @@ export default abstract class I18N {
     id: string,
     language: 'en' | 'ko',
     getI18N: Function,
-    changelogs: Array<string> | null
+    changelogs?: Array<string>
   ) {
     const url = `_locales/${language}/messages.json`;
     fetch(url)
       .then((response) => response.json())
       .then((messageJSON) => {
-        const title = messageJSON[id].message;
         if (changelogs) {
+          const title = messageJSON[id].message;
           let message = '';
           changelogs.forEach(
             (log) => (message += `${messageJSON[log].message} `)
           );
           getI18N(title, message);
         } else {
+          const title = messageJSON[`contextMenu_${id}`].message;
           getI18N(id, title);
         }
       });

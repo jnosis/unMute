@@ -1,17 +1,23 @@
 import I18N from './I18N/i18n';
 import Mute from './Mute/mute';
-import { Command } from './types/types';
+import { Command, ContextMenuId } from './types/types';
+import ContextMenu from './UI/contextMenus';
 
-chrome.runtime.onStartup.addListener(() => console.log(`start`));
+chrome.runtime.onStartup.addListener(initialize);
 chrome.runtime.onInstalled.addListener((details) => {
+  initialize();
   if (details.reason === 'update') createNotification();
 });
 chrome.notifications.onClicked.addListener((notificationId) => {
   if (notificationId === 'updated') {
-    chrome.tabs.create({ url: './changelog.html' });
+    chrome.tabs.create({ url: 'changelog.html' });
   }
   chrome.notifications.clear(notificationId);
 });
+
+function initialize() {
+  ContextMenu.createContextMenus();
+}
 
 function createNotification() {
   I18N.bypassI18NinMV3('notificationTitle', 'en', I18N.getI18NtoNotification, [
@@ -32,8 +38,8 @@ chrome.commands.onCommand.addListener(
   (command, tab) => tab.id && onCommand(command as Command, tab.id)
 );
 
-chrome.contextMenus.onClicked.addListener(({ menuItemId }, tab) =>
-  onContextMenuClick(menuItemId, tab)
+chrome.contextMenus.onClicked.addListener(
+  ({ menuItemId }, tab) => tab?.id && onContextMenuClick(menuItemId, tab.id)
 );
 
 function onActionClick(tabId: number) {
@@ -45,7 +51,7 @@ function onCommand(command: Command, tabId: number) {
     case 'muteCurrentTab':
       Mute.toggleMute(tabId);
       break;
-    case 'toggleAllTab':
+    case 'toggleAllTabs':
       Mute.toggleAllTab();
       break;
     case 'autoMute':
@@ -60,9 +66,46 @@ function onCommand(command: Command, tabId: number) {
   }
 }
 
-function onContextMenuClick(
-  menuItemId: string,
-  tab: chrome.tabs.Tab | undefined
-) {
-  console.log(`${menuItemId} ${tab}`);
+function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
+  switch (menuItemId) {
+    case 'muteCurrentTab':
+      Mute.toggleMute(tabId);
+      break;
+    case 'on':
+      break;
+    case 'off':
+      break;
+    case 'current':
+      break;
+    case 'recent':
+      break;
+    case 'fix':
+      break;
+    case 'all':
+      break;
+    case 'fixTab':
+      break;
+    case 'actionMode_muteCurrentTab':
+      break;
+    case 'actionMode_autoMute':
+      break;
+    case 'actionMode_autoMode':
+      break;
+    case 'actionMode_fixTab':
+      break;
+    case 'actionMode_toggleAllTabs':
+      break;
+    case 'toggleAllTabs':
+      Mute.toggleAllTab();
+      break;
+    case 'shortcuts':
+      chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+      break;
+    case 'changelog':
+      chrome.tabs.create({ url: 'changelog.html' });
+      break;
+
+    default:
+      throw new Error(`unavailable contextMenu: ${menuItemId}`);
+  }
 }

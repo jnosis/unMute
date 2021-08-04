@@ -38,10 +38,10 @@
   "contextMenu_autoMute": {
     "message": "Auto Mute"
   },
-  "contextMenu_autoOn": {
+  "contextMenu_on": {
     "message": "ON"
   },
-  "contextMenu_autoOff": {
+  "contextMenu_off": {
     "message": "OFF"
   },
   "contextMenu_autoMode": {
@@ -59,6 +59,24 @@
   "contextMenu_all": {
     "message": "Always Mute All Tabs"
   },
+  "contextMenu_actionMode": {
+    "message": "User Button Action Setting"
+  },
+  "contextMenu_actionMode_muteCurrentTab": {
+    "message": "Mute/unMute Current Tab"
+  },
+  "contextMenu_actionMode_autoMute": {
+    "message": "Auto Mute ON/OFF"
+  },
+  "contextMenu_actionMode_autoMode": {
+    "message": "Change Auto Mute Mode"
+  },
+  "contextMenu_actionMode_fixTab": {
+    "message": "Change Current Tab to Specified Tab"
+  },
+  "contextMenu_actionMode_toggleAllTabs": {
+    "message": "Toggle All Tabs"
+  },
   "contextMenu_muteAllTabs": {
     "message": "Always Mute All Tabs On"
   },
@@ -68,8 +86,11 @@
   "contextMenu_toggleAllTabs": {
     "message": "Toggle All Tabs"
   },
-  "contextMenu_shortcutSetting": {
+  "contextMenu_shortcuts": {
     "message": "Shortcut Setting"
+  },
+  "contextMenu_changelog": {
+    "message": "changelog"
   },
 
   "option_actionMode": {

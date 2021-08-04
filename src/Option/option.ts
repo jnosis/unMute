@@ -7,7 +7,7 @@ export type Option = {
   offBehavior: OffBehavior;
 };
 
-const initOption: Option = {
+export const initOption: Option = {
   actionMode: 'muteCurrentTab',
   autoMode: 'current',
   autoState: false,
