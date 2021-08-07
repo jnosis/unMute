@@ -10,7 +10,8 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 chrome.notifications.onClicked.addListener((notificationId) => {
   if (notificationId === 'updated') {
-    chrome.tabs.create({ url: 'changelog.html' });
+    let url = chrome.runtime.getURL('changelog.html');
+    chrome.tabs.create({ url });
   }
   chrome.notifications.clear(notificationId);
 });
@@ -20,8 +21,9 @@ function initialize() {
 }
 
 function createNotification() {
-  I18N.bypassI18NinMV3('notificationTitle', 'en', I18N.getI18NtoNotification, [
+  I18N.bypassI18NinMV3('notificationTitle', I18N.setI18NtoNotification, [
     'changelog_1_0_0',
+    'changelog_1_0_1',
   ]);
   // chrome.notifications.create('updated', {
   //   type: 'basic',
@@ -102,7 +104,8 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
       chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
       break;
     case 'changelog':
-      chrome.tabs.create({ url: 'changelog.html' });
+      let url = chrome.runtime.getURL('changelog.html');
+      chrome.tabs.create({ url });
       break;
 
     default:

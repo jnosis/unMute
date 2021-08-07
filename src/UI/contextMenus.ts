@@ -65,7 +65,7 @@ export default abstract class ContextMenu {
         contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
       },
       () => {
-        I18N.bypassI18NinMV3(id, 'en', I18N.getI18NtoContextMenus);
+        I18N.bypassI18NinMV3(id, I18N.setI18NtoContextMenus);
         if (hasChildId && childIds) {
           childIds.forEach((childId) =>
             chrome.contextMenus.create(
@@ -78,8 +78,7 @@ export default abstract class ContextMenu {
                   : ['page', 'video', 'audio', 'action'],
                 type: 'radio',
               },
-              () =>
-                I18N.bypassI18NinMV3(childId, 'en', I18N.getI18NtoContextMenus)
+              () => I18N.bypassI18NinMV3(childId, I18N.setI18NtoContextMenus)
             )
           );
           this.updateContextMenu(opt, id);

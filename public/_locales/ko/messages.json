@@ -179,7 +179,10 @@
   },
 
   "changelog_1_0_0": {
-    "message": "test"
+    "message": "테스트1"
+  },
+  "changelog_1_0_1": {
+    "message": "테스트2"
   },
 
   "knownIssue1": {

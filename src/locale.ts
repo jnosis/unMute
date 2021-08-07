@@ -4,7 +4,7 @@ export default function localizeHtmlPage() {
   for (const element of elements) {
     const text = element.textContent as string;
     const localizedText = text.replace(messageRegex, (_match, key: string) => {
-      return key ? chrome.i18n.getMessage(key) : '';
+      return key ? chrome.i18n.getMessage(key) : text;
     });
 
     if (localizedText !== text) {

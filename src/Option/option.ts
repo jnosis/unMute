@@ -18,6 +18,6 @@ export function saveOption(opt: Option = initOption) {
   chrome.storage.local.set({ ...opt });
 }
 
-export function loadOption(opt: Option = initOption) {
-  chrome.storage.local.get({ ...opt });
+export function loadOption(keys: string | string[]) {
+  chrome.storage.local.get(keys).then((item) => console.log(item));
 }
