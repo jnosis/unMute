@@ -1,3 +1,5 @@
+import { Language } from '../types/types';
+
 // * bypass i18n
 export default abstract class I18N {
   static async bypassI18NinMV3(
@@ -5,7 +7,9 @@ export default abstract class I18N {
     setI18N: Function,
     changelogs?: Array<string>
   ) {
-    const messages = await this.fetchMessagesJSON('en');
+    const language: Language = 'en';
+    const url = chrome.runtime.getURL(`_locales/${language}/messages.json`);
+    const messages = await this.fetchMessagesJSON(url);
     if (changelogs) {
       const title = messages[id]?.message;
       let message = changelogs.reduce(
@@ -35,11 +39,10 @@ export default abstract class I18N {
     });
   }
 
-  static async fetchMessagesJSON(
-    language: 'en' | 'ko'
+  private static async fetchMessagesJSON(
+    request: RequestInfo
   ): Promise<{ [id: string]: { message: string } }> {
-    const url = chrome.runtime.getURL(`_locales/${language}/messages.json`);
-    const response = await fetch(url);
+    const response = await fetch(request);
     const messages = await response.json();
     return messages;
   }

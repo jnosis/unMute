@@ -22,3 +22,4 @@ export type ContextMenuId =
   | 'shortcuts'
   | 'changelog';
 export type Color = '#579242' | '#9c2829' | '#5f6368';
+export type Language = 'en' | 'ko';

@@ -7,17 +7,17 @@ export type Option = {
   offBehavior: OffBehavior;
 };
 
-export const initOption: Option = {
+export const defaultOption: Option = {
   actionMode: 'muteCurrentTab',
   autoMode: 'current',
   autoState: false,
   offBehavior: 'release',
 };
 
-export function saveOption(opt: Option = initOption) {
-  chrome.storage.local.set({ ...opt });
+export function saveOption(config: Option = defaultOption) {
+  chrome.storage.local.set({ ...config });
 }
 
-export function loadOption(keys: string | string[]) {
+export async function loadOption(keys: string | string[]) {
   chrome.storage.local.get(keys).then((item) => console.log(item));
 }
