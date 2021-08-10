@@ -15,6 +15,7 @@ export type ContextMenuId =
   | 'actionMode_autoMute'
   | 'actionMode_autoMode'
   | 'actionMode_fixTab'
+  | 'unmuteCurrentTab'
   | ActionMode
   | AutoMode
   | AutoState

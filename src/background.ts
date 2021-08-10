@@ -17,7 +17,7 @@ chrome.notifications.onClicked.addListener((notificationId) => {
 });
 
 function initialize() {
-  ContextMenu.createContextMenus();
+  ContextMenu.createAll(onContextMenuClick);
 }
 
 function createNotification() {
@@ -38,10 +38,6 @@ chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
 
 chrome.commands.onCommand.addListener(
   (command, tab) => tab.id && onCommand(command as Command, tab.id)
-);
-
-chrome.contextMenus.onClicked.addListener(
-  ({ menuItemId }, tab) => tab?.id && onContextMenuClick(menuItemId, tab.id)
 );
 
 function onActionClick(tabId: number) {

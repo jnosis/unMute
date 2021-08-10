@@ -5,7 +5,8 @@ export default abstract class I18N {
   static async bypassI18NinMV3(
     id: string,
     setI18N: Function,
-    changelogs?: Array<string>
+    changelogs?: Array<string>,
+    messageId: string = id
   ) {
     const language: Language = 'en';
     const url = chrome.runtime.getURL(`_locales/${language}/messages.json`);
@@ -18,7 +19,7 @@ export default abstract class I18N {
       );
       setI18N(title, message);
     } else {
-      const title = messages[`contextMenu_${id}`]?.message;
+      const title = messages[`contextMenu_${messageId}`]?.message;
       setI18N(id, title);
     }
   }
