@@ -33,8 +33,6 @@ export default abstract class ContextMenu {
       this.createByIdAndItsChildren(option, 'changelog', true);
     });
 
-    this.updateAll(option);
-
     chrome.contextMenus.onClicked.addListener(
       ({ menuItemId }, tab) => tab?.id && listener(menuItemId, tab.id)
     );
@@ -123,10 +121,19 @@ export default abstract class ContextMenu {
                   ? ['action']
                   : ['page', 'video', 'audio', 'action'],
                 type: 'radio',
+                checked:
+                  id === 'autoMute'
+                    ? childId === (option.autoState ? 'on' : 'off')
+                    : id === 'autoMode'
+                    ? childId === `${id}_${option.autoMode}`
+                    : childId === `${id}_${option.actionMode}`,
               },
-              () => I18N.bypassI18NinMV3(childId, I18N.setI18NtoContextMenus)
+              () => {
+                I18N.bypassI18NinMV3(childId, I18N.setI18NtoContextMenus);
+              }
             )
           );
+        } else {
           this.update(option, id);
         }
       }
