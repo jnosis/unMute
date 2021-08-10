@@ -14,8 +14,8 @@ export const defaultOption: Option = {
   offBehavior: 'release',
 };
 
-export function saveOption(config: Option = defaultOption) {
-  chrome.storage.local.set({ ...config });
+export function saveOption(option: Option = defaultOption) {
+  chrome.storage.local.set({ ...option });
 }
 
 export async function loadOption(keys: string | string[]) {

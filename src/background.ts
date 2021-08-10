@@ -1,5 +1,6 @@
 import Mute from './Mute/mute';
 import { Command, ContextMenuId } from './types/types';
+import ActionBadge from './UI/actionBadge';
 import ContextMenu from './UI/contextMenus';
 import Notification from './UI/notification';
 
@@ -11,6 +12,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 function initialize() {
   ContextMenu.createAll(onContextMenuClick);
+  ActionBadge.update();
 }
 
 chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
