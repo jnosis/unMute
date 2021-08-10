@@ -1,37 +1,16 @@
-import I18N from './I18N/i18n';
 import Mute from './Mute/mute';
 import { Command, ContextMenuId } from './types/types';
 import ContextMenu from './UI/contextMenus';
+import Notification from './UI/notification';
 
 chrome.runtime.onStartup.addListener(initialize);
 chrome.runtime.onInstalled.addListener((details) => {
   initialize();
-  if (details.reason === 'update') createNotification();
-});
-chrome.notifications.onClicked.addListener((notificationId) => {
-  if (notificationId === 'updated') {
-    let url = chrome.runtime.getURL('changelog.html');
-    chrome.tabs.create({ url });
-  }
-  chrome.notifications.clear(notificationId);
+  if (details.reason === 'update') Notification.create(onNotificationClick);
 });
 
 function initialize() {
   ContextMenu.createAll(onContextMenuClick);
-}
-
-function createNotification() {
-  I18N.bypassI18NinMV3('notificationTitle', I18N.setI18NtoNotification, [
-    'changelog_1_0_0',
-    'changelog_1_0_1',
-  ]);
-  // chrome.notifications.create('updated', {
-  //   type: 'basic',
-  //   iconUrl: './icons/icon128.png',
-  //   title: chrome.i18n.getMessage('notificationTitle'),
-  //   message: chrome.i18n.getMessage('changelog_1_0_0'),
-  //   requireInteraction: true,
-  // });
 }
 
 chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
@@ -62,6 +41,14 @@ function onCommand(command: Command, tabId: number) {
     default:
       throw new Error(`unavailable command: ${command}`);
   }
+}
+
+function onNotificationClick(notificationId: string) {
+  if (notificationId === 'updated') {
+    let url = chrome.runtime.getURL('changelog.html');
+    chrome.tabs.create({ url });
+  }
+  chrome.notifications.clear(notificationId);
 }
 
 function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
