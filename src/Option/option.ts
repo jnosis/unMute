@@ -13,7 +13,8 @@ type StorageKeys =
   | 'autoState'
   | 'offBehavior'
   | 'recentTabIds'
-  | 'fixedTabId';
+  | 'fixedTabId'
+  | 'wasInit';
 
 export type StorageProperties = {
   actionMode?: ActionMode;
@@ -22,26 +23,30 @@ export type StorageProperties = {
   offBehavior?: OffBehavior;
   recentTabIds?: string;
   fixedTabId?: number;
+  wasInit?: boolean;
 };
 
 export const defaultOption: Option = {
-  actionMode: 'autoMute',
+  actionMode: 'muteCurrentTab',
   autoMode: 'current',
-  autoState: true,
+  autoState: false,
   offBehavior: 'release',
 };
 
 export function saveStorage(
-  option: StorageProperties = defaultOption,
+  storage: StorageProperties = defaultOption,
   callback?: () => void
 ) {
-  chrome.storage.local.set({ ...option }, callback);
+  console.trace(`Save storage: ${storage}`);
+  console.table({ ...storage });
+  chrome.storage.local.set({ ...storage }, callback);
 }
 
 export async function loadStorage(
   keys: StorageKeys | StorageKeys[] | null = null,
   callback: (items: StorageProperties) => void
 ) {
+  console.trace(`Load storage: ${keys}`);
   chrome.storage.local.get(keys, callback);
 }
 export async function loadOption(callback: (option: Option) => void) {
@@ -57,4 +62,53 @@ export async function loadOption(callback: (option: Option) => void) {
       callback(option);
     }
   );
+}
+
+export abstract class ChangeOption {
+  static setActionMode(actionMode: ActionMode, callback?: () => void) {
+    console.trace(`Set action mode: ${actionMode}`);
+    saveStorage({ actionMode }, callback);
+  }
+  static setAutoMode(autoMode: AutoMode, callback?: () => void) {
+    console.trace(`Set auto mode: ${autoMode}`);
+    saveStorage({ autoMode }, callback);
+  }
+  static setAutoState(autoState: boolean, callback?: () => void) {
+    console.trace(`Set auto state: ${autoState}`);
+    saveStorage({ autoState }, callback);
+  }
+  static setOffBehavior(offBehavior: OffBehavior, callback?: () => void) {
+    console.trace(`Set off behavior: ${offBehavior}`);
+    saveStorage({ offBehavior }, callback);
+  }
+
+  static toggleAutoMute(callback?: () => void) {
+    console.trace(`Toggle auto mute`);
+    loadOption(({ autoState }) => {
+      this.setAutoState(!autoState, callback);
+    });
+  }
+
+  static rotateAutoMode(callback?: () => void) {
+    console.trace(`Rotate auto mode`);
+    loadOption(({ autoMode }) => {
+      switch (autoMode) {
+        case 'current':
+          this.setAutoMode('recent', callback);
+          break;
+        case 'recent':
+          this.setAutoMode('fix', callback);
+          break;
+        case 'fix':
+          this.setAutoMode('all', callback);
+          break;
+        case 'all':
+          this.setAutoMode('current', callback);
+          break;
+
+        default:
+          throw Error(`Unavailable auto mode ${autoMode}`);
+      }
+    });
+  }
 }

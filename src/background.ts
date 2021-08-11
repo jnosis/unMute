@@ -1,5 +1,7 @@
 import Mute from './Mute/mute';
 import {
+  ChangeOption,
+  defaultOption,
   loadOption,
   loadStorage,
   saveStorage,
@@ -17,10 +19,37 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 function initialize() {
-  saveStorage();
-  chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
-  ContextMenu.createAll(onContextMenuClick);
-  ActionBadge.update();
+  loadStorage('wasInit', ({ wasInit }) => {
+    console.log(`Initialize: ${!!wasInit}`);
+    if (wasInit) {
+      _();
+    } else {
+      saveStorage({ ...defaultOption, wasInit: true }, _);
+    }
+  });
+
+  function _() {
+    console.log(`_`);
+    chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
+    ActionBadge.update();
+    ContextMenu.createAll(onContextMenuClick);
+    doAutoMute();
+  }
+}
+
+chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
+
+function onStorageChanged(changes: StorageProperties) {
+  if (
+    changes.autoState ||
+    changes.autoMode ||
+    changes.fixedTabId ||
+    changes.recentTabIds
+  ) {
+    doAutoMute();
+    updateContextMenus();
+    updateActionBadge();
+  }
 }
 
 chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
@@ -30,7 +59,28 @@ chrome.commands.onCommand.addListener(
 );
 
 function onActionClick(tabId: number) {
-  Mute.toggleMute(tabId);
+  loadOption(({ actionMode }) => {
+    switch (actionMode) {
+      case 'muteCurrentTab':
+        Mute.toggleMute(tabId);
+        break;
+      case 'toggleAllTabs':
+        Mute.toggleAllTab();
+        break;
+      case 'autoMute':
+        ChangeOption.toggleAutoMute();
+        break;
+      case 'autoMode':
+        ChangeOption.rotateAutoMode();
+        break;
+      case 'fixTab':
+        saveStorage({ fixedTabId: tabId });
+        break;
+
+      default:
+        throw new Error(`Unavailable action mode: ${actionMode}`);
+    }
+  });
 }
 
 function onCommand(command: Command, tabId: number) {
@@ -42,17 +92,16 @@ function onCommand(command: Command, tabId: number) {
       Mute.toggleAllTab();
       break;
     case 'autoMute':
-      loadStorage('autoState', ({ autoState }) =>
-        saveStorage({ autoState: !autoState }, () => {
-          doAutoMute();
-          updateContextMenus();
-          updateActionBadge();
-        })
-      );
+      ChangeOption.toggleAutoMute();
       break;
     case 'autoMode':
+      ChangeOption.rotateAutoMode();
       break;
     case 'fixTab':
+      saveStorage({ fixedTabId: tabId });
+      break;
+    case 'dev':
+      showStorage();
       break;
 
     default:
@@ -74,28 +123,40 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
       Mute.toggleMute(tabId);
       break;
     case 'on':
+      ChangeOption.setAutoState(true);
       break;
     case 'off':
+      ChangeOption.setAutoState(false);
       break;
     case 'current':
+      ChangeOption.setAutoMode('current');
       break;
     case 'recent':
+      ChangeOption.setAutoMode('recent');
       break;
     case 'fix':
+      ChangeOption.setAutoMode('fix');
       break;
     case 'all':
+      ChangeOption.setAutoMode('all');
       break;
     case 'fixTab':
+      saveStorage({ fixedTabId: tabId });
       break;
     case 'actionMode_muteCurrentTab':
+      ChangeOption.setActionMode('muteCurrentTab');
       break;
     case 'actionMode_autoMute':
+      ChangeOption.setActionMode('autoMute');
       break;
     case 'actionMode_autoMode':
+      ChangeOption.setActionMode('autoMode');
       break;
     case 'actionMode_fixTab':
+      ChangeOption.setActionMode('fixTab');
       break;
     case 'actionMode_toggleAllTabs':
+      ChangeOption.setActionMode('toggleAllTabs');
       break;
     case 'toggleAllTabs':
       Mute.toggleAllTab();
@@ -116,9 +177,9 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
   onTabActivated(tabId)
 );
+chrome.tabs.onActivated.addListener(async () => updateActionBadge());
 chrome.tabs.onActivated.addListener(async () => doAutoMute());
 chrome.tabs.onActivated.addListener(async () => updateContextMenus());
-chrome.tabs.onActivated.addListener(async () => updateActionBadge());
 
 function onTabActivated(tabId: number) {
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
@@ -127,8 +188,8 @@ function onTabActivated(tabId: number) {
     let ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
     if (tab.audible) {
       ids = [...new Set([tabId, ...ids])];
-      chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) }, () => {});
     }
+    chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) }, () => {});
   });
 }
 
@@ -166,7 +227,12 @@ function updateContextMenus() {
 }
 
 function updateActionBadge() {
-  loadStorage(['fixedTabId'], (items) =>
-    loadOption((option) => ActionBadge.update(option, items.fixedTabId))
+  loadStorage(['fixedTabId'], ({ fixedTabId }) =>
+    loadOption((option) => ActionBadge.update(option, fixedTabId))
   );
+}
+
+// * for Dev
+function showStorage() {
+  loadStorage(null, (items) => console.table({ ...items }));
 }

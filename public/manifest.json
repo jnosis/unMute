@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.9.9.2",
+  "version": "1.9.9.7",
   "version_name": "2.0.0",
 
   "default_locale": "en",
@@ -50,6 +50,12 @@
         "default": "Alt+Shift+M"
       },
       "description": "__MSG_command_toggleAllTabs__"
+    },
+    "dev": {
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      },
+      "description": "dev"
     }
   },
 
