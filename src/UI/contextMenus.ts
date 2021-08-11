@@ -39,10 +39,10 @@ export default abstract class ContextMenu {
   }
 
   static updateAll(option: Option) {
-    this.update(option, 'muteCurrentTab');
-    this.update(option, 'autoMute');
-    this.update(option, 'autoMode');
-    this.update(option, 'actionMode');
+    ContextMenu.update(option, 'muteCurrentTab');
+    ContextMenu.update(option, 'autoMute');
+    ContextMenu.update(option, 'autoMode');
+    ContextMenu.update(option, 'actionMode');
   }
 
   static async update(
@@ -63,7 +63,7 @@ export default abstract class ContextMenu {
         visible: option.autoState ? false : true,
       });
     } else if (id === 'autoMode') {
-      chrome.contextMenus.update(`autoMode_${option.autoMode}`, {
+      chrome.contextMenus.update(`${option.autoMode}`, {
         checked: true,
       });
     } else if (id === 'actionMode') {
@@ -125,7 +125,7 @@ export default abstract class ContextMenu {
                   id === 'autoMute'
                     ? childId === (option.autoState ? 'on' : 'off')
                     : id === 'autoMode'
-                    ? childId === `${id}_${option.autoMode}`
+                    ? childId === option.autoMode
                     : childId === `${id}_${option.actionMode}`,
               },
               () => {

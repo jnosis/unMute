@@ -24,7 +24,7 @@ export default abstract class ActionBadge {
         break;
 
       default:
-        break;
+        throw new Error(`Unavailable actionMode: ${option.actionMode}`);
     }
   }
 

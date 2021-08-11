@@ -7,17 +7,54 @@ export type Option = {
   offBehavior: OffBehavior;
 };
 
+type StorageKeys =
+  | 'actionMode'
+  | 'autoMode'
+  | 'autoState'
+  | 'offBehavior'
+  | 'recentTabIds'
+  | 'fixedTabId';
+
+export type StorageProperties = {
+  actionMode?: ActionMode;
+  autoMode?: AutoMode;
+  autoState?: boolean;
+  offBehavior?: OffBehavior;
+  recentTabIds?: string;
+  fixedTabId?: number;
+};
+
 export const defaultOption: Option = {
-  actionMode: 'muteCurrentTab',
+  actionMode: 'autoMute',
   autoMode: 'current',
-  autoState: false,
+  autoState: true,
   offBehavior: 'release',
 };
 
-export function saveOption(option: Option = defaultOption) {
-  chrome.storage.local.set({ ...option });
+export function saveStorage(
+  option: StorageProperties = defaultOption,
+  callback?: () => void
+) {
+  chrome.storage.local.set({ ...option }, callback);
 }
 
-export async function loadOption(keys: string | string[]) {
-  chrome.storage.local.get(keys).then((item) => console.log(item));
+export async function loadStorage(
+  keys: StorageKeys | StorageKeys[] | null = null,
+  callback: (items: StorageProperties) => void
+) {
+  chrome.storage.local.get(keys, callback);
+}
+export async function loadOption(callback: (option: Option) => void) {
+  loadStorage(
+    ['actionMode', 'autoMode', 'autoState', 'offBehavior'],
+    (items) => {
+      const option: Option = {
+        actionMode: items.actionMode || defaultOption.actionMode,
+        autoMode: items.autoMode || defaultOption.autoMode,
+        autoState: !!items.autoState,
+        offBehavior: items.offBehavior || defaultOption.offBehavior,
+      };
+      callback(option);
+    }
+  );
 }

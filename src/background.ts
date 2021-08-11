@@ -1,4 +1,10 @@
 import Mute from './Mute/mute';
+import {
+  loadOption,
+  loadStorage,
+  saveStorage,
+  StorageProperties,
+} from './Option/option';
 import { Command, ContextMenuId } from './types/types';
 import ActionBadge from './UI/actionBadge';
 import ContextMenu from './UI/contextMenus';
@@ -11,6 +17,8 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 function initialize() {
+  saveStorage();
+  chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
   ContextMenu.createAll(onContextMenuClick);
   ActionBadge.update();
 }
@@ -34,6 +42,13 @@ function onCommand(command: Command, tabId: number) {
       Mute.toggleAllTab();
       break;
     case 'autoMute':
+      loadStorage('autoState', ({ autoState }) =>
+        saveStorage({ autoState: !autoState }, () => {
+          doAutoMute();
+          updateContextMenus();
+          updateActionBadge();
+        })
+      );
       break;
     case 'autoMode':
       break;
@@ -41,7 +56,7 @@ function onCommand(command: Command, tabId: number) {
       break;
 
     default:
-      throw new Error(`unavailable command: ${command}`);
+      throw new Error(`Unavailable command: ${command}`);
   }
 }
 
@@ -94,6 +109,64 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
       break;
 
     default:
-      throw new Error(`unavailable contextMenu: ${menuItemId}`);
+      throw new Error(`Unavailable contextMenu: ${menuItemId}`);
   }
+}
+
+chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
+  onTabActivated(tabId)
+);
+chrome.tabs.onActivated.addListener(async () => doAutoMute());
+chrome.tabs.onActivated.addListener(async () => updateContextMenus());
+chrome.tabs.onActivated.addListener(async () => updateActionBadge());
+
+function onTabActivated(tabId: number) {
+  loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
+    console.trace(`Tab activated: ${tabId}`);
+    const tab = await chrome.tabs.get(tabId);
+    let ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
+    if (tab.audible) {
+      ids = [...new Set([tabId, ...ids])];
+      chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) }, () => {});
+    }
+  });
+}
+
+function doAutoMute() {
+  loadStorage(
+    ['autoState', 'autoMode', 'recentTabIds', 'fixedTabId'],
+    ({ autoState, autoMode, recentTabIds, fixedTabId }: StorageProperties) => {
+      console.log(autoState);
+      if (autoState) {
+        console.log(autoMode);
+        switch (autoMode) {
+          case 'current':
+            Mute.doAutoMute(autoMode);
+            break;
+          case 'recent':
+            recentTabIds &&
+              Mute.doAutoMute(autoMode, JSON.parse(recentTabIds)[0]);
+            break;
+          case 'fix':
+            Mute.doAutoMute(autoMode, fixedTabId);
+            break;
+          case 'all':
+            Mute.doAutoMute(autoMode);
+            break;
+          default:
+            throw new Error(`Unavailable AutoMode: ${autoMode}`);
+        }
+      }
+    }
+  );
+}
+
+function updateContextMenus() {
+  loadOption(ContextMenu.updateAll);
+}
+
+function updateActionBadge() {
+  loadStorage(['fixedTabId'], (items) =>
+    loadOption((option) => ActionBadge.update(option, items.fixedTabId))
+  );
 }
