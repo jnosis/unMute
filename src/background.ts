@@ -175,13 +175,10 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 }
 
 chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
-  onTabActivated(tabId)
+  onTabActivated(tabId, update)
 );
-chrome.tabs.onActivated.addListener(async () => updateActionBadge());
-chrome.tabs.onActivated.addListener(async () => doAutoMute());
-chrome.tabs.onActivated.addListener(async () => updateContextMenus());
 
-function onTabActivated(tabId: number) {
+function onTabActivated(tabId: number, callback: () => void) {
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
     console.trace(`Tab activated: ${tabId}`);
     const tab = await chrome.tabs.get(tabId);
@@ -189,8 +186,16 @@ function onTabActivated(tabId: number) {
     if (tab.audible) {
       ids = [...new Set([tabId, ...ids])];
     }
-    chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) }, () => {});
+    chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) });
+    callback();
   });
+}
+
+function update() {
+  console.trace(`update`);
+  doAutoMute();
+  updateActionBadge();
+  updateContextMenus();
 }
 
 function doAutoMute() {
