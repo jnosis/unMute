@@ -41,13 +41,25 @@ chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
 
 function onStorageChanged(changes: StorageProperties) {
   if (
-    changes.autoState ||
-    changes.autoMode ||
-    changes.fixedTabId ||
-    changes.recentTabIds
+    !changes.autoState &&
+    !changes.autoMode &&
+    !changes.fixedTabId &&
+    !changes.recentTabIds
   ) {
-    update();
+    return;
   }
+  console.log(`Storage change: ${changes}`);
+  console.table({ ...changes });
+
+  if (changes.autoState) {
+    const autoState =
+      changes.autoState && (changes.autoState as chrome.storage.StorageChange);
+    if (!autoState.newValue) {
+      checkOffBehavior();
+    }
+  }
+
+  update();
 }
 
 chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
@@ -67,13 +79,13 @@ function onActionClick(tabId: number) {
         Mute.toggleAllTab();
         break;
       case 'autoMute':
-        ChangeOption.toggleAutoMute();
+        ChangeOption.toggleAutoMute(() => setFixTab(tabId));
         break;
       case 'autoMode':
-        ChangeOption.rotateAutoMode();
+        ChangeOption.rotateAutoMode(() => setFixTab(tabId));
         break;
       case 'fixTab':
-        saveStorage({ fixedTabId: tabId });
+        setFixTab(tabId);
         break;
 
       default:
@@ -92,13 +104,13 @@ function onCommand(command: Command, tabId: number) {
       Mute.toggleAllTab();
       break;
     case 'autoMute':
-      ChangeOption.toggleAutoMute();
+      ChangeOption.toggleAutoMute(() => setFixTab(tabId));
       break;
     case 'autoMode':
-      ChangeOption.rotateAutoMode();
+      ChangeOption.rotateAutoMode(() => setFixTab(tabId));
       break;
     case 'fixTab':
-      saveStorage({ fixedTabId: tabId });
+      setFixTab(tabId);
       break;
     case 'dev':
       showStorage();
@@ -124,25 +136,25 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
       Mute.toggleMute(tabId);
       break;
     case 'on':
-      ChangeOption.setAutoState(true);
+      ChangeOption.setAutoState(true, () => setFixTab(tabId));
       break;
     case 'off':
       ChangeOption.setAutoState(false);
       break;
     case 'current':
-      ChangeOption.setAutoMode('current');
+      ChangeOption.setAutoMode('current', () => setFixTab(tabId));
       break;
     case 'recent':
-      ChangeOption.setAutoMode('recent');
+      ChangeOption.setAutoMode('recent', () => setFixTab(tabId));
       break;
     case 'fix':
-      ChangeOption.setAutoMode('fix');
+      ChangeOption.setAutoMode('fix', () => setFixTab(tabId));
       break;
     case 'all':
-      ChangeOption.setAutoMode('all');
+      ChangeOption.setAutoMode('all', () => setFixTab(tabId));
       break;
     case 'fixTab':
-      saveStorage({ fixedTabId: tabId });
+      setFixTab(tabId);
       break;
     case 'actionMode_muteCurrentTab':
       ChangeOption.setActionMode('muteCurrentTab');
@@ -311,6 +323,19 @@ function updateContextMenus() {
 function updateActionBadge() {
   loadStorage(['fixedTabId'], ({ fixedTabId }) =>
     loadOption((option) => ActionBadge.update(option, fixedTabId))
+  );
+}
+
+function setFixTab(tabId: number) {
+  loadOption(
+    ({ autoMode, autoState }) =>
+      autoState && autoMode === 'fix' && saveStorage({ fixedTabId: tabId })
+  );
+}
+
+function checkOffBehavior() {
+  loadOption(
+    ({ offBehavior }) => offBehavior === 'release' && Mute.releaseAllMute()
   );
 }
 
