@@ -205,7 +205,7 @@ function onTabUpdated(
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
     let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
     const window = await chrome.windows.getCurrent();
-    console.log(`CW: ${tab.windowId}, ${window.id}`);
+    console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
     if (tab.audible) {
       if (tab.active && tab.windowId === window.id) {
@@ -214,6 +214,55 @@ function onTabUpdated(
         ids = [...new Set([...ids, tabId])];
       }
     } else if (ids.includes(tabId)) {
+      ids = ids.filter((id) => id !== tabId);
+    }
+
+    saveStorage({ recentTabIds: JSON.stringify(ids) });
+  });
+}
+
+chrome.windows.onFocusChanged.addListener((windowId) =>
+  onWindowFocusChanged(windowId)
+);
+
+function onWindowFocusChanged(windowId: number) {
+  console.log(`Window focus changed: ${windowId}`);
+  loadStorage(
+    ['autoMode', 'recentTabIds'],
+    async ({ autoMode, recentTabIds }) => {
+      let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      const tab = tabs[0];
+      const tabId = tab?.id;
+
+      if (tab && tabId) {
+        if (tab.audible) {
+          if (tab.active && tab.windowId === windowId) {
+            ids = [...new Set([tabId, ...ids])];
+          } else {
+            ids = [...new Set([...ids, tabId])];
+          }
+          saveStorage({ recentTabIds: JSON.stringify(ids) });
+        }
+      }
+
+      if (autoMode === 'current') doAutoMute();
+    }
+  );
+}
+
+chrome.tabs.onRemoved.addListener((tabId, { windowId }) =>
+  onTabRemoved(tabId, windowId)
+);
+
+function onTabRemoved(tabId: number, windowId: number) {
+  console.log(`Tab removed: ${tabId}, ${windowId}`);
+  loadStorage('recentTabIds', ({ recentTabIds }) => {
+    let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+    if (ids.includes(tabId)) {
       ids = ids.filter((id) => id !== tabId);
     }
 
