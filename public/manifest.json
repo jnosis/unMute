@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.9.9.7",
+  "version": "1.9.9.8",
   "version_name": "2.0.0",
 
   "default_locale": "en",

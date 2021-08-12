@@ -46,9 +46,7 @@ function onStorageChanged(changes: StorageProperties) {
     changes.fixedTabId ||
     changes.recentTabIds
   ) {
-    doAutoMute();
-    updateContextMenus();
-    updateActionBadge();
+    update();
   }
 }
 
@@ -59,6 +57,7 @@ chrome.commands.onCommand.addListener(
 );
 
 function onActionClick(tabId: number) {
+  console.log(`Action click: ${tabId}`);
   loadOption(({ actionMode }) => {
     switch (actionMode) {
       case 'muteCurrentTab':
@@ -84,6 +83,7 @@ function onActionClick(tabId: number) {
 }
 
 function onCommand(command: Command, tabId: number) {
+  console.log(`On command: ${tabId}`);
   switch (command) {
     case 'muteCurrentTab':
       Mute.toggleMute(tabId);
@@ -118,6 +118,7 @@ function onNotificationClick(notificationId: string) {
 }
 
 function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
+  console.log(`Context menu click: (${ContextMenu} : ${tabId})`);
   switch (menuItemId) {
     case 'muteCurrentTab':
       Mute.toggleMute(tabId);
@@ -179,8 +180,8 @@ chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
 );
 
 function onTabActivated(tabId: number, callback: () => void) {
+  console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
-    console.trace(`Tab activated: ${tabId}`);
     const tab = await chrome.tabs.get(tabId);
     let ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
     if (tab.audible) {
@@ -188,6 +189,35 @@ function onTabActivated(tabId: number, callback: () => void) {
     }
     chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) });
     callback();
+  });
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
+  onTabUpdated(tabId, changeInfo, tab)
+);
+
+function onTabUpdated(
+  tabId: number,
+  _changeInfo: chrome.tabs.TabChangeInfo,
+  tab: chrome.tabs.Tab
+) {
+  console.log(`Tab updated: ${tabId}`);
+  loadStorage('recentTabIds', async ({ recentTabIds }) => {
+    let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+    const window = await chrome.windows.getCurrent();
+    console.log(`CW: ${tab.windowId}, ${window.id}`);
+
+    if (tab.audible) {
+      if (tab.active && tab.windowId === window.id) {
+        ids = [...new Set([tabId, ...ids])];
+      } else {
+        ids = [...new Set([...ids, tabId])];
+      }
+    } else if (ids.includes(tabId)) {
+      ids = ids.filter((id) => id !== tabId);
+    }
+
+    saveStorage({ recentTabIds: JSON.stringify(ids) });
   });
 }
 
@@ -202,9 +232,7 @@ function doAutoMute() {
   loadStorage(
     ['autoState', 'autoMode', 'recentTabIds', 'fixedTabId'],
     ({ autoState, autoMode, recentTabIds, fixedTabId }: StorageProperties) => {
-      console.log(autoState);
       if (autoState) {
-        console.log(autoMode);
         switch (autoMode) {
           case 'current':
             Mute.doAutoMute(autoMode);
