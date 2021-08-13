@@ -315,12 +315,10 @@ function onWindowFocusChanged(windowId: number) {
   );
 }
 
-chrome.tabs.onRemoved.addListener((tabId, { windowId }) =>
-  onTabRemoved(tabId, windowId)
-);
+chrome.tabs.onRemoved.addListener((tabId, _removeInfo) => onTabRemoved(tabId));
 
-function onTabRemoved(tabId: number, windowId: number) {
-  console.log(`Tab removed: ${tabId}, ${windowId}`);
+function onTabRemoved(tabId: number) {
+  console.log(`Tab removed: ${tabId}`);
   loadStorage('recentTabIds', ({ recentTabIds }) => {
     let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
     if (ids.includes(tabId)) {
