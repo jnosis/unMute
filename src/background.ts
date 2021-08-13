@@ -7,7 +7,14 @@ import {
   saveStorage,
   StorageProperties,
 } from './Option/option';
-import { Command, ContextMenuId } from './types/types';
+import {
+  ActionMode,
+  AutoMode,
+  Command,
+  ContextMenuId,
+  OffBehavior,
+  OptionPageResponse,
+} from './types/types';
 import ActionBadge from './UI/actionBadge';
 import ContextMenu from './UI/contextMenus';
 import Notification from './UI/notification';
@@ -31,9 +38,9 @@ function initialize() {
   function _() {
     console.log(`_`);
     chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
-    ActionBadge.update();
     ContextMenu.createAll(onContextMenuClick);
     doAutoMute();
+    updateActionBadge();
   }
 }
 
@@ -41,6 +48,7 @@ chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
 
 function onStorageChanged(changes: StorageProperties) {
   if (
+    !changes.actionMode &&
     !changes.autoState &&
     !changes.autoMode &&
     !changes.fixedTabId &&
@@ -60,6 +68,42 @@ function onStorageChanged(changes: StorageProperties) {
   }
 
   update();
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
+  onMessage(message, sender, sendResponse)
+);
+
+function onMessage(
+  message: OptionPageResponse,
+  sender: chrome.runtime.MessageSender,
+  sendResponse: (response?: any) => void
+) {
+  if (sender.id === chrome.runtime.id) {
+    switch (message.message) {
+      case 'actionMode':
+        ChangeOption.setActionMode(message.value as ActionMode);
+        break;
+      case 'autoState':
+        ChangeOption.setAutoState(!!message.value);
+        break;
+      case 'autoMode':
+        ChangeOption.setAutoMode(message.value as AutoMode);
+        break;
+      case 'offBehavior':
+        ChangeOption.setOffBehavior(message.value as OffBehavior);
+        break;
+      case 'reset':
+        ChangeOption.reset();
+        break;
+      case 'language':
+        break;
+
+      default:
+        break;
+    }
+    sendResponse(message);
+  }
 }
 
 chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
@@ -215,21 +259,25 @@ function onTabUpdated(
 ) {
   console.log(`Tab updated: ${tabId}`);
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+    let oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+    let newIds: number[] = [...oldIds];
     const window = await chrome.windows.getCurrent();
     console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
     if (tab.audible) {
       if (tab.active && tab.windowId === window.id) {
-        ids = [...new Set([tabId, ...ids])];
+        newIds = [...new Set([tabId, ...oldIds])];
       } else {
-        ids = [...new Set([...ids, tabId])];
+        newIds = [...new Set([...oldIds, tabId])];
       }
-    } else if (ids.includes(tabId)) {
-      ids = ids.filter((id) => id !== tabId);
+    } else if (oldIds.includes(tabId)) {
+      newIds = oldIds.filter((id) => id !== tabId);
     }
 
-    saveStorage({ recentTabIds: JSON.stringify(ids) });
+    newIds.length === oldIds.length &&
+    newIds.every((id, index) => id === oldIds[index])
+      ? saveStorage({ recentTabIds: JSON.stringify(newIds) })
+      : update();
   });
 }
 

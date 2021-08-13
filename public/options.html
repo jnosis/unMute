@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>unMute Setting</title>
+    <!-- <link rel="stylesheet" href="../css/settings.css" /> -->
+    <script defer src="options.js"></script>
+  </head>
+  <body>
+    <section>
+      <article>
+        <header>
+          <label class="locale-text setting-category" id="actionMode">
+            __MSG_option_actionMode__
+          </label>
+          <br />
+        </header>
+
+        <section>
+          <input
+            type="radio"
+            id="muteCurrentTab"
+            name="actionMode"
+            value="muteCurrentTab"
+          />
+          <label
+            class="locale-text"
+            for="muteCurrentTab"
+            id="actionMode_muteCurrentTab"
+          >
+            __MSG_option_actionMode_muteCurrentTab__
+          </label>
+          <br />
+          <input
+            type="radio"
+            id="autoMute"
+            name="actionMode"
+            value="autoMute"
+          />
+          <label class="locale-text" for="autoMute" id="actionMode_autoMute">
+            __MSG_option_actionMode_autoMute__
+          </label>
+          <br />
+          <input
+            type="radio"
+            id="autoMode"
+            name="actionMode"
+            value="autoMode"
+          />
+          <label class="locale-text" for="autoMode" id="actionMode_autoMode">
+            __MSG_option_actionMode_autoMode__
+          </label>
+          <br />
+          <input type="radio" id="fixTab" name="actionMode" value="fixTab" />
+          <label class="locale-text" for="fixTab" id="actionMode_fixTab">
+            __MSG_option_actionMode_fixTab__
+          </label>
+          <br />
+          <!-- <input
+            type="radio"
+            id="muteAllTabs"
+            name="actionMode"
+            value="muteAllTabs"
+          />
+          <label for="muteAllTabs" id="actionMode_muteAllTabs"></label>
+          <br /> -->
+          <input
+            type="radio"
+            id="toggleAllTabs"
+            name="actionMode"
+            value="toggleAllTabs"
+          />
+          <label
+            class="locale-text"
+            for="toggleAllTabs"
+            id="actionMode_toggleAllTabs"
+          >
+            __MSG_option_actionMode_toggleAllTabs__
+          </label>
+        </section>
+      </article>
+
+      <article>
+        <header>
+          <label class="locale-text setting-category not-first" id="autoMuteOp">
+            __MSG_option_autoMuteOp__
+          </label>
+          <br />
+        </header>
+
+        <section>
+          <input type="checkbox" id="autoState" />
+          <label class="locale-text" for="autoState" id="autoMute_autoState">
+            __MSG_option_autoMute_autoState__
+          </label>
+          <br />
+          <label>&nbsp;</label>
+          <input type="radio" id="current" name="autoMode" value="current" />
+          <label class="locale-text" for="current" id="autoMute_current">
+            __MSG_option_autoMute_current__
+          </label>
+          <br />
+          <label>&nbsp;</label>
+          <input type="radio" id="recent" name="autoMode" value="recent" />
+          <label class="locale-text" for="recent" id="autoMute_recent">
+            __MSG_option_autoMute_recent__
+          </label>
+          <br />
+          <label>&nbsp;</label>
+          <input type="radio" id="fix" name="autoMode" value="fix" />
+          <label class="locale-text" for="fix" id="autoMute_fix">
+            __MSG_option_autoMute_fix__
+          </label>
+          <br />
+          <label>&nbsp;</label>
+          <input type="radio" id="all" name="autoMode" value="all" />
+          <label class="locale-text" for="all" id="autoMute_all">
+            __MSG_option_autoMute_all__
+          </label>
+        </section>
+      </article>
+
+      <article>
+        <header>
+          <label
+            class="locale-text setting-category not-first"
+            id="offBehavior"
+          >
+            __MSG_option_offBehavior__
+          </label>
+          <br />
+        </header>
+
+        <section>
+          <input type="radio" id="release" name="offBehavior" value="release" />
+          <label class="locale-text" for="release" id="offBehavior_release">
+            __MSG_option_offBehavior_release__
+          </label>
+          <input
+            type="radio"
+            id="notRelease"
+            name="offBehavior"
+            value="notRelease"
+          />
+          <label
+            class="locale-text"
+            for="notRelease"
+            id="offBehavior_notRelease"
+          >
+            __MSG_option_offBehavior_notRelease__
+          </label>
+        </section>
+      </article>
+    </section>
+    <footer>
+      <!--* i18n 임시방편-->
+      <article>
+        <header>
+          <label for="language">
+            language for Context Menus
+          </label>
+          <select name="language" id="language">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+          </select>
+        </header>
+      </article>
+      <button
+        class="locale-text"
+        id="reset"
+        style="margin: 2px; width: 80px; height: 20px;"
+      >
+        __MSG_option_reset__
+      </button>
+      <br />
+      <button id="changelog" style="margin: 2px; width: 80px; height: 20px;">
+        changelog
+      </button>
+    </footer>
+  </body>
+</html>

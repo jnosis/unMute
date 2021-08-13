@@ -81,6 +81,10 @@ export abstract class ChangeOption {
     console.trace(`Set off behavior: ${offBehavior}`);
     saveStorage({ offBehavior }, callback);
   }
+  static reset() {
+    console.trace(`Reset option`);
+    saveStorage(defaultOption);
+  }
 
   static toggleAutoMute(callback?: () => void) {
     console.trace(`Toggle auto mute`);

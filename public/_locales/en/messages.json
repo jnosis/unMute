@@ -146,13 +146,13 @@
   "option_autoMute_all": {
     "message": "Auto Mute Mode : Mute All Tabs"
   },
-  "option_autoOff": {
+  "option_offBehavior": {
     "message": "Action when Auto Mode off"
   },
-  "option_autoOff_release": {
+  "option_offBehavior_release": {
     "message": "unMute All Tab"
   },
-  "option_autoOff_notRelease": {
+  "option_offBehavior_notRelease": {
     "message": "Keep Mute State"
   },
   "option_reset": {

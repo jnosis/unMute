@@ -24,3 +24,14 @@ export type ContextMenuId =
   | 'changelog';
 export type Color = '#579242' | '#9c2829' | '#5f6368';
 export type Language = 'en' | 'ko';
+export type OptionPageMessage =
+  | 'actionMode'
+  | 'autoState'
+  | 'autoMode'
+  | 'offBehavior'
+  | 'reset'
+  | 'language';
+export type OptionPageResponse = {
+  message: OptionPageMessage;
+  value: string | boolean;
+};

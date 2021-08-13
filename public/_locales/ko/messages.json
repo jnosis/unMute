@@ -149,13 +149,13 @@
   "option_autoMute_all": {
     "message": "자동 음소거 모드 : 항상 모든 탭 음소거"
   },
-  "option_autoOff": {
+  "option_offBehavior": {
     "message": "자동 음소거 껐을 시 동작"
   },
-  "option_autoOff_release": {
+  "option_offBehavior_release": {
     "message": "모든 탭 음소거 해제"
   },
-  "option_autoOff_notRelease": {
+  "option_offBehavior_notRelease": {
     "message": "모든 탭 현상 유지"
   },
   "option_reset": {
