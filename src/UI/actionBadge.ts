@@ -6,6 +6,7 @@ export default abstract class ActionBadge {
   private static red: Color = '#9c2829';
   private static grey: Color = '#5f6368';
   static update(option: Option = defaultOption, fixTabId?: number) {
+    console.trace(`Update action badge`);
     switch (option.actionMode) {
       case 'muteCurrentTab':
         this.updateMuteCurrentTab();
@@ -29,6 +30,7 @@ export default abstract class ActionBadge {
   }
 
   private static async updateMuteCurrentTab() {
+    console.trace(`Update action: muteCurrentTab`);
     chrome.action.setBadgeText({ text: '' });
     const tabs = await chrome.tabs.query({});
     tabs.forEach((tab) => {
@@ -41,6 +43,7 @@ export default abstract class ActionBadge {
   }
 
   private static async updateToggleAllTabs(autoState: boolean) {
+    console.trace(`Update action: toggleAllTabs: ${autoState}`);
     chrome.action.setBadgeText({ text: '' });
     const tabs = await chrome.tabs.query({});
     if (!autoState) {
@@ -51,6 +54,7 @@ export default abstract class ActionBadge {
   }
 
   private static async updateAutoMute(autoState: boolean) {
+    console.trace(`Update action: autoState: ${autoState}`);
     const tabs = await chrome.tabs.query({});
     const color: Color = autoState ? this.green : this.red;
     const text: 'on' | 'off' = autoState ? 'on' : 'off';
@@ -65,6 +69,7 @@ export default abstract class ActionBadge {
   }
 
   private static async updateAutoMode(autoMode: AutoMode, autoState: boolean) {
+    console.trace(`Update action: autoMode: ${autoMode}`);
     let text: string;
     switch (autoMode) {
       case 'current':
@@ -101,6 +106,7 @@ export default abstract class ActionBadge {
     autoState: boolean,
     fixTabId?: number
   ) {
+    console.trace(`Update action: fixTab: ${fixTabId}`);
     const tabs = await chrome.tabs.query({});
     if (autoState && autoMode === 'fix') {
       tabs.forEach((tab) => {

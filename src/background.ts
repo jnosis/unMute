@@ -79,6 +79,7 @@ function onMessage(
   sender: chrome.runtime.MessageSender,
   sendResponse: (response?: any) => void
 ) {
+  console.log(`On message: ${message}`);
   if (sender.id === chrome.runtime.id) {
     switch (message.message) {
       case 'actionMode':
@@ -365,7 +366,7 @@ function doAutoMute() {
 }
 
 function updateContextMenus() {
-  loadOption(ContextMenu.updateAll);
+  loadOption((option) => ContextMenu.updateAll(option));
 }
 
 function updateActionBadge() {
