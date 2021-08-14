@@ -1,11 +1,10 @@
-import { ActionMode, AutoMode, Language, OffBehavior } from '../types/types';
+import { ActionMode, AutoMode, OffBehavior } from '../types/types';
 
 export type Option = {
   actionMode: ActionMode;
   autoMode: AutoMode;
   autoState: boolean;
   offBehavior: OffBehavior;
-  language: Language;
 };
 
 type StorageKeys =
@@ -26,7 +25,6 @@ export type StorageProperties = {
   recentTabIds?: string;
   fixedTabId?: number;
   wasInit?: boolean;
-  language?: Language;
 };
 
 export const defaultOption: Option = {
@@ -34,7 +32,6 @@ export const defaultOption: Option = {
   autoMode: 'current',
   autoState: false,
   offBehavior: 'release',
-  language: 'en',
 };
 
 export function saveStorage(
@@ -65,7 +62,6 @@ export async function loadOption(callback: (option: Option) => void) {
         autoMode: items.autoMode || defaultOption.autoMode,
         autoState: !!items.autoState,
         offBehavior: items.offBehavior || defaultOption.offBehavior,
-        language: items.language || defaultOption.language,
       };
       callback(option);
     }
@@ -92,11 +88,6 @@ export abstract class ChangeOption {
   static reset() {
     console.trace(`Reset option`);
     saveStorage();
-  }
-
-  static setLanguage(language: Language, callback?: () => void) {
-    console.trace(`Set language: ${language}`);
-    saveStorage({ language }, callback);
   }
 
   static toggleAutoMute(callback?: () => void) {

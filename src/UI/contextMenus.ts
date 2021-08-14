@@ -1,11 +1,11 @@
 import I18N from '../I18N/i18n';
 import { Option } from '../Option/option';
-import { ContextMenuId, Language } from '../types/types';
+import { ContextMenuId } from '../types/types';
 
 type OnClickedListener = (menuItemId: ContextMenuId, tabId: number) => void;
 
 export default abstract class ContextMenu {
-  static createAll(listener: OnClickedListener, option: Option) {
+  static async createAll(listener: OnClickedListener, option: Option) {
     console.trace(`create all context menus`);
     chrome.contextMenus.removeAll(() => {
       this.createByIdAndItsChildren(option, 'muteCurrentTab');
@@ -36,11 +36,11 @@ export default abstract class ContextMenu {
     );
   }
 
-  static updateAll(option: Option) {
-    this.update(option, 'muteCurrentTab');
-    this.update(option, 'autoMute');
-    this.update(option, 'autoMode');
-    this.update(option, 'actionMode');
+  static async updateAll(option: Option) {
+    await this.update(option, 'muteCurrentTab');
+    await this.update(option, 'autoMute');
+    await this.update(option, 'autoMode');
+    await this.update(option, 'actionMode');
   }
 
   static async update(
@@ -102,13 +102,9 @@ export default abstract class ContextMenu {
           const messageId: ContextMenuId = tab.mutedInfo?.muted
             ? 'unmuteCurrentTab'
             : 'muteCurrentTab';
-          I18N.bypassI18NinMV3(
-            id,
-            I18N.setI18NtoContextMenus,
-            option.language,
-            undefined,
-            messageId
-          );
+          chrome.contextMenus.update(id, {
+            title: await I18N.getMessage(`contextMenu_${messageId}`),
+          });
           chrome.contextMenus.update(id, { visible: true }, () =>
             this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
           );
@@ -121,7 +117,7 @@ export default abstract class ContextMenu {
     }
   }
 
-  private static createByIdAndItsChildren(
+  private static async createByIdAndItsChildren(
     option: Option,
     id: ContextMenuId,
     isUI: boolean = false,
@@ -132,38 +128,28 @@ export default abstract class ContextMenu {
     chrome.contextMenus.create(
       {
         id,
-        title: `chrome.i18n.getMessage(contextMenu_${id})`,
+        title: await I18N.getMessage(`contextMenu_${id}`),
         contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
       },
       () => {
-        I18N.bypassI18NinMV3(id, I18N.setI18NtoContextMenus, option.language);
         if (hasChildId && childIds) {
-          childIds.forEach((childId) => {
+          childIds.forEach(async (childId) => {
             console.trace(`Create child context menu: ${childId}`);
-            chrome.contextMenus.create(
-              {
-                id: `${childId}`,
-                parentId: id,
-                title: `chrome.i18n.getMessage(contextMenu_${childId})`,
-                contexts: isUI
-                  ? ['action']
-                  : ['page', 'video', 'audio', 'action'],
-                type: 'radio',
-                checked:
-                  id === 'autoMute'
-                    ? childId === (option.autoState ? 'on' : 'off')
-                    : id === 'autoMode'
-                    ? childId === option.autoMode
-                    : childId === `${id}_${option.actionMode}`,
-              },
-              () => {
-                I18N.bypassI18NinMV3(
-                  childId,
-                  I18N.setI18NtoContextMenus,
-                  option.language
-                );
-              }
-            );
+            chrome.contextMenus.create({
+              id: `${childId}`,
+              parentId: id,
+              title: await I18N.getMessage(`contextMenu_${childId}`),
+              contexts: isUI
+                ? ['action']
+                : ['page', 'video', 'audio', 'action'],
+              type: 'radio',
+              checked:
+                id === 'autoMute'
+                  ? childId === (option.autoState ? 'on' : 'off')
+                  : id === 'autoMode'
+                  ? childId === option.autoMode
+                  : childId === `${id}_${option.actionMode}`,
+            });
           });
         } else {
           this.update(option, id);
@@ -182,45 +168,5 @@ export default abstract class ContextMenu {
         ContextMenu.update(option, id, updatedProperties);
       }, 0);
     }
-  }
-
-  static updateLanguage(language: Language) {
-    I18N.bypassI18NinMV3('autoMute', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('autoMode', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('actionMode', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('toggleAllTabs', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('shortcuts', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('changelog', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('on', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('off', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('current', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('recent', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('fix', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3('all', I18N.setI18NtoContextMenus, language);
-    I18N.bypassI18NinMV3(
-      'actionMode_muteCurrentTab',
-      I18N.setI18NtoContextMenus,
-      language
-    );
-    I18N.bypassI18NinMV3(
-      'actionMode_toggleAllTabs',
-      I18N.setI18NtoContextMenus,
-      language
-    );
-    I18N.bypassI18NinMV3(
-      'actionMode_autoMute',
-      I18N.setI18NtoContextMenus,
-      language
-    );
-    I18N.bypassI18NinMV3(
-      'actionMode_autoMode',
-      I18N.setI18NtoContextMenus,
-      language
-    );
-    I18N.bypassI18NinMV3(
-      'actionMode_fixTab',
-      I18N.setI18NtoContextMenus,
-      language
-    );
   }
 }

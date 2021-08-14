@@ -42,14 +42,11 @@ function saveOptionsPage(event: MouseEvent) {
   } else if (id === 'changelog') {
     const url = chrome.runtime.getURL('changelog.html');
     chrome.tabs.create({ url });
-  } else if (id === 'language') {
-    const value = target.value;
-    sendMessage('language', value);
   }
 }
 
 function loadOptionsPage() {
-  loadOption(({ actionMode, autoState, autoMode, offBehavior, language }) => {
+  loadOption(({ actionMode, autoState, autoMode, offBehavior }) => {
     const actionModeOption = document.querySelector(
       `#${actionMode}`
     ) as HTMLInputElement;
@@ -62,14 +59,10 @@ function loadOptionsPage() {
     const offBehaviorOption = document.querySelector(
       `#${offBehavior}`
     ) as HTMLInputElement;
-    const languageOption = document.querySelector(
-      `#${language}`
-    ) as HTMLOptionElement;
 
     actionModeOption.checked = true;
     autoSateOption.checked = autoState;
     autoModeOption.checked = true;
     offBehaviorOption.checked = true;
-    languageOption.selected = true;
   });
 }

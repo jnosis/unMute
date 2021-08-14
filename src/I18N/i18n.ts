@@ -1,43 +1,16 @@
-import { Language } from '../types/types';
-
 // * bypass i18n
 export default abstract class I18N {
-  static async bypassI18NinMV3(
-    id: string,
-    setI18N: Function,
-    language: Language = 'en',
-    changelogs?: Array<string>,
-    messageId: string = id
-  ) {
-    const url = chrome.runtime.getURL(`_locales/${language}/messages.json`);
+  static async getMessage(id: string) {
+    let lang = navigator.language;
+    lang = lang.indexOf('-') !== -1 ? (lang.split('-')[0] as string) : lang;
+    const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
     const messages = await this.fetchMessagesJSON(url);
-    if (changelogs) {
-      const title = messages[id]?.message;
-      let message = changelogs.reduce(
-        (message, log) => `${messages[log]?.message}\n${message}`,
-        ''
-      );
-      setI18N(title, message);
-    } else {
-      const title = messages[`contextMenu_${messageId}`]?.message;
-      setI18N(id, title);
+    let message: string = id;
+    if (messages[id] !== undefined) {
+      message = messages[id]?.message as string;
     }
-  }
 
-  static setI18NtoContextMenus(id: string, title: string) {
-    chrome.contextMenus.update(id, {
-      title,
-    });
-  }
-
-  static setI18NtoNotification(title: string, message: string) {
-    chrome.notifications.create('updated', {
-      title,
-      message,
-      type: 'basic',
-      iconUrl: 'icons/icon128.png',
-      requireInteraction: true,
-    });
+    return message;
   }
 
   private static async fetchMessagesJSON(

@@ -12,7 +12,6 @@ import {
   AutoMode,
   Command,
   ContextMenuId,
-  Language,
   OffBehavior,
   OptionPageResponse,
 } from './types/types';
@@ -23,11 +22,7 @@ import Notification from './UI/notification';
 chrome.runtime.onStartup.addListener(initialize);
 chrome.runtime.onInstalled.addListener((details) => {
   initialize();
-  if (details.reason === 'update') {
-    loadOption(({ language }) =>
-      Notification.create(onNotificationClick, language)
-    );
-  }
+  if (details.reason === 'update') Notification.create(onNotificationClick);
 });
 
 function initialize() {
@@ -54,9 +49,6 @@ function initialize() {
 chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
 
 function onStorageChanged(changes: StorageProperties) {
-  if (!!changes.language) {
-    updateContextMenusLanguage();
-  }
   if (
     !changes.actionMode &&
     !changes.autoState &&
@@ -106,9 +98,6 @@ function onMessage(
         break;
       case 'reset':
         ChangeOption.reset();
-        break;
-      case 'language':
-        ChangeOption.setLanguage(message.value as Language);
         break;
 
       default:
@@ -376,9 +365,6 @@ function doAutoMute() {
 
 function updateContextMenus() {
   loadOption((option) => ContextMenu.updateAll(option));
-}
-function updateContextMenusLanguage() {
-  loadOption(({ language }) => ContextMenu.updateLanguage(language));
 }
 
 function updateActionBadge() {
