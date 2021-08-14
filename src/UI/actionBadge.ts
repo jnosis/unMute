@@ -1,11 +1,11 @@
-import { defaultOption, Option } from '../Option/option';
+import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 
 export default abstract class ActionBadge {
   private static green: Color = '#579242';
   private static red: Color = '#9c2829';
   private static grey: Color = '#5f6368';
-  static update(option: Option = defaultOption, fixTabId?: number) {
+  static update(option: Option, fixTabId?: number) {
     console.trace(`Update action badge`);
     switch (option.actionMode) {
       case 'muteCurrentTab':

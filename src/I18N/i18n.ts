@@ -5,10 +5,10 @@ export default abstract class I18N {
   static async bypassI18NinMV3(
     id: string,
     setI18N: Function,
+    language: Language = 'en',
     changelogs?: Array<string>,
     messageId: string = id
   ) {
-    const language: Language = 'en';
     const url = chrome.runtime.getURL(`_locales/${language}/messages.json`);
     const messages = await this.fetchMessagesJSON(url);
     if (changelogs) {

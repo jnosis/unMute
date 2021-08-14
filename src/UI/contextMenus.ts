@@ -1,14 +1,11 @@
 import I18N from '../I18N/i18n';
-import { defaultOption, Option } from '../Option/option';
-import { ContextMenuId } from '../types/types';
+import { Option } from '../Option/option';
+import { ContextMenuId, Language } from '../types/types';
 
 type OnClickedListener = (menuItemId: ContextMenuId, tabId: number) => void;
 
 export default abstract class ContextMenu {
-  static createAll(
-    listener: OnClickedListener,
-    option: Option = defaultOption
-  ) {
+  static createAll(listener: OnClickedListener, option: Option) {
     console.trace(`create all context menus`);
     chrome.contextMenus.removeAll(() => {
       this.createByIdAndItsChildren(option, 'muteCurrentTab');
@@ -47,7 +44,7 @@ export default abstract class ContextMenu {
   }
 
   static async update(
-    option: Option = defaultOption,
+    option: Option,
     id: ContextMenuId,
     updatedProperties?: chrome.contextMenus.UpdateProperties
   ) {
@@ -108,6 +105,7 @@ export default abstract class ContextMenu {
           I18N.bypassI18NinMV3(
             id,
             I18N.setI18NtoContextMenus,
+            option.language,
             undefined,
             messageId
           );
@@ -124,7 +122,7 @@ export default abstract class ContextMenu {
   }
 
   private static createByIdAndItsChildren(
-    option: Option = defaultOption,
+    option: Option,
     id: ContextMenuId,
     isUI: boolean = false,
     hasChildId: boolean = false,
@@ -138,7 +136,7 @@ export default abstract class ContextMenu {
         contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
       },
       () => {
-        I18N.bypassI18NinMV3(id, I18N.setI18NtoContextMenus);
+        I18N.bypassI18NinMV3(id, I18N.setI18NtoContextMenus, option.language);
         if (hasChildId && childIds) {
           childIds.forEach((childId) => {
             console.trace(`Create child context menu: ${childId}`);
@@ -159,7 +157,11 @@ export default abstract class ContextMenu {
                     : childId === `${id}_${option.actionMode}`,
               },
               () => {
-                I18N.bypassI18NinMV3(childId, I18N.setI18NtoContextMenus);
+                I18N.bypassI18NinMV3(
+                  childId,
+                  I18N.setI18NtoContextMenus,
+                  option.language
+                );
               }
             );
           });
@@ -180,5 +182,45 @@ export default abstract class ContextMenu {
         ContextMenu.update(option, id, updatedProperties);
       }, 0);
     }
+  }
+
+  static updateLanguage(language: Language) {
+    I18N.bypassI18NinMV3('autoMute', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('autoMode', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('actionMode', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('toggleAllTabs', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('shortcuts', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('changelog', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('on', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('off', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('current', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('recent', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('fix', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3('all', I18N.setI18NtoContextMenus, language);
+    I18N.bypassI18NinMV3(
+      'actionMode_muteCurrentTab',
+      I18N.setI18NtoContextMenus,
+      language
+    );
+    I18N.bypassI18NinMV3(
+      'actionMode_toggleAllTabs',
+      I18N.setI18NtoContextMenus,
+      language
+    );
+    I18N.bypassI18NinMV3(
+      'actionMode_autoMute',
+      I18N.setI18NtoContextMenus,
+      language
+    );
+    I18N.bypassI18NinMV3(
+      'actionMode_autoMode',
+      I18N.setI18NtoContextMenus,
+      language
+    );
+    I18N.bypassI18NinMV3(
+      'actionMode_fixTab',
+      I18N.setI18NtoContextMenus,
+      language
+    );
   }
 }

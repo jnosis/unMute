@@ -1,7 +1,7 @@
 import Mute from './Mute/mute';
 import {
   ChangeOption,
-  defaultOption,
+  initStorage,
   loadOption,
   loadStorage,
   saveStorage,
@@ -12,6 +12,7 @@ import {
   AutoMode,
   Command,
   ContextMenuId,
+  Language,
   OffBehavior,
   OptionPageResponse,
 } from './types/types';
@@ -22,7 +23,11 @@ import Notification from './UI/notification';
 chrome.runtime.onStartup.addListener(initialize);
 chrome.runtime.onInstalled.addListener((details) => {
   initialize();
-  if (details.reason === 'update') Notification.create(onNotificationClick);
+  if (details.reason === 'update') {
+    loadOption(({ language }) =>
+      Notification.create(onNotificationClick, language)
+    );
+  }
 });
 
 function initialize() {
@@ -31,22 +36,27 @@ function initialize() {
     if (wasInit) {
       _();
     } else {
-      saveStorage({ ...defaultOption, wasInit: true }, _);
+      initStorage(_);
     }
   });
 
   function _() {
-    console.log(`_`);
-    chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
-    ContextMenu.createAll(onContextMenuClick);
-    doAutoMute();
-    updateActionBadge();
+    loadOption((option) => {
+      console.log(`_`);
+      chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
+      ContextMenu.createAll(onContextMenuClick, option);
+      doAutoMute();
+      updateActionBadge();
+    });
   }
 }
 
 chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
 
 function onStorageChanged(changes: StorageProperties) {
+  if (!!changes.language) {
+    updateContextMenusLanguage();
+  }
   if (
     !changes.actionMode &&
     !changes.autoState &&
@@ -98,6 +108,7 @@ function onMessage(
         ChangeOption.reset();
         break;
       case 'language':
+        ChangeOption.setLanguage(message.value as Language);
         break;
 
       default:
@@ -365,6 +376,9 @@ function doAutoMute() {
 
 function updateContextMenus() {
   loadOption((option) => ContextMenu.updateAll(option));
+}
+function updateContextMenusLanguage() {
+  loadOption(({ language }) => ContextMenu.updateLanguage(language));
 }
 
 function updateActionBadge() {

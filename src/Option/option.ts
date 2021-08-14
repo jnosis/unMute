@@ -1,10 +1,11 @@
-import { ActionMode, AutoMode, OffBehavior } from '../types/types';
+import { ActionMode, AutoMode, Language, OffBehavior } from '../types/types';
 
 export type Option = {
   actionMode: ActionMode;
   autoMode: AutoMode;
   autoState: boolean;
   offBehavior: OffBehavior;
+  language: Language;
 };
 
 type StorageKeys =
@@ -14,7 +15,8 @@ type StorageKeys =
   | 'offBehavior'
   | 'recentTabIds'
   | 'fixedTabId'
-  | 'wasInit';
+  | 'wasInit'
+  | 'language';
 
 export type StorageProperties = {
   actionMode?: ActionMode;
@@ -24,6 +26,7 @@ export type StorageProperties = {
   recentTabIds?: string;
   fixedTabId?: number;
   wasInit?: boolean;
+  language?: Language;
 };
 
 export const defaultOption: Option = {
@@ -31,6 +34,7 @@ export const defaultOption: Option = {
   autoMode: 'current',
   autoState: false,
   offBehavior: 'release',
+  language: 'en',
 };
 
 export function saveStorage(
@@ -40,6 +44,9 @@ export function saveStorage(
   console.trace(`Save storage: ${storage}`);
   console.table({ ...storage });
   chrome.storage.local.set({ ...storage }, callback);
+}
+export function initStorage(callback?: () => void) {
+  saveStorage({ ...defaultOption, wasInit: true }, callback);
 }
 
 export async function loadStorage(
@@ -51,13 +58,14 @@ export async function loadStorage(
 }
 export async function loadOption(callback: (option: Option) => void) {
   loadStorage(
-    ['actionMode', 'autoMode', 'autoState', 'offBehavior'],
+    ['actionMode', 'autoMode', 'autoState', 'offBehavior', 'language'],
     (items) => {
       const option: Option = {
         actionMode: items.actionMode || defaultOption.actionMode,
         autoMode: items.autoMode || defaultOption.autoMode,
         autoState: !!items.autoState,
         offBehavior: items.offBehavior || defaultOption.offBehavior,
+        language: items.language || defaultOption.language,
       };
       callback(option);
     }
@@ -83,7 +91,12 @@ export abstract class ChangeOption {
   }
   static reset() {
     console.trace(`Reset option`);
-    saveStorage(defaultOption);
+    saveStorage();
+  }
+
+  static setLanguage(language: Language, callback?: () => void) {
+    console.trace(`Set language: ${language}`);
+    saveStorage({ language }, callback);
   }
 
   static toggleAutoMute(callback?: () => void) {

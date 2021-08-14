@@ -50,6 +50,12 @@
         "default": "Alt+Shift+M"
       },
       "description": "__MSG_command_toggleAllTabs__"
+    },
+    "dev": {
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      },
+      "description": "dev"
     }
   },
 
