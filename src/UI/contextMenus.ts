@@ -7,28 +7,28 @@ type OnClickedListener = (menuItemId: ContextMenuId, tabId: number) => void;
 export default abstract class ContextMenu {
   static async createAll(listener: OnClickedListener, option: Option) {
     console.trace(`create all context menus`);
-    chrome.contextMenus.removeAll(() => {
-      this.createByIdAndItsChildren(option, 'muteCurrentTab');
-      this.createByIdAndItsChildren(option, 'autoMute', false, true, [
+    chrome.contextMenus.removeAll(async () => {
+      await this.createByIdAndItsChildren(option, 'muteCurrentTab');
+      await this.createByIdAndItsChildren(option, 'autoMute', false, true, [
         'on',
         'off',
       ]);
-      this.createByIdAndItsChildren(option, 'autoMode', false, true, [
+      await this.createByIdAndItsChildren(option, 'autoMode', false, true, [
         'current',
         'recent',
         'fix',
         'all',
       ]);
-      this.createByIdAndItsChildren(option, 'actionMode', false, true, [
+      await this.createByIdAndItsChildren(option, 'actionMode', false, true, [
         'actionMode_muteCurrentTab',
         'actionMode_toggleAllTabs',
         'actionMode_autoMute',
         'actionMode_autoMode',
         'actionMode_fixTab',
       ]);
-      this.createByIdAndItsChildren(option, 'toggleAllTabs', false);
-      this.createByIdAndItsChildren(option, 'shortcuts', true);
-      this.createByIdAndItsChildren(option, 'changelog', true);
+      await this.createByIdAndItsChildren(option, 'toggleAllTabs', false);
+      await this.createByIdAndItsChildren(option, 'shortcuts', true);
+      await this.createByIdAndItsChildren(option, 'changelog', true);
     });
 
     chrome.contextMenus.onClicked.addListener(

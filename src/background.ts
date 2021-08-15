@@ -233,19 +233,25 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 }
 
 chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
-  onTabActivated(tabId, update)
+  onTabActivated(tabId)
 );
 
-function onTabActivated(tabId: number, callback: () => void) {
+function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
     const tab = await chrome.tabs.get(tabId);
-    let ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
+    const oldIds: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
+    let newIds: number[] = [...oldIds];
     if (tab.audible) {
-      ids = [...new Set([tabId, ...ids])];
+      newIds = [...new Set([tabId, ...oldIds])];
+    } else if (oldIds.includes(tabId)) {
+      newIds = oldIds.filter((id) => id !== tabId);
     }
-    chrome.storage.local.set({ recentTabIds: JSON.stringify(ids) });
-    callback();
+
+    newIds.length === oldIds.length &&
+    newIds.every((id, index) => id === oldIds[index])
+      ? update()
+      : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
 
@@ -260,7 +266,7 @@ function onTabUpdated(
 ) {
   console.log(`Tab updated: ${tabId}`);
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    let oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+    const oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
     let newIds: number[] = [...oldIds];
     const window = await chrome.windows.getCurrent();
     console.log(`WindowId: ${tab.windowId}, ${window.id}`);
@@ -277,8 +283,8 @@ function onTabUpdated(
 
     newIds.length === oldIds.length &&
     newIds.every((id, index) => id === oldIds[index])
-      ? saveStorage({ recentTabIds: JSON.stringify(newIds) })
-      : update();
+      ? update()
+      : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
 
@@ -291,7 +297,8 @@ function onWindowFocusChanged(windowId: number) {
   loadStorage(
     ['autoMode', 'recentTabIds'],
     async ({ autoMode, recentTabIds }) => {
-      let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      const oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      let newIds: number[] = [...oldIds];
       const tabs = await chrome.tabs.query({
         active: true,
         currentWindow: true,
@@ -302,12 +309,18 @@ function onWindowFocusChanged(windowId: number) {
       if (tab && tabId) {
         if (tab.audible) {
           if (tab.active && tab.windowId === windowId) {
-            ids = [...new Set([tabId, ...ids])];
+            newIds = [...new Set([tabId, ...oldIds])];
           } else {
-            ids = [...new Set([...ids, tabId])];
+            newIds = [...new Set([...oldIds, tabId])];
           }
-          saveStorage({ recentTabIds: JSON.stringify(ids) });
+        } else if (oldIds.includes(tabId)) {
+          newIds = oldIds.filter((id) => id !== tabId);
         }
+
+        newIds.length === oldIds.length &&
+        newIds.every((id, index) => id === oldIds[index])
+          ? update()
+          : saveStorage({ recentTabIds: JSON.stringify(newIds) });
       }
 
       if (autoMode === 'current') doAutoMute();
@@ -323,9 +336,11 @@ function onTabRemoved(tabId: number) {
     let ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
     if (ids.includes(tabId)) {
       ids = ids.filter((id) => id !== tabId);
+      saveStorage({ recentTabIds: JSON.stringify(ids) });
+      return;
     }
 
-    saveStorage({ recentTabIds: JSON.stringify(ids) });
+    update();
   });
 }
 
