@@ -169,24 +169,49 @@
     "message": "현재/최근 소리나는/지정된 탭 제외하고 모든 탭 자동 음소거"
   },
   "feature3": {
-    "message": "모든 탭 음소거/음소거 해제"
+    "message": "항상 모든 탭 음소거"
   },
   "feature4": {
-    "message": "모든 탭 토글"
+    "message": "모든 탭 음소거 토글"
   },
   "feature5": {
-    "message": "사용자 버튼 설정(확장자 아이콘 버튼)"
+    "message": "사용자 버튼 설정"
   },
 
-  "changelog_1_0_0": {
-    "message": "테스트1"
+  "changelog_1_0": {
+    "message": "1.0: 초기 출시"
   },
-  "changelog_1_0_1": {
-    "message": "테스트2"
+  "changelog_1_1": {
+    "message": "1.1: 컨텍스트 메뉴 추가"
+  },
+  "changelog_1_2": {
+    "message": "1.2: 현재 탭을 제외하고 모든 탭 자동 음소거 추가"
+  },
+  "changelog_1_3": {
+    "message": "1.3: 옵션 페이지 추가"
+  },
+  "changelog_1_4": {
+    "message": "1.4: 최근에 소리난 탭을 제외하고 모든 탭 자동 음소거 추가"
+  },
+  "changelog_1_5": {
+    "message": "1.5: 변경사항 페이지 및 알림 추가"
+  },
+  "changelog_1_6": {
+    "message": "1.6: 사용자 버튼 옵션 추가"
+  },
+  "changelog_1_7": {
+    "message": "1.7: 항상 모든 탭 음소거 추가"
+  },
+  "changelog_1_8": {
+    "message": "1.8: 특정한 탭을 제외하고 모든 탭 자동 음소거 추가"
+  },
+
+  "changelog_2_0_0": {
+    "message": "2.0.0: 매니페스트 V3으로 변경"
   },
 
   "knownIssue1": {
-    "message": "간혈적으로 확정자가 멈춤"
+    "message": "간혈적으로 확정자가 멈춤 (탭을 변경하거나 새로고침 하면 정상 작동 됨)"
   },
 
   "todo1": {

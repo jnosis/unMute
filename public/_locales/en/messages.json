@@ -166,24 +166,49 @@
     "message": "Auto Mute All Tabs except Current/Recent-Audible/Specified Tab"
   },
   "feature3": {
-    "message": "Mute/unMute All Tabs"
+    "message": "Always Mute All Tabs"
   },
   "feature4": {
-    "message": "Toggle state All Tabs"
+    "message": "Toggle Mute state All Tabs"
   },
   "feature5": {
-    "message": "Change User Button Action(Extension Icon Button a.k.a Page Action)"
+    "message": "Customize User Action Button"
   },
 
-  "changelog_1_0_0": {
-    "message": "test1"
+  "changelog_1_0": {
+    "message": "1.0: Initial release"
   },
-  "changelog_1_0_1": {
-    "message": "test2"
+  "changelog_1_1": {
+    "message": "1.1: Add context menus"
+  },
+  "changelog_1_2": {
+    "message": "1.2: Add auto mute all tabs except the current tab"
+  },
+  "changelog_1_3": {
+    "message": "1.3: Add options page"
+  },
+  "changelog_1_4": {
+    "message": "1.4: Add auto mute all tabs except the recent-audible tab"
+  },
+  "changelog_1_5": {
+    "message": "1.5: Add changelog page and notification"
+  },
+  "changelog_1_6": {
+    "message": "1.6: Add option for user action button"
+  },
+  "changelog_1_7": {
+    "message": "1.7: Add always mute all tabs"
+  },
+  "changelog_1_8": {
+    "message": "1.8: Add auto mute all tabs except the specified tab"
+  },
+
+  "changelog_2_0_0": {
+    "message": "2.0.0: Migrate to manifest V3"
   },
 
   "knownIssue1": {
-    "message": "Sometimes extensions freezing"
+    "message": "Sometimes extensions freezing (If you change or refresh tab, it will be work)"
   },
 
   "todo1": {

@@ -9,8 +9,8 @@ export default abstract class Notification {
       iconUrl: './icons/icon128.png',
       title: await I18N.getMessage('notificationTitle'),
       message: `${await I18N.getMessage(
-        'changelog_1_0_1'
-      )}\n${await I18N.getMessage('changelog_1_0_0')}`,
+        'changelog_2_0_0'
+      )}\n${await I18N.getMessage('changelog_1_8')}`,
       requireInteraction: true,
     });
     chrome.notifications.onClicked.addListener((notificationId: string) =>
