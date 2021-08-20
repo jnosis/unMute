@@ -5,14 +5,17 @@
   "scripts": {
     "dev": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.dev.js",
-    "prod": "webpack --config webpack/webpack.prod.js",
-    "clean": "rimraf dist"
+    "prod": "webpack --config webpack/webpack.prod.js && node zip.js",
+    "clean": "rimraf dist unmute.zip",
+    "zip": "node zip.js",
+    "delete-zip": "rimraf unmute.zip"
   },
   "author": "unFace <jnosis1546@gmail.com>",
   "license": "UNLICENSED",
   "private": "true",
   "devDependencies": {
     "@types/chrome": "^0.0.152",
+    "archiver": "^5.3.0",
     "copy-webpack-plugin": "^9.0.1",
     "ts-loader": "^9.2.4",
     "typescript": "^4.3.5",
