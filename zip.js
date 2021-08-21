@@ -1,33 +1,37 @@
 const fs = require('fs');
+const path = require('path');
 const archiver = require('archiver');
 
+const zipPath = path.join(__dirname, '/unmute.zip');
+const distPath = path.join(__dirname, '/dist');
 console.log(`\nChecking unmute.zip...`);
-if (fs.existsSync(`${__dirname}/unmute.zip`)) {
-  fs.unlinkSync(`${__dirname}/unmute.zip`);
-  console.log(`Delete unmute.zip`);
-}
+fs.rm(zipPath, async (err) => {
+  if (!err) {
+    console.log(`  Delete unmute.zip`);
+  }
 
-console.log(`Checking /dist...`);
-const isDist = fs.existsSync(`${__dirname}/dist`);
-if (!isDist) {
-  console.log(`/dist does not exist.`);
-  return;
-}
+  try {
+    console.log(`Checking ${distPath}...`);
+    await fs.promises.access(distPath, fs.constants.F_OK);
 
-console.log('Creating unmute.zip file...');
-const output = fs.createWriteStream(`${__dirname}/unmute.zip`);
-const archive = archiver('zip', {
-  zlib: { level: 9 },
+    console.log(`Creating unmute.zip file...`);
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver('zip', {
+      zlib: { level: 9 },
+    });
+
+    output.on('close', () => {
+      console.log('  Archive has been created.');
+      console.log(`  File size: ${archive.pointer()} total bytes`);
+    });
+
+    archive.on('error', (error) => {
+      throw error;
+    });
+
+    archive.pipe(output);
+    archive.directory(distPath, '').finalize();
+  } catch (error) {
+    console.log(`  ${distPath} does not exist.`);
+  }
 });
-
-output.on('close', () => {
-  console.log(`File size: ${archive.pointer()} total bytes`);
-  console.log('Archive has been created.');
-});
-
-archive.on('error', (error) => {
-  throw error;
-});
-
-archive.pipe(output);
-archive.directory(`${__dirname}/dist`, '').finalize();
