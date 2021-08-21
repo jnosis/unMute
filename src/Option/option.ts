@@ -14,8 +14,7 @@ type StorageKeys =
   | 'offBehavior'
   | 'recentTabIds'
   | 'fixedTabId'
-  | 'wasInit'
-  | 'language';
+  | 'wasInit';
 
 export type StorageProperties = {
   actionMode?: ActionMode;
@@ -55,7 +54,7 @@ export async function loadStorage(
 }
 export async function loadOption(callback: (option: Option) => void) {
   loadStorage(
-    ['actionMode', 'autoMode', 'autoState', 'offBehavior', 'language'],
+    ['actionMode', 'autoMode', 'autoState', 'offBehavior'],
     (items) => {
       const option: Option = {
         actionMode: items.actionMode || defaultOption.actionMode,
