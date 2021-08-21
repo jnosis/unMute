@@ -32,6 +32,7 @@ fs.rm(zipPath, async (err) => {
     archive.pipe(output);
     archive.directory(distPath, '').finalize();
   } catch (error) {
-    console.log(`  ${distPath} does not exist.`);
+    if (error.code === 'ENOENT') console.log(`  ${distPath} does not exist.`);
+    else throw error;
   }
 });
