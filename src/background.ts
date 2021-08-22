@@ -157,9 +157,9 @@ function onCommand(command: Command, tabId: number) {
     case 'fixTab':
       setFixTab(tabId);
       break;
-    case 'dev':
-      showStorage();
-      break;
+    // for Dev-case 'dev':
+    // for Dev-  showStorage();
+    // for Dev-  break;
 
     default:
       throw new Error(`Unavailable command: ${command}`);
@@ -401,7 +401,7 @@ function checkOffBehavior() {
   );
 }
 
-// * for Dev
-function showStorage() {
-  loadStorage(null, (items) => console.table({ ...items }));
-}
+// for Dev-
+// for Dev-function showStorage() {
+// for Dev-  loadStorage(null, (items) => console.table({ ...items }));
+// for Dev-}
