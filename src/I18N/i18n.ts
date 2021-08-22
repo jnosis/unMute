@@ -1,4 +1,6 @@
 // * bypass i18n
+type MessagesJSON = { [id: string]: { message: string } };
+
 export default abstract class I18N {
   static async getMessage(id: string) {
     let lang = navigator.language;
@@ -15,7 +17,7 @@ export default abstract class I18N {
 
   private static async fetchMessagesJSON(
     request: RequestInfo
-  ): Promise<{ [id: string]: { message: string } }> {
+  ): Promise<MessagesJSON> {
     const response = await fetch(request);
     const messages = await response.json();
     return messages;
