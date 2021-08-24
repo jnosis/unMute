@@ -1,6 +1,7 @@
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { exec } = require('child_process');
 const common = require('./webpack.common.js');
 const modify = require('./manifest-loader.js');
 const path = require('path');
@@ -42,5 +43,22 @@ module.exports = merge(common, {
         },
       ],
     }),
+
+    {
+      apply: (compiler) => {
+        compiler.hooks.afterEmit.tap('RunZipJS', (compilation) => {
+          exec('node zip.js', (err, stdout, stderr) => {
+            if (err) {
+              console.error(`exec error: ${err}`);
+              return;
+            }
+
+            console.log('\nRun zip.js');
+            if (stdout) process.stdout.write(stdout);
+            if (stderr) process.stderr.write(stderr);
+          });
+        });
+      },
+    },
   ],
 });

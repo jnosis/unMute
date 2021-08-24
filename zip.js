@@ -4,7 +4,7 @@ const archiver = require('archiver');
 
 const zipPath = path.join(__dirname, '/unmute.zip');
 const distPath = path.join(__dirname, '/dist');
-console.log(`\nChecking unmute.zip...`);
+console.log(`Checking unmute.zip...`);
 fs.rm(zipPath, async (err) => {
   if (!err) {
     console.log(`  Delete unmute.zip`);

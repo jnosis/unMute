@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.dev.js",
-    "prod": "webpack --config webpack/webpack.prod.js && node zip.js",
+    "prod": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist unmute.zip",
     "zip": "node zip.js",
     "delete-zip": "rimraf unmute.zip"
