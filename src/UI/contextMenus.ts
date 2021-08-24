@@ -32,7 +32,8 @@ export default abstract class ContextMenu {
     });
 
     chrome.contextMenus.onClicked.addListener(
-      ({ menuItemId }, tab) => tab?.id && listener(menuItemId, tab.id)
+      ({ menuItemId }, tab) =>
+        tab?.id && listener(menuItemId as ContextMenuId, tab.id)
     );
   }
 
