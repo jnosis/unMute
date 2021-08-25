@@ -29,24 +29,46 @@ function initialize() {
   loadStorage('wasInit', ({ wasInit }) => {
     console.log(`Initialize: ${!!wasInit}`);
     if (wasInit) {
-      _();
+      load();
     } else {
-      initStorage(_);
+      initStorage(load);
     }
   });
 
-  function _() {
+  function load() {
     loadOption((option) => {
-      console.log(`_`);
+      console.log(`load`);
       chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
       ContextMenu.createAll(onContextMenuClick, option);
       doAutoMute();
       updateActionBadge();
+      addListener();
     });
   }
 }
 
-chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
+function addListener() {
+  chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
+    onMessage(message, sender, sendResponse)
+  );
+  chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
+  chrome.commands.onCommand.addListener(
+    (command, tab) => tab.id && onCommand(command as Command, tab.id)
+  );
+  chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
+    onTabActivated(tabId)
+  );
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
+    onTabUpdated(tabId, changeInfo, tab)
+  );
+  chrome.windows.onFocusChanged.addListener((windowId) =>
+    onWindowFocusChanged(windowId)
+  );
+  chrome.tabs.onRemoved.addListener((tabId, _removeInfo) =>
+    onTabRemoved(tabId)
+  );
+}
 
 function onStorageChanged(changes: StorageProperties) {
   if (
@@ -71,10 +93,6 @@ function onStorageChanged(changes: StorageProperties) {
 
   update();
 }
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
-  onMessage(message, sender, sendResponse)
-);
 
 function onMessage(
   message: OptionPageResponse,
@@ -106,12 +124,6 @@ function onMessage(
     sendResponse(message);
   }
 }
-
-chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
-
-chrome.commands.onCommand.addListener(
-  (command, tab) => tab.id && onCommand(command as Command, tab.id)
-);
 
 function onActionClick(tabId: number) {
   console.log(`Action click: ${tabId}`);
@@ -234,10 +246,6 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
   }
 }
 
-chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
-  onTabActivated(tabId)
-);
-
 function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
@@ -256,10 +264,6 @@ function onTabActivated(tabId: number) {
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
-  onTabUpdated(tabId, changeInfo, tab)
-);
 
 function onTabUpdated(
   tabId: number,
@@ -289,10 +293,6 @@ function onTabUpdated(
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
-
-chrome.windows.onFocusChanged.addListener((windowId) =>
-  onWindowFocusChanged(windowId)
-);
 
 function onWindowFocusChanged(windowId: number) {
   console.log(`Window focus changed: ${windowId}`);
@@ -329,8 +329,6 @@ function onWindowFocusChanged(windowId: number) {
     }
   );
 }
-
-chrome.tabs.onRemoved.addListener((tabId, _removeInfo) => onTabRemoved(tabId));
 
 function onTabRemoved(tabId: number) {
   console.log(`Tab removed: ${tabId}`);
@@ -381,10 +379,12 @@ function doAutoMute() {
 }
 
 function updateContextMenus() {
+  console.trace(`updateContextMenus`);
   loadOption((option) => ContextMenu.updateAll(option));
 }
 
 function updateActionBadge() {
+  console.trace(`updateActionBadge`);
   loadStorage(['fixedTabId'], ({ fixedTabId }) =>
     loadOption((option) => ActionBadge.update(option, fixedTabId))
   );

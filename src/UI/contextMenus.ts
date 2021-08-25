@@ -51,47 +51,25 @@ export default abstract class ContextMenu {
   ) {
     console.trace(`Update context menu: ${id}`);
     if (!!updatedProperties) {
-      chrome.contextMenus.update(id, updatedProperties, () =>
-        this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
+      chrome.contextMenus.update(id, updatedProperties);
     } else if (id === 'autoMute') {
-      chrome.contextMenus.update(
-        option.autoState ? 'on' : 'off',
-        {
-          checked: true,
-        },
-        () => this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
-      chrome.contextMenus.update(
-        'muteCurrentTab',
-        {
-          visible: option.autoState ? false : true,
-        },
-        () => this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
-      chrome.contextMenus.update(
-        'toggleAllTabs',
-        {
-          visible: option.autoState ? false : true,
-        },
-        () => this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
+      chrome.contextMenus.update(option.autoState ? 'on' : 'off', {
+        checked: true,
+      });
+      chrome.contextMenus.update('muteCurrentTab', {
+        visible: option.autoState ? false : true,
+      });
+      chrome.contextMenus.update('toggleAllTabs', {
+        visible: option.autoState ? false : true,
+      });
     } else if (id === 'autoMode') {
-      chrome.contextMenus.update(
-        `${option.autoMode}`,
-        {
-          checked: true,
-        },
-        () => this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
+      chrome.contextMenus.update(`${option.autoMode}`, {
+        checked: true,
+      });
     } else if (id === 'actionMode') {
-      chrome.contextMenus.update(
-        `actionMode_${option.actionMode}`,
-        {
-          checked: true,
-        },
-        () => this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-      );
+      chrome.contextMenus.update(`actionMode_${option.actionMode}`, {
+        checked: true,
+      });
     } else if (id === 'muteCurrentTab') {
       const tabs = await chrome.tabs.query({
         active: true,
@@ -106,13 +84,9 @@ export default abstract class ContextMenu {
           chrome.contextMenus.update(id, {
             title: await I18N.getMessage(`contextMenu_${messageId}`),
           });
-          chrome.contextMenus.update(id, { visible: true }, () =>
-            this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-          );
+          chrome.contextMenus.update(id, { visible: true });
         } else {
-          chrome.contextMenus.update(id, { visible: false }, () =>
-            this.catchUpdateErrorBeforeCreate(option, id, updatedProperties)
-          );
+          chrome.contextMenus.update(id, { visible: false });
         }
       }
     }
@@ -157,17 +131,5 @@ export default abstract class ContextMenu {
         }
       }
     );
-  }
-
-  private static catchUpdateErrorBeforeCreate(
-    option: Option,
-    id: ContextMenuId,
-    updatedProperties?: chrome.contextMenus.UpdateProperties
-  ) {
-    if (chrome.runtime.lastError) {
-      setTimeout(() => {
-        ContextMenu.update(option, id, updatedProperties);
-      }, 0);
-    }
   }
 }
