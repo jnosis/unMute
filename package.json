@@ -10,8 +10,16 @@
     "zip": "node zip.js",
     "delete-zip": "rimraf unmute.zip"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jnosis/unMute.git"
+  },
   "author": "unFace <jnosis1546@gmail.com>",
   "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jnosis/unMute/issues"
+  },
+  "homepage": "https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige",
   "private": "true",
   "devDependencies": {
     "@types/chrome": "^0.0.154",
