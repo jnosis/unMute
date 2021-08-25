@@ -2,9 +2,8 @@
 
 <p align="center">
 Manually/Automatically Mute your tabs for Google Chrome™.
-</p><hr>
+</p>
 <p align="center">
-<a href="https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige"><span>Install at Chrome Web Store</span></a><br>
 <a href="https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige"><img src="./image/chrome-web-store.png" alt="크롬 웹 스토어"></a>
 </p><hr>
 
