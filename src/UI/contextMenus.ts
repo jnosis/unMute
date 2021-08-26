@@ -37,13 +37,6 @@ export default abstract class ContextMenu {
     );
   }
 
-  static async updateAll(option: Option) {
-    await this.update(option, 'muteCurrentTab');
-    await this.update(option, 'autoMute');
-    await this.update(option, 'autoMode');
-    await this.update(option, 'actionMode');
-  }
-
   static async update(
     option: Option,
     id: ContextMenuId,

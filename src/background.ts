@@ -43,7 +43,7 @@ function initialize() {
       ContextMenu.createAll(onContextMenuClick, option);
       doAutoMute();
       updateActionBadge();
-      addListener();
+      setTimeout(addListener, 100);
     });
   }
 }
@@ -251,7 +251,7 @@ function onTabActivated(tabId: number) {
 
     newIds.length === oldIds.length &&
     newIds.every((id, index) => id === oldIds[index])
-      ? update('muteCurrentTab')
+      ? update(['muteCurrentTab'])
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
@@ -280,7 +280,7 @@ function onTabUpdated(
 
     newIds.length === oldIds.length &&
     newIds.every((id, index) => id === oldIds[index])
-      ? update('muteCurrentTab')
+      ? update(['muteCurrentTab'])
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
@@ -312,7 +312,7 @@ function onWindowFocusChanged(windowId: number) {
 
         newIds.length === oldIds.length &&
         newIds.every((id, index) => id === oldIds[index])
-          ? update('muteCurrentTab')
+          ? update(['muteCurrentTab'])
           : saveStorage({ recentTabIds: JSON.stringify(newIds) });
       }
 
@@ -335,11 +335,11 @@ function onTabRemoved(tabId: number) {
   });
 }
 
-function update(id?: ContextMenuId) {
+function update(ids?: ContextMenuId[]) {
   console.trace(`update`);
   doAutoMute();
   updateActionBadge();
-  updateContextMenus(id);
+  updateContextMenus(ids);
 }
 
 function doAutoMute() {
@@ -369,15 +369,16 @@ function doAutoMute() {
   );
 }
 
-function updateContextMenus(id?: ContextMenuId) {
-  console.trace(`updateContextMenus: ${id}`);
-  loadOption((option) => {
-    if (!!id) {
-      ContextMenu.update(option, id);
-      return;
-    }
-    ContextMenu.updateAll(option);
-  });
+function updateContextMenus(
+  ids: ContextMenuId[] = [
+    'muteCurrentTab',
+    'autoMute',
+    'autoMode',
+    'actionMode',
+  ]
+) {
+  console.trace(`updateContextMenus: ${ids}`);
+  loadOption((option) => ids.forEach((id) => ContextMenu.update(option, id)));
 }
 
 function updateActionBadge() {
