@@ -1,3 +1,4 @@
+import { Listener } from './listener/listener';
 import Mute from './Mute/mute';
 import {
   ChangeOption,
@@ -48,25 +49,15 @@ function initialize() {
 }
 
 function addListener() {
-  chrome.storage.onChanged.addListener((changes) => onStorageChanged(changes));
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>
-    onMessage(message, sender, sendResponse)
-  );
-  chrome.action.onClicked.addListener((tab) => tab.id && onActionClick(tab.id));
-  chrome.commands.onCommand.addListener(
-    (command, tab) => tab.id && onCommand(command as Command, tab.id)
-  );
-  chrome.tabs.onActivated.addListener(async ({ tabId }: { tabId: number }) =>
-    onTabActivated(tabId)
-  );
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
-    onTabUpdated(tabId, changeInfo, tab)
-  );
-  chrome.windows.onFocusChanged.addListener((windowId) =>
-    onWindowFocusChanged(windowId)
-  );
-  chrome.tabs.onRemoved.addListener((tabId, _removeInfo) =>
-    onTabRemoved(tabId)
+  new Listener(
+    onStorageChanged,
+    onMessage,
+    onActionClick,
+    onCommand,
+    onTabActivated,
+    onTabUpdated,
+    onWindowFocusChanged,
+    onTabRemoved
   );
 }
 
