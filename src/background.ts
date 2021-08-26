@@ -251,7 +251,7 @@ function onTabActivated(tabId: number) {
 
     newIds.length === oldIds.length &&
     newIds.every((id, index) => id === oldIds[index])
-      ? update()
+      ? update('muteCurrentTab')
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
@@ -280,7 +280,7 @@ function onTabUpdated(
 
     newIds.length === oldIds.length &&
     newIds.every((id, index) => id === oldIds[index])
-      ? update()
+      ? update('muteCurrentTab')
       : saveStorage({ recentTabIds: JSON.stringify(newIds) });
   });
 }
@@ -312,7 +312,7 @@ function onWindowFocusChanged(windowId: number) {
 
         newIds.length === oldIds.length &&
         newIds.every((id, index) => id === oldIds[index])
-          ? update()
+          ? update('muteCurrentTab')
           : saveStorage({ recentTabIds: JSON.stringify(newIds) });
       }
 
@@ -335,11 +335,11 @@ function onTabRemoved(tabId: number) {
   });
 }
 
-function update() {
+function update(id?: ContextMenuId) {
   console.trace(`update`);
   doAutoMute();
   updateActionBadge();
-  updateContextMenus();
+  updateContextMenus(id);
 }
 
 function doAutoMute() {
@@ -369,9 +369,15 @@ function doAutoMute() {
   );
 }
 
-function updateContextMenus() {
-  console.trace(`updateContextMenus`);
-  loadOption((option) => ContextMenu.updateAll(option));
+function updateContextMenus(id?: ContextMenuId) {
+  console.trace(`updateContextMenus: ${id}`);
+  loadOption((option) => {
+    if (!!id) {
+      ContextMenu.update(option, id);
+      return;
+    }
+    ContextMenu.updateAll(option);
+  });
 }
 
 function updateActionBadge() {
