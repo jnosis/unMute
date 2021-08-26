@@ -20,10 +20,10 @@ export default abstract class Mute {
         this.doCurrentMode();
         break;
       case 'recent':
-        tabId && this.doRecentMode(tabId);
+        this.doRecentMode(tabId);
         break;
       case 'fix':
-        tabId && this.doFixMode(tabId);
+        this.doFixMode(tabId);
         break;
       case 'all':
         this.doAllMode();
@@ -50,7 +50,7 @@ export default abstract class Mute {
         );
     }
   }
-  static async doRecentMode(recentTabId: number) {
+  static async doRecentMode(recentTabId?: number) {
     console.trace(`Do recent mode: ${recentTabId}`);
     const tabs = await chrome.tabs.query({ audible: true });
     tabs
@@ -59,7 +59,7 @@ export default abstract class Mute {
         chrome.tabs.update(id as number, { muted: id !== recentTabId })
       );
   }
-  static async doFixMode(fixedTabId: number) {
+  static async doFixMode(fixedTabId?: number) {
     console.trace(`Do fix mode: ${fixedTabId}`);
     const tabs = await chrome.tabs.query({ audible: true });
     tabs
