@@ -1,4 +1,4 @@
-import { Listener } from './listener/listener';
+import { Listener } from './Listener/listener';
 import Mute from './Mute/mute';
 import {
   ChangeOption,
