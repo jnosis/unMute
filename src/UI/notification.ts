@@ -1,9 +1,7 @@
 import I18N from '../I18N/i18n';
 
-type OnClickedListener = (notificationId: string) => void;
-
 export default abstract class Notification {
-  static async create(listener: OnClickedListener) {
+  static async create() {
     chrome.notifications.create('updated', {
       type: 'basic',
       iconUrl: './icons/icon128.png',
@@ -13,8 +11,5 @@ export default abstract class Notification {
       )}\n${await I18N.getMessage('changelog_1_8')}`,
       requireInteraction: true,
     });
-    chrome.notifications.onClicked.addListener((notificationId: string) =>
-      listener(notificationId)
-    );
   }
 }

@@ -2,10 +2,8 @@ import I18N from '../I18N/i18n';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
 
-type OnClickedListener = (menuItemId: ContextMenuId, tabId: number) => void;
-
 export default abstract class ContextMenu {
-  static async createAll(listener: OnClickedListener, option: Option) {
+  static async createAll(option: Option) {
     console.trace(`create all context menus`);
     chrome.contextMenus.removeAll(async () => {
       await this.createByIdAndItsChildren(option, 'muteCurrentTab');
@@ -30,11 +28,6 @@ export default abstract class ContextMenu {
       await this.createByIdAndItsChildren(option, 'shortcuts', true);
       await this.createByIdAndItsChildren(option, 'changelog', true);
     });
-
-    chrome.contextMenus.onClicked.addListener(
-      ({ menuItemId }, tab) =>
-        tab?.id && listener(menuItemId as ContextMenuId, tab.id)
-    );
   }
 
   static async update(
