@@ -10,21 +10,22 @@ export class Load {
 }
 
 function onLoad(callback: Function, details?: chrome.runtime.InstalledDetails) {
+  const isUpdated = details?.reason === 'update';
   loadStorage('wasInit', ({ wasInit }) => {
     console.log(`Initialize: ${!!wasInit}`);
     if (wasInit) {
-      load(callback);
+      load(callback, isUpdated);
     } else {
-      initStorage(() => load(callback));
+      initStorage(() => load(callback, isUpdated));
     }
   });
-  if (details?.reason === 'update') Notification.create();
+  if (isUpdated) Notification.create();
 }
 
-function load(callback: Function) {
+function load(callback: Function, isUpdated: boolean) {
   loadOption((option) => {
     console.log(`load`);
-    chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
+    isUpdated || chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
     ContextMenu.createAll(option);
     doAutoMute();
     updateActionBadge();
