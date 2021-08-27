@@ -41,8 +41,56 @@ export function saveStorage(
   console.table({ ...storage });
   chrome.storage.local.set({ ...storage }, callback);
 }
-export function initStorage(callback?: () => void) {
-  saveStorage({ ...defaultOption, wasInit: true }, callback);
+export async function initStorage(callback?: () => void) {
+  const initValues = await getPreviousValues();
+  console.table({ ...initValues });
+  saveStorage(initValues, callback);
+}
+async function getPreviousValues(): Promise<StorageProperties> {
+  const values: StorageProperties = { ...defaultOption, wasInit: true };
+  const previousStorage = await chrome.storage.sync.get();
+  if (!previousStorage) {
+    console.log(`Not exist previous storage`);
+    return values;
+  }
+
+  if (previousStorage.BROWSER_ACTION_MODE !== undefined) {
+    switch (previousStorage.BROWSER_ACTION_MODE) {
+      case 'mute_current_tab':
+        values.actionMode = 'muteCurrentTab';
+        break;
+      case 'auto_mute':
+        values.actionMode = 'autoMute';
+        break;
+      case 'auto_recent':
+        values.actionMode = 'autoMode';
+        break;
+      case 'auto_fix':
+        values.actionMode = 'fixTab';
+        break;
+      case 'toggle_all_tabs':
+        values.actionMode = 'toggleAllTabs';
+        break;
+
+      default:
+        values.actionMode = 'muteCurrentTab';
+        break;
+    }
+  }
+  if (previousStorage.AUTO_RECENT) {
+    values.autoMode = 'recent';
+  } else if (previousStorage.AUTO_FIX) {
+    values.autoMode = 'fix';
+  } else {
+    values.autoMode = 'current';
+  }
+  values.autoState = !!previousStorage.AUTO_MUTE;
+  if (previousStorage.AUTO_OFF !== undefined) {
+    values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
+  }
+
+  chrome.storage.sync.clear();
+  return values;
 }
 
 export async function loadStorage(
