@@ -302,6 +302,12 @@ function update(ids?: ContextMenuId[]) {
   updateContextMenus(ids);
 }
 
+async function checkRecentTabIds(ids: number[]): Promise<number[]> {
+  const tabs = await chrome.tabs.query({ audible: true });
+  const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
+  return ids.filter((id) => recentRecentTabIds.includes(id));
+}
+
 async function updateRecentTabIds(
   tabId: number,
   ids: number[],
@@ -315,9 +321,8 @@ async function updateRecentTabIds(
     } else {
       updatedIds = [...new Set([...ids, tabId])];
     }
-  } else if (ids.includes(tabId)) {
-    updatedIds = ids.filter((id) => id !== tabId);
   }
+  updatedIds = await checkRecentTabIds(updatedIds);
 
   return updatedIds;
 }
