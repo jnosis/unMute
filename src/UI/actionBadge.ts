@@ -1,3 +1,4 @@
+import { Api } from '../Api/api';
 import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 
@@ -31,41 +32,41 @@ export default abstract class ActionBadge {
 
   private static async updateMuteCurrentTab() {
     console.trace(`Update action: muteCurrentTab`);
-    chrome.action.setBadgeText({ text: '' });
-    const tabs = await chrome.tabs.query({});
+    chrome.browserAction.setBadgeText({ text: '' });
+    const tabs = await Api.queryTabs({});
     tabs.forEach((tab) => {
       if (tab.audible) {
-        tab.id && chrome.action.enable(tab.id);
+        tab.id && chrome.browserAction.enable(tab.id);
       } else {
-        tab.id && chrome.action.disable(tab.id);
+        tab.id && chrome.browserAction.disable(tab.id);
       }
     });
   }
 
   private static async updateToggleAllTabs(autoState: boolean) {
     console.trace(`Update action: toggleAllTabs: ${autoState}`);
-    chrome.action.setBadgeText({ text: '' });
-    const tabs = await chrome.tabs.query({});
+    chrome.browserAction.setBadgeText({ text: '' });
+    const tabs = await Api.queryTabs({});
     if (!autoState) {
-      tabs.forEach((tab) => tab.id && chrome.action.enable(tab.id));
+      tabs.forEach((tab) => tab.id && chrome.browserAction.enable(tab.id));
     } else {
-      tabs.forEach((tab) => tab.id && chrome.action.disable(tab.id));
+      tabs.forEach((tab) => tab.id && chrome.browserAction.disable(tab.id));
     }
   }
 
   private static async updateAutoMute(autoState: boolean) {
     console.trace(`Update action: autoState: ${autoState}`);
-    const tabs = await chrome.tabs.query({});
+    const tabs = await Api.queryTabs({});
     const color: Color = autoState ? this.green : this.red;
     const text: 'on' | 'off' = autoState ? 'on' : 'off';
     tabs.forEach((tab) => {
       const tabId = tab.id;
       if (tabId) {
-        chrome.action.enable(tabId);
-        chrome.action.setBadgeBackgroundColor({ color, tabId });
+        chrome.browserAction.enable(tabId);
+        chrome.browserAction.setBadgeBackgroundColor({ color, tabId });
       }
     });
-    chrome.action.setBadgeText({ text });
+    chrome.browserAction.setBadgeText({ text });
   }
 
   private static async updateAutoMode(autoMode: AutoMode, autoState: boolean) {
@@ -89,16 +90,16 @@ export default abstract class ActionBadge {
         break;
     }
 
-    const tabs = await chrome.tabs.query({});
+    const tabs = await Api.queryTabs({});
     const color: Color = autoState ? this.green : this.red;
     tabs.forEach((tab) => {
       const tabId = tab.id;
       if (tabId) {
-        chrome.action.enable(tabId);
-        chrome.action.setBadgeBackgroundColor({ color, tabId });
+        chrome.browserAction.enable(tabId);
+        chrome.browserAction.setBadgeBackgroundColor({ color, tabId });
       }
     });
-    chrome.action.setBadgeText({ text });
+    chrome.browserAction.setBadgeText({ text });
   }
 
   private static async updateFixTab(
@@ -107,14 +108,14 @@ export default abstract class ActionBadge {
     fixTabId?: number
   ) {
     console.trace(`Update action: fixTab: ${fixTabId}`);
-    const tabs = await chrome.tabs.query({});
+    const tabs = await Api.queryTabs({});
     if (autoState && autoMode === 'fix') {
       tabs.forEach((tab) => {
         const tabId = tab.id;
         const color: Color = tabId === fixTabId ? this.green : this.red;
         if (tabId) {
-          chrome.action.enable(tabId);
-          chrome.action.setBadgeBackgroundColor({ color, tabId });
+          chrome.browserAction.enable(tabId);
+          chrome.browserAction.setBadgeBackgroundColor({ color, tabId });
         }
       });
     } else {
@@ -122,11 +123,11 @@ export default abstract class ActionBadge {
         const tabId = tab.id;
         const color: Color = this.grey;
         if (tabId) {
-          chrome.action.setBadgeBackgroundColor({ color, tabId });
-          chrome.action.disable(tabId);
+          chrome.browserAction.setBadgeBackgroundColor({ color, tabId });
+          chrome.browserAction.disable(tabId);
         }
       });
     }
-    chrome.action.setBadgeText({ text: 'fix' });
+    chrome.browserAction.setBadgeText({ text: 'fix' });
   }
 }

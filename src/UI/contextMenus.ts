@@ -1,3 +1,4 @@
+import { Api } from '../Api/api';
 import I18N from '../I18N/i18n';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
@@ -57,7 +58,7 @@ export default abstract class ContextMenu {
         checked: true,
       });
     } else if (id === 'muteCurrentTab') {
-      const tabs = await chrome.tabs.query({
+      const tabs = await Api.queryTabs({
         active: true,
         currentWindow: true,
       });
@@ -90,7 +91,9 @@ export default abstract class ContextMenu {
       {
         id,
         title: await I18N.getMessage(`contextMenu_${id}`),
-        contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
+        contexts: isUI
+          ? ['browser_action']
+          : ['page', 'video', 'audio', 'browser_action'],
       },
       () => {
         if (hasChildId && childIds) {
@@ -101,8 +104,8 @@ export default abstract class ContextMenu {
               parentId: id,
               title: await I18N.getMessage(`contextMenu_${childId}`),
               contexts: isUI
-                ? ['action']
-                : ['page', 'video', 'audio', 'action'],
+                ? ['browser_action']
+                : ['page', 'video', 'audio', 'browser_action'],
               type: 'radio',
               checked:
                 id === 'autoMute'

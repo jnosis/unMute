@@ -1,14 +1,15 @@
+import { Api } from '../Api/api';
 import { AutoMode } from '../types/types';
 
 export default abstract class Mute {
   static async toggleMute(tabId: number) {
-    const tab = await chrome.tabs.get(tabId);
+    const tab = await Api.getTab(tabId);
     let muted = !tab.mutedInfo?.muted;
     console.trace(`Toggling current tab: ${muted}`);
     chrome.tabs.update(tabId, { muted });
   }
   static async toggleAllTab() {
-    const tabs = await chrome.tabs.query({ audible: true });
+    const tabs = await Api.queryTabs({ audible: true });
     console.trace(`Toggling all tabs`);
     tabs.forEach((tab) => tab.id && this.toggleMute(tab.id));
   }
@@ -34,8 +35,8 @@ export default abstract class Mute {
     }
   }
   static async doCurrentMode() {
-    const tabs = await chrome.tabs.query({ audible: true });
-    const currentTabs = await chrome.tabs.query({
+    const tabs = await Api.queryTabs({ audible: true });
+    const currentTabs = await Api.queryTabs({
       active: true,
       currentWindow: true,
     });
@@ -52,7 +53,7 @@ export default abstract class Mute {
   }
   static async doRecentMode(recentTabId?: number) {
     console.trace(`Do recent mode: ${recentTabId}`);
-    const tabs = await chrome.tabs.query({ audible: true });
+    const tabs = await Api.queryTabs({ audible: true });
     tabs
       .map((tab) => tab.id)
       .forEach((id) =>
@@ -61,7 +62,7 @@ export default abstract class Mute {
   }
   static async doFixMode(fixedTabId?: number) {
     console.trace(`Do fix mode: ${fixedTabId}`);
-    const tabs = await chrome.tabs.query({ audible: true });
+    const tabs = await Api.queryTabs({ audible: true });
     tabs
       .map((tab) => tab.id)
       .forEach((id) =>
@@ -70,13 +71,13 @@ export default abstract class Mute {
   }
   static async doAllMode() {
     console.trace(`Do all mode`);
-    const tabs = await chrome.tabs.query({ audible: true, muted: false });
+    const tabs = await Api.queryTabs({ audible: true, muted: false });
     tabs
       .map((tab) => tab.id)
       .forEach((id) => chrome.tabs.update(id as number, { muted: true }));
   }
   static async releaseAllMute() {
-    const tabs = await chrome.tabs.query({ audible: true, muted: true });
+    const tabs = await Api.queryTabs({ audible: true, muted: true });
     tabs.forEach(
       (tab) => tab.id && chrome.tabs.update(tab.id, { muted: false })
     );

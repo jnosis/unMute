@@ -1,3 +1,4 @@
+import { Api } from '../Api/api';
 import { ActionMode, AutoMode, OffBehavior } from '../types/types';
 
 export type Option = {
@@ -48,7 +49,7 @@ export async function initStorage(callback?: () => void) {
 }
 async function getPreviousValues(): Promise<StorageProperties> {
   const values: StorageProperties = { ...defaultOption, wasInit: true };
-  const previousStorage = await chrome.storage.sync.get();
+  const previousStorage = await Api.getSyncStorage();
   if (!previousStorage) {
     console.log(`Not exist previous storage`);
     return values;

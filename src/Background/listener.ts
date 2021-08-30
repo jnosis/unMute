@@ -1,3 +1,4 @@
+import { Api } from '../Api/api';
 import Mute from '../Mute/mute';
 import {
   ChangeOption,
@@ -24,11 +25,11 @@ export class Listener {
 
     chrome.runtime.onMessage.addListener(onMessage);
 
-    chrome.notifications.onClicked.addListener((notificationId: string) =>
+    chrome.notifications.onClicked.addListener((notificationId) =>
       onNotificationClick(notificationId)
     );
 
-    chrome.action.onClicked.addListener(
+    chrome.browserAction.onClicked.addListener(
       (tab) => tab.id && onActionClick(tab.id)
     );
 
@@ -61,7 +62,9 @@ function onNotificationClick(notificationId: string) {
   chrome.notifications.clear(notificationId);
 }
 
-function onStorageChanged(changes: StorageProperties) {
+function onStorageChanged(changes: {
+  [key: string]: chrome.storage.StorageChange;
+}) {
   if (
     !changes.actionMode &&
     !changes.autoState &&
@@ -75,7 +78,7 @@ function onStorageChanged(changes: StorageProperties) {
   console.table({ ...changes });
 
   if (changes.autoState) {
-    const autoState = changes.autoState as chrome.storage.StorageChange;
+    const autoState = changes.autoState;
     if (!autoState.newValue) {
       checkOffBehavior();
     }
@@ -231,7 +234,7 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
-    const tab = await chrome.tabs.get(tabId);
+    const tab = await Api.getTab(tabId);
     const audible = !!tab.audible;
     const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
     await setUpdatedRecentTabIds(tabId, ids, audible, true);
@@ -245,7 +248,7 @@ function onTabUpdated(
 ) {
   console.log(`Tab updated: ${tabId}`);
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    const window = await chrome.windows.getCurrent();
+    const window = await Api.getCurrentWindow();
     console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
     const audible = !!tab.audible;
@@ -260,7 +263,7 @@ function onWindowFocusChanged(windowId: number) {
   loadStorage(
     ['autoMode', 'recentTabIds'],
     async ({ autoMode, recentTabIds }) => {
-      const tabs = await chrome.tabs.query({
+      const tabs = await Api.queryTabs({
         active: true,
         currentWindow: true,
       });
@@ -288,7 +291,7 @@ function onTabRemoved(tabId: number) {
 }
 
 async function checkRecentTabIds(ids: number[]): Promise<number[]> {
-  const tabs = await chrome.tabs.query({ audible: true });
+  const tabs = await Api.queryTabs({ audible: true });
   const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
   return ids.filter((id) => recentRecentTabIds.includes(id));
 }
