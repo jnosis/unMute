@@ -65,3 +65,69 @@ export namespace Api.storage {
   export const sync = new SyncStorageArea();
   export const local = new LocalStorageArea();
 }
+
+export namespace Api.action {
+  export function setBadgeText(
+    details: chrome.browserAction.BadgeTextDetails
+  ): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.browserAction.setBadgeText(details, resolve)
+    );
+  }
+
+  export function setBadgeBackgroundColor(
+    details: chrome.browserAction.BadgeBackgroundColorDetails
+  ): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.browserAction.setBadgeBackgroundColor(details, resolve)
+    );
+  }
+
+  export function enable(tabId?: number): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.browserAction.enable(tabId, resolve)
+    );
+  }
+
+  export function disable(tabId?: number): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.browserAction.disable(tabId, resolve)
+    );
+  }
+}
+
+export namespace Api.contextMenus {
+  export type UpdateProperties = chrome.contextMenus.UpdateProperties;
+
+  export function create(
+    createProperties: chrome.contextMenus.CreateProperties
+  ): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.contextMenus.create(createProperties, resolve)
+    );
+  }
+
+  export function update(
+    id: string,
+    updateProperties: chrome.contextMenus.UpdateProperties
+  ): Promise<void> {
+    return new Promise((resolve) =>
+      chrome.contextMenus.update(id, updateProperties, resolve)
+    );
+  }
+
+  export function removeAll(): Promise<void> {
+    return new Promise((resolve) => chrome.contextMenus.removeAll(resolve));
+  }
+}
+
+export namespace Api.notifications {
+  export function create(
+    notificationId: string,
+    options: chrome.notifications.NotificationOptions
+  ): Promise<string> {
+    return new Promise((resolve) =>
+      chrome.notifications.create(notificationId, options, resolve)
+    );
+  }
+}

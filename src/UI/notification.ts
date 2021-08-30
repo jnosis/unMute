@@ -1,8 +1,9 @@
+import { Api } from '../Api/api';
 import I18N from '../I18N/i18n';
 
 export default abstract class Notification {
   static async create() {
-    chrome.notifications.create('updated', {
+    Api.notifications.create('updated', {
       type: 'basic',
       iconUrl: './icons/icon128.png',
       title: await I18N.getMessage('notificationTitle'),
