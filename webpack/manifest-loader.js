@@ -4,5 +4,5 @@ module.exports = function makeManifest(content) {
   delete manifest.commands.dev;
   delete manifest.options_ui.open_in_tab;
 
-  return JSON.stringify(manifest);
+  return JSON.stringify(manifest, null, 2);
 };
