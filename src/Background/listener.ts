@@ -24,7 +24,7 @@ export class Listener {
 
     chrome.runtime.onMessage.addListener(onMessage);
 
-    chrome.notifications.onClicked.addListener((notificationId: string) =>
+    chrome.notifications.onClicked.addListener((notificationId) =>
       onNotificationClick(notificationId)
     );
 
@@ -61,7 +61,9 @@ function onNotificationClick(notificationId: string) {
   chrome.notifications.clear(notificationId);
 }
 
-function onStorageChanged(changes: StorageProperties) {
+function onStorageChanged(changes: {
+  [key: string]: chrome.storage.StorageChange;
+}) {
   if (
     !changes.actionMode &&
     !changes.autoState &&

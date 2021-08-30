@@ -83,7 +83,7 @@ export default abstract class ContextMenu {
     id: ContextMenuId,
     isUI: boolean = false,
     hasChildId: boolean = false,
-    childIds?: Array<ContextMenuId>
+    childIds?: ContextMenuId[]
   ) {
     console.trace(`Create context menu: ${id}`);
     chrome.contextMenus.create(
