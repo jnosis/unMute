@@ -58,7 +58,7 @@ export default abstract class ContextMenu {
         checked: true,
       });
     } else if (id === 'muteCurrentTab') {
-      const tabs = await Api.queryTabs({
+      const tabs = await Api.tabs.query({
         active: true,
         currentWindow: true,
       });

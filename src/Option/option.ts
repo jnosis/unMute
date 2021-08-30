@@ -34,13 +34,14 @@ export const defaultOption: Option = {
   offBehavior: 'release',
 };
 
-export function saveStorage(
+export async function saveStorage(
   storage: StorageProperties = defaultOption,
   callback?: () => void
 ) {
   console.trace(`Save storage: ${storage}`);
   console.table({ ...storage });
-  chrome.storage.local.set({ ...storage }, callback);
+  await Api.storage.local.set({ ...storage });
+  callback && callback();
 }
 export async function initStorage(callback?: () => void) {
   const initValues = await getPreviousValues();
@@ -49,7 +50,7 @@ export async function initStorage(callback?: () => void) {
 }
 async function getPreviousValues(): Promise<StorageProperties> {
   const values: StorageProperties = { ...defaultOption, wasInit: true };
-  const previousStorage = await Api.getSyncStorage();
+  const previousStorage = await Api.storage.sync.get();
   if (!previousStorage) {
     console.log(`Not exist previous storage`);
     return values;
@@ -90,7 +91,7 @@ async function getPreviousValues(): Promise<StorageProperties> {
     values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
   }
 
-  chrome.storage.sync.clear();
+  Api.storage.sync.clear();
   return values;
 }
 
@@ -99,7 +100,8 @@ export async function loadStorage(
   callback: (items: StorageProperties) => void
 ) {
   console.trace(`Load storage: ${keys}`);
-  chrome.storage.local.get(keys, callback);
+  const items = await Api.storage.local.get(keys);
+  callback(items);
 }
 export async function loadOption(callback: (option: Option) => void) {
   loadStorage(

@@ -1,4 +1,9 @@
-import { initStorage, loadOption, loadStorage } from '../Option/option';
+import {
+  initStorage,
+  loadOption,
+  loadStorage,
+  saveStorage,
+} from '../Option/option';
 import ContextMenu from '../UI/contextMenus';
 import Notification from '../UI/notification';
 import { doAutoMute, updateActionBadge } from './update';
@@ -25,7 +30,7 @@ function onLoad(callback: Function, details?: chrome.runtime.InstalledDetails) {
 function load(callback: Function, isUpdated: boolean) {
   loadOption((option) => {
     console.log(`load`);
-    isUpdated || chrome.storage.local.set({ recentTabIds: JSON.stringify([]) });
+    isUpdated || saveStorage({ recentTabIds: JSON.stringify([]) });
     ContextMenu.createAll(option);
     doAutoMute();
     updateActionBadge();

@@ -234,7 +234,7 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
-    const tab = await Api.getTab(tabId);
+    const tab = await Api.tabs.get(tabId);
     const audible = !!tab.audible;
     const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
     await setUpdatedRecentTabIds(tabId, ids, audible, true);
@@ -248,7 +248,7 @@ function onTabUpdated(
 ) {
   console.log(`Tab updated: ${tabId}`);
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    const window = await Api.getCurrentWindow();
+    const window = await Api.windows.getCurrent();
     console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
     const audible = !!tab.audible;
@@ -263,7 +263,7 @@ function onWindowFocusChanged(windowId: number) {
   loadStorage(
     ['autoMode', 'recentTabIds'],
     async ({ autoMode, recentTabIds }) => {
-      const tabs = await Api.queryTabs({
+      const tabs = await Api.tabs.query({
         active: true,
         currentWindow: true,
       });
@@ -291,7 +291,7 @@ function onTabRemoved(tabId: number) {
 }
 
 async function checkRecentTabIds(ids: number[]): Promise<number[]> {
-  const tabs = await Api.queryTabs({ audible: true });
+  const tabs = await Api.tabs.query({ audible: true });
   const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
   return ids.filter((id) => recentRecentTabIds.includes(id));
 }
