@@ -1,12 +1,24 @@
 const { merge } = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
-const common = require('./webpack/webpack.common.js');
+const { exec } = require('child_process');
 const dev = require('./webpack/webpack.dev.js');
 const prod = require('./webpack/webpack.prod.js');
 const modify = require('./webpack/manifest-loader.js');
+// const path = require('path');
+// const api = path.join(__dirname, 'src/Api/api.ts');
 
 module.exports = (env) => {
+  // const loader = path.join(__dirname, `webpack/dev-code-disabler.js`);
   return merge(!!env.production ? prod : dev, {
+    // module: {
+    //   rules: [
+    //     {
+    //       test: /\.tsx?$/,
+    //       use: loader,
+    //       resource: api,
+    //     },
+    //   ],
+    // },
     plugins: [
       new CopyPlugin({
         patterns: [
@@ -19,6 +31,23 @@ module.exports = (env) => {
           },
         ],
       }),
+
+      {
+        apply: (compiler) => {
+          compiler.hooks.afterEmit.tap('RunZipJS', (compilation) => {
+            exec(`node zip.js ${env.platform}`, (err, stdout, stderr) => {
+              if (err) {
+                console.error(`exec error: ${err}`);
+                return;
+              }
+
+              console.log('\nRun zip.js');
+              if (stdout) process.stdout.write(stdout);
+              if (stderr) process.stderr.write(stderr);
+            });
+          });
+        },
+      },
     ],
   });
 };
