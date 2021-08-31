@@ -3,7 +3,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { exec } = require('child_process');
 const common = require('./webpack.common.js');
-const modify = require('./manifest-loader.js');
 const path = require('path');
 const loader = path.join(__dirname, 'dev-code-disabler.js');
 const background = path.join(__dirname, '..', 'src/background.ts');
@@ -32,16 +31,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: './image/icons/prod', to: './icons' },
-        {
-          from: './public/manifest.json',
-          to: './',
-          transform(content, path) {
-            return modify(content);
-          },
-        },
-      ],
+      patterns: [{ from: './image/icons/prod', to: './icons' }],
     }),
 
     {

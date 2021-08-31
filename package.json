@@ -3,12 +3,18 @@
   "version": "2.0.0",
   "description": "",
   "scripts": {
-    "dev": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.dev.js",
-    "prod": "webpack --config webpack/webpack.prod.js",
+    "dev": "webpack --env platform=chrome --watch",
+    "build": "webpack --env platform=chrome",
+    "prod": "webpack --env platform=chrome --env production",
     "clean": "rimraf dist unmute.zip",
     "zip": "node zip.js",
-    "delete-zip": "rimraf unmute.zip"
+    "delete-zip": "rimraf unmute.zip",
+    "dev:chrome": "webpack --env platform=chrome --watch",
+    "build:chrome": "webpack --env platform=chrome",
+    "prod:chrome": "webpack --env platform=chrome --env production",
+    "dev:firefox": "webpack --env platform=firefox --watch",
+    "build:firefox": "webpack --env platform=firefox",
+    "prod:firefox": "webpack --env platform=firefox --env production"
   },
   "repository": {
     "type": "git",
