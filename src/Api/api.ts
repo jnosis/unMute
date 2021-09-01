@@ -1,5 +1,5 @@
 // Promisify chrome api
-export namespace Api.tabs {
+export namespace browser.tabs {
   export function get(tabId: number): Promise<chrome.tabs.Tab> {
     return new Promise((resolve) => chrome.tabs.get(tabId, resolve));
   }
@@ -20,13 +20,13 @@ export namespace Api.tabs {
   }
 }
 
-export namespace Api.windows {
+export namespace browser.windows {
   export function getCurrent(): Promise<chrome.windows.Window> {
     return new Promise((resolve) => chrome.windows.getCurrent(resolve));
   }
 }
 
-export namespace Api.storage {
+export namespace browser.storage {
   interface StorageArea {
     get(
       keys: string | string[] | { [key: string]: any } | null
@@ -66,7 +66,7 @@ export namespace Api.storage {
   export const local = new LocalStorageArea();
 }
 
-export namespace Api.action {
+export namespace browser.action {
   export function setBadgeText(
     details: chrome.browserAction.BadgeTextDetails
   ): Promise<void> {
@@ -96,7 +96,7 @@ export namespace Api.action {
   }
 }
 
-export namespace Api.contextMenus {
+export namespace browser.contextMenus {
   export type UpdateProperties = chrome.contextMenus.UpdateProperties;
 
   export function create(
@@ -121,7 +121,7 @@ export namespace Api.contextMenus {
   }
 }
 
-export namespace Api.notifications {
+export namespace browser.notifications {
   export function create(
     notificationId: string,
     options: chrome.notifications.NotificationOptions

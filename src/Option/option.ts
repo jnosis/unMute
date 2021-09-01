@@ -1,4 +1,4 @@
-import { Api } from '../Api/api';
+import { browser } from '../Api/api';
 import { ActionMode, AutoMode, OffBehavior } from '../types/types';
 
 export type Option = {
@@ -40,7 +40,7 @@ export async function saveStorage(
 ) {
   console.trace(`Save storage: ${storage}`);
   console.table({ ...storage });
-  await Api.storage.local.set({ ...storage });
+  await browser.storage.local.set({ ...storage });
   callback && callback();
 }
 export async function initStorage(callback?: () => void) {
@@ -50,7 +50,7 @@ export async function initStorage(callback?: () => void) {
 }
 async function getPreviousValues(): Promise<StorageProperties> {
   const values: StorageProperties = { ...defaultOption, wasInit: true };
-  const previousStorage = await Api.storage.sync.get();
+  const previousStorage = await browser.storage.sync.get();
   if (!previousStorage) {
     console.log(`Not exist previous storage`);
     return values;
@@ -91,7 +91,7 @@ async function getPreviousValues(): Promise<StorageProperties> {
     values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
   }
 
-  Api.storage.sync.clear();
+  browser.storage.sync.clear();
   return values;
 }
 
@@ -100,7 +100,7 @@ export async function loadStorage(
   callback: (items: StorageProperties) => void
 ) {
   console.trace(`Load storage: ${keys}`);
-  const items = await Api.storage.local.get(keys);
+  const items = await browser.storage.local.get(keys);
   callback(items);
 }
 export async function loadOption(callback: (option: Option) => void) {

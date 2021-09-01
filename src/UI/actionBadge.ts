@@ -1,4 +1,4 @@
-import { Api } from '../Api/api';
+import { browser } from '../Api/api';
 import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 
@@ -32,41 +32,41 @@ export default abstract class ActionBadge {
 
   private static async updateMuteCurrentTab() {
     console.trace(`Update action: muteCurrentTab`);
-    Api.action.setBadgeText({ text: '' });
-    const tabs = await Api.tabs.query({});
+    browser.action.setBadgeText({ text: '' });
+    const tabs = await browser.tabs.query({});
     tabs.forEach((tab) => {
       if (tab.audible) {
-        tab.id && Api.action.enable(tab.id);
+        tab.id && browser.action.enable(tab.id);
       } else {
-        tab.id && Api.action.disable(tab.id);
+        tab.id && browser.action.disable(tab.id);
       }
     });
   }
 
   private static async updateToggleAllTabs(autoState: boolean) {
     console.trace(`Update action: toggleAllTabs: ${autoState}`);
-    Api.action.setBadgeText({ text: '' });
-    const tabs = await Api.tabs.query({});
+    browser.action.setBadgeText({ text: '' });
+    const tabs = await browser.tabs.query({});
     if (!autoState) {
-      tabs.forEach((tab) => tab.id && Api.action.enable(tab.id));
+      tabs.forEach((tab) => tab.id && browser.action.enable(tab.id));
     } else {
-      tabs.forEach((tab) => tab.id && Api.action.disable(tab.id));
+      tabs.forEach((tab) => tab.id && browser.action.disable(tab.id));
     }
   }
 
   private static async updateAutoMute(autoState: boolean) {
     console.trace(`Update action: autoState: ${autoState}`);
-    const tabs = await Api.tabs.query({});
+    const tabs = await browser.tabs.query({});
     const color: Color = autoState ? this.green : this.red;
     const text: 'on' | 'off' = autoState ? 'on' : 'off';
     tabs.forEach((tab) => {
       const tabId = tab.id;
       if (tabId) {
-        Api.action.enable(tabId);
-        Api.action.setBadgeBackgroundColor({ color, tabId });
+        browser.action.enable(tabId);
+        browser.action.setBadgeBackgroundColor({ color, tabId });
       }
     });
-    Api.action.setBadgeText({ text });
+    browser.action.setBadgeText({ text });
   }
 
   private static async updateAutoMode(autoMode: AutoMode, autoState: boolean) {
@@ -90,16 +90,16 @@ export default abstract class ActionBadge {
         break;
     }
 
-    const tabs = await Api.tabs.query({});
+    const tabs = await browser.tabs.query({});
     const color: Color = autoState ? this.green : this.red;
     tabs.forEach((tab) => {
       const tabId = tab.id;
       if (tabId) {
-        Api.action.enable(tabId);
-        Api.action.setBadgeBackgroundColor({ color, tabId });
+        browser.action.enable(tabId);
+        browser.action.setBadgeBackgroundColor({ color, tabId });
       }
     });
-    Api.action.setBadgeText({ text });
+    browser.action.setBadgeText({ text });
   }
 
   private static async updateFixTab(
@@ -108,14 +108,14 @@ export default abstract class ActionBadge {
     fixTabId?: number
   ) {
     console.trace(`Update action: fixTab: ${fixTabId}`);
-    const tabs = await Api.tabs.query({});
+    const tabs = await browser.tabs.query({});
     if (autoState && autoMode === 'fix') {
       tabs.forEach((tab) => {
         const tabId = tab.id;
         const color: Color = tabId === fixTabId ? this.green : this.red;
         if (tabId) {
-          Api.action.enable(tabId);
-          Api.action.setBadgeBackgroundColor({ color, tabId });
+          browser.action.enable(tabId);
+          browser.action.setBadgeBackgroundColor({ color, tabId });
         }
       });
     } else {
@@ -123,11 +123,11 @@ export default abstract class ActionBadge {
         const tabId = tab.id;
         const color: Color = this.grey;
         if (tabId) {
-          Api.action.setBadgeBackgroundColor({ color, tabId });
-          Api.action.disable(tabId);
+          browser.action.setBadgeBackgroundColor({ color, tabId });
+          browser.action.disable(tabId);
         }
       });
     }
-    Api.action.setBadgeText({ text: 'fix' });
+    browser.action.setBadgeText({ text: 'fix' });
   }
 }

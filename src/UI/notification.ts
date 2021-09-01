@@ -1,9 +1,9 @@
-import { Api } from '../Api/api';
+import { browser } from '../Api/api';
 import I18N from '../I18N/i18n';
 
 export default abstract class Notification {
   static async create() {
-    Api.notifications.create('updated', {
+    browser.notifications.create('updated', {
       type: 'basic',
       iconUrl: './icons/icon128.png',
       title: await I18N.getMessage('notificationTitle'),

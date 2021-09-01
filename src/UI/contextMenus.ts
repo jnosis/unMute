@@ -1,4 +1,4 @@
-import { Api } from '../Api/api';
+import { browser } from '../Api/api';
 import I18N from '../I18N/i18n';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
@@ -6,7 +6,7 @@ import { ContextMenuId } from '../types/types';
 export default abstract class ContextMenu {
   static async createAll(option: Option) {
     console.trace(`create all context menus`);
-    await Api.contextMenus.removeAll();
+    await browser.contextMenus.removeAll();
 
     await this.createByIdAndItsChildren(option, 'muteCurrentTab');
     await this.createByIdAndItsChildren(option, 'autoMute', false, true, [
@@ -34,31 +34,31 @@ export default abstract class ContextMenu {
   static async update(
     option: Option,
     id: ContextMenuId,
-    updatedProperties?: Api.contextMenus.UpdateProperties
+    updatedProperties?: browser.contextMenus.UpdateProperties
   ) {
     console.trace(`Update context menu: ${id}`);
     if (!!updatedProperties) {
-      Api.contextMenus.update(id, updatedProperties);
+      browser.contextMenus.update(id, updatedProperties);
     } else if (id === 'autoMute') {
-      Api.contextMenus.update(option.autoState ? 'on' : 'off', {
+      browser.contextMenus.update(option.autoState ? 'on' : 'off', {
         checked: true,
       });
-      Api.contextMenus.update('muteCurrentTab', {
+      browser.contextMenus.update('muteCurrentTab', {
         visible: option.autoState ? false : true,
       });
-      Api.contextMenus.update('toggleAllTabs', {
+      browser.contextMenus.update('toggleAllTabs', {
         visible: option.autoState ? false : true,
       });
     } else if (id === 'autoMode') {
-      Api.contextMenus.update(`${option.autoMode}`, {
+      browser.contextMenus.update(`${option.autoMode}`, {
         checked: true,
       });
     } else if (id === 'actionMode') {
-      Api.contextMenus.update(`actionMode_${option.actionMode}`, {
+      browser.contextMenus.update(`actionMode_${option.actionMode}`, {
         checked: true,
       });
     } else if (id === 'muteCurrentTab') {
-      const tabs = await Api.tabs.query({
+      const tabs = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
@@ -68,12 +68,12 @@ export default abstract class ContextMenu {
           const messageId: ContextMenuId = tab.mutedInfo?.muted
             ? 'unmuteCurrentTab'
             : 'muteCurrentTab';
-          Api.contextMenus.update(id, {
+          browser.contextMenus.update(id, {
             title: await I18N.getMessage(`contextMenu_${messageId}`),
           });
-          Api.contextMenus.update(id, { visible: true });
+          browser.contextMenus.update(id, { visible: true });
         } else {
-          Api.contextMenus.update(id, { visible: false });
+          browser.contextMenus.update(id, { visible: false });
         }
       }
     }
@@ -87,7 +87,7 @@ export default abstract class ContextMenu {
     childIds?: Array<ContextMenuId>
   ) {
     console.trace(`Create context menu: ${id}`);
-    await Api.contextMenus.create({
+    await browser.contextMenus.create({
       id,
       title: await I18N.getMessage(`contextMenu_${id}`),
       contexts: isUI
@@ -97,7 +97,7 @@ export default abstract class ContextMenu {
     if (hasChildId && childIds) {
       childIds.forEach(async (childId) => {
         console.trace(`Create child context menu: ${childId}`);
-        Api.contextMenus.create({
+        browser.contextMenus.create({
           id: `${childId}`,
           parentId: id,
           title: await I18N.getMessage(`contextMenu_${childId}`),
