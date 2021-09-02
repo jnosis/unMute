@@ -1,3 +1,4 @@
+import { browser } from '../Api/api';
 import { Listener } from './listener';
 import { Load } from './load';
 
@@ -12,7 +13,7 @@ function onStart() {
   new Load(addListener);
 }
 
-function onInstalled(details?: chrome.runtime.InstalledDetails) {
+function onInstalled(details?: browser.runtime.InstalledDetails) {
   new Load(addListener, details);
 }
 

@@ -23,14 +23,17 @@ export type ContextMenuId =
   | 'shortcuts'
   | 'changelog';
 export type Color = '#579242' | '#9c2829' | '#5f6368';
-export type OptionPageMessage =
+export type OptionPageMessageId =
   | 'actionMode'
   | 'autoState'
   | 'autoMode'
   | 'offBehavior'
   | 'reset'
   | 'language';
-export type OptionPageResponse = {
-  message: OptionPageMessage;
+export type OptionPageMessage = {
+  id: OptionPageMessageId;
   value: string | boolean;
+};
+export type OptionPageResponse = {
+  response: string;
 };

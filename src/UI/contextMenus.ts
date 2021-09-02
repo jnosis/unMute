@@ -1,5 +1,4 @@
 import { browser } from '../Api/api';
-import I18N from '../I18N/i18n';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
 
@@ -69,7 +68,7 @@ export default abstract class ContextMenu {
             ? 'unmuteCurrentTab'
             : 'muteCurrentTab';
           browser.contextMenus.update(id, {
-            title: await I18N.getMessage(`contextMenu_${messageId}`),
+            title: browser.i18n.getMessage(`contextMenu_${messageId}`),
           });
           browser.contextMenus.update(id, { visible: true });
         } else {
@@ -89,7 +88,7 @@ export default abstract class ContextMenu {
     console.trace(`Create context menu: ${id}`);
     await browser.contextMenus.create({
       id,
-      title: await I18N.getMessage(`contextMenu_${id}`),
+      title: browser.i18n.getMessage(`contextMenu_${id}`),
       contexts: isUI
         ? ['browser_action']
         : ['page', 'video', 'audio', 'browser_action'],
@@ -100,7 +99,7 @@ export default abstract class ContextMenu {
         browser.contextMenus.create({
           id: `${childId}`,
           parentId: id,
-          title: await I18N.getMessage(`contextMenu_${childId}`),
+          title: browser.i18n.getMessage(`contextMenu_${childId}`),
           contexts: isUI
             ? ['browser_action']
             : ['page', 'video', 'audio', 'browser_action'],

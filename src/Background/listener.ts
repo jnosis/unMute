@@ -1,3 +1,4 @@
+import { browser } from '../Api/api';
 import Mute from '../Mute/mute';
 import {
   ChangeOption,
@@ -12,7 +13,7 @@ import {
   Command,
   ContextMenuId,
   OffBehavior,
-  OptionPageResponse,
+  OptionPageMessage,
 } from '../types/types';
 import { update } from './update';
 
@@ -55,14 +56,14 @@ export class Listener {
 
 function onNotificationClick(notificationId: string) {
   if (notificationId === 'updated') {
-    let url = chrome.runtime.getURL('changelog.html');
-    chrome.tabs.create({ url });
+    let url = browser.runtime.getURL('changelog.html');
+    browser.tabs.create({ url });
   }
-  chrome.notifications.clear(notificationId);
+  browser.notifications.clear(notificationId);
 }
 
 function onStorageChanged(changes: {
-  [key: string]: chrome.storage.StorageChange;
+  [key: string]: browser.storage.StorageChange;
 }) {
   if (
     !changes.actionMode &&
@@ -87,33 +88,40 @@ function onStorageChanged(changes: {
 }
 
 function onMessage(
-  message: OptionPageResponse,
-  sender: chrome.runtime.MessageSender,
+  message: OptionPageMessage,
+  sender: browser.runtime.MessageSender,
   sendResponse: (response?: any) => void
 ) {
   console.log(`On message: ${message}`);
-  if (sender.id === chrome.runtime.id) {
-    switch (message.message) {
+  const response = { response: '' };
+  if (sender.id === browser.runtime.id) {
+    switch (message.id) {
       case 'actionMode':
         ChangeOption.setActionMode(message.value as ActionMode);
+        response.response = `${message.id} => ${message.value}`;
         break;
       case 'autoState':
         ChangeOption.setAutoState(!!message.value);
+        response.response = `${message.id} => ${message.value}`;
         break;
       case 'autoMode':
         ChangeOption.setAutoMode(message.value as AutoMode);
+        response.response = `${message.id} => ${message.value}`;
         break;
       case 'offBehavior':
         ChangeOption.setOffBehavior(message.value as OffBehavior);
+        response.response = `${message.id} => ${message.value}`;
         break;
       case 'reset':
         ChangeOption.reset();
+        response.response = `${message.id}`;
         break;
 
       default:
+        response.response = `Wrong message: ${message.id}`;
         break;
     }
-    sendResponse(message);
+    sendResponse(response);
   }
 }
 
@@ -218,11 +226,11 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
       Mute.toggleAllTab();
       break;
     case 'shortcuts':
-      chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+      browser.tabs.create({ url: 'chrome://extensions/shortcuts' });
       break;
     case 'changelog':
-      let url = chrome.runtime.getURL('changelog.html');
-      chrome.tabs.create({ url });
+      let url = browser.runtime.getURL('changelog.html');
+      browser.tabs.create({ url });
       break;
 
     default:
@@ -233,7 +241,7 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
   loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
-    const tab = await chrome.tabs.get(tabId);
+    const tab = await browser.tabs.get(tabId);
     const audible = !!tab.audible;
     const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
     await setUpdatedRecentTabIds(tabId, ids, audible, true);
@@ -242,12 +250,12 @@ function onTabActivated(tabId: number) {
 
 function onTabUpdated(
   tabId: number,
-  _changeInfo: chrome.tabs.TabChangeInfo,
-  tab: chrome.tabs.Tab
+  _changeInfo: browser.tabs.TabChangeInfo,
+  tab: browser.tabs.Tab
 ) {
   console.log(`Tab updated: ${tabId}`);
   loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    const window = await chrome.windows.getCurrent();
+    const window = await browser.windows.getCurrent();
     console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
     const audible = !!tab.audible;
@@ -262,7 +270,7 @@ function onWindowFocusChanged(windowId: number) {
   loadStorage(
     ['autoMode', 'recentTabIds'],
     async ({ autoMode, recentTabIds }) => {
-      const tabs = await chrome.tabs.query({
+      const tabs = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
@@ -290,7 +298,7 @@ function onTabRemoved(tabId: number) {
 }
 
 async function checkRecentTabIds(ids: number[]): Promise<number[]> {
-  const tabs = await chrome.tabs.query({ audible: true });
+  const tabs = await browser.tabs.query({ audible: true });
   const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
   return ids.filter((id) => recentRecentTabIds.includes(id));
 }

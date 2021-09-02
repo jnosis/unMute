@@ -1,3 +1,4 @@
+import { browser } from '../Api/api';
 import {
   initStorage,
   loadOption,
@@ -9,31 +10,37 @@ import Notification from '../UI/notification';
 import { doAutoMute, updateActionBadge } from './update';
 
 export class Load {
-  constructor(callback: Function, details?: chrome.runtime.InstalledDetails) {
-    onLoad(callback, details);
+  constructor(
+    callback: () => void,
+    details?: browser.runtime.InstalledDetails
+  ) {
+    this.onLoad(callback, details);
   }
-}
 
-function onLoad(callback: Function, details?: chrome.runtime.InstalledDetails) {
-  const isUpdated = details?.reason === 'update';
-  loadStorage('wasInit', ({ wasInit }) => {
-    console.log(`Initialize: ${!!wasInit}`);
-    if (wasInit) {
-      load(callback, isUpdated);
-    } else {
-      initStorage(() => load(callback, isUpdated));
-    }
-  });
-  if (isUpdated) Notification.create();
-}
+  private onLoad(
+    callback: () => void,
+    details?: browser.runtime.InstalledDetails
+  ) {
+    const isUpdated = details?.reason === 'update';
+    loadStorage('wasInit', ({ wasInit }) => {
+      console.log(`Initialize: ${!!wasInit}`);
+      if (wasInit) {
+        this.load(callback, isUpdated);
+      } else {
+        initStorage(() => this.load(callback, isUpdated));
+      }
+    });
+    if (isUpdated) Notification.create();
+  }
 
-function load(callback: Function, isUpdated: boolean) {
-  loadOption((option) => {
-    console.log(`load`);
-    isUpdated || saveStorage({ recentTabIds: JSON.stringify([]) });
-    ContextMenu.createAll(option);
-    doAutoMute();
-    updateActionBadge();
-    setTimeout(callback, 100);
-  });
+  private load(callback: () => void, isUpdated: boolean) {
+    loadOption((option) => {
+      console.log(`load`);
+      isUpdated || saveStorage({ recentTabIds: JSON.stringify([]) });
+      ContextMenu.createAll(option);
+      doAutoMute();
+      updateActionBadge();
+      setTimeout(callback, 100);
+    });
+  }
 }

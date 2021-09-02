@@ -1,32 +1,48 @@
+import { OptionPageMessage, OptionPageResponse } from '../types/types';
+
 // Promisify chrome api
 export namespace browser.tabs {
-  export function get(tabId: number): Promise<chrome.tabs.Tab> {
+  export type Tab = chrome.tabs.Tab;
+  export type TabChangeInfo = chrome.tabs.TabChangeInfo;
+  export type CreateProperties = chrome.tabs.CreateProperties;
+  export type UpdateProperties = chrome.tabs.UpdateProperties;
+  export type QueryInfo = chrome.tabs.QueryInfo;
+
+  export function get(tabId: number): Promise<Tab> {
     return new Promise((resolve) => chrome.tabs.get(tabId, resolve));
   }
 
   export function update(
     tabId: number,
-    updateProperties: chrome.tabs.UpdateProperties
-  ): Promise<chrome.tabs.Tab | undefined> {
+    updateProperties: UpdateProperties
+  ): Promise<Tab | undefined> {
     return new Promise((resolve) =>
       chrome.tabs.update(tabId, updateProperties, resolve)
     );
   }
 
-  export function query(
-    queryInfo: chrome.tabs.QueryInfo
-  ): Promise<chrome.tabs.Tab[]> {
+  export function query(queryInfo: QueryInfo): Promise<Tab[]> {
     return new Promise((resolve) => chrome.tabs.query(queryInfo, resolve));
+  }
+
+  export function create(createProperties: CreateProperties): Promise<Tab> {
+    return new Promise((resolve) =>
+      chrome.tabs.create(createProperties, resolve)
+    );
   }
 }
 
 export namespace browser.windows {
-  export function getCurrent(): Promise<chrome.windows.Window> {
+  export type Window = chrome.windows.Window;
+
+  export function getCurrent(): Promise<Window> {
     return new Promise((resolve) => chrome.windows.getCurrent(resolve));
   }
 }
 
 export namespace browser.storage {
+  export type StorageChange = chrome.storage.StorageChange;
+
   interface StorageArea {
     get(
       keys: string | string[] | { [key: string]: any } | null
@@ -122,12 +138,48 @@ export namespace browser.contextMenus {
 }
 
 export namespace browser.notifications {
+  export type NotificationOptions = chrome.notifications.NotificationOptions;
+
   export function create(
     notificationId: string,
-    options: chrome.notifications.NotificationOptions
+    options: NotificationOptions
   ): Promise<string> {
     return new Promise((resolve) =>
       chrome.notifications.create(notificationId, options, resolve)
+    );
+  }
+
+  export function clear(notificationId: string): Promise<boolean> {
+    return new Promise((resolve) =>
+      chrome.notifications.clear(notificationId, resolve)
+    );
+  }
+}
+
+export namespace browser.i18n {
+  export function getMessage(messageName: string, substitutions?: any) {
+    return chrome.i18n.getMessage(messageName, substitutions);
+  }
+}
+
+export namespace browser.runtime {
+  export const id = chrome.runtime.id;
+  export type MessageSender = chrome.runtime.MessageSender;
+  export type InstalledDetails = chrome.runtime.InstalledDetails;
+
+  export function getManifest() {
+    return chrome.runtime.getManifest();
+  }
+
+  export function getURL(path: string) {
+    return chrome.runtime.getURL(path);
+  }
+
+  export function sendMessage(
+    message: OptionPageMessage
+  ): Promise<OptionPageResponse> {
+    return new Promise((resolve) =>
+      chrome.runtime.sendMessage(message, resolve)
     );
   }
 }

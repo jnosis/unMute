@@ -1,6 +1,7 @@
+import { browser } from './Api/api';
 import localizeHtmlPage from './locale';
 import { loadOption } from './Option/option';
-import { OptionPageMessage, OptionPageResponse } from './types/types';
+import { OptionPageMessageId } from './types/types';
 
 document.addEventListener('DOMContentLoaded', () => {
   localizeHtmlPage();
@@ -9,15 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('click', saveOptionsPage);
 chrome.storage.onChanged.addListener(loadOptionsPage);
 
-function sendMessage(message: OptionPageMessage, value: string | boolean) {
-  console.trace(message, value);
-  chrome.runtime.sendMessage(
-    { message, value },
-    (response: OptionPageResponse) => {
-      console.log(`Response: ${response.message}`);
-      if (response.message === 'reset') location.reload();
-    }
-  );
+async function sendMessage(id: OptionPageMessageId, value: string | boolean) {
+  console.trace(id, value);
+  const response = await browser.runtime.sendMessage({ id, value });
+  console.log(`Response: ${response.response}`);
+  if (response.response === 'reset') location.reload();
 }
 
 function saveOptionsPage(event: MouseEvent) {
@@ -40,8 +37,8 @@ function saveOptionsPage(event: MouseEvent) {
     sendMessage('reset', true);
     location.reload();
   } else if (id === 'changelog') {
-    const url = chrome.runtime.getURL('changelog.html');
-    chrome.tabs.create({ url });
+    const url = browser.runtime.getURL('changelog.html');
+    browser.tabs.create({ url });
   }
 }
 

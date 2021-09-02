@@ -1,15 +1,14 @@
 import { browser } from '../Api/api';
-import I18N from '../I18N/i18n';
 
 export default abstract class Notification {
   static async create() {
     browser.notifications.create('updated', {
       type: 'basic',
       iconUrl: './icons/icon128.png',
-      title: await I18N.getMessage('notificationTitle'),
-      message: `${await I18N.getMessage(
+      title: browser.i18n.getMessage('notificationTitle'),
+      message: `${browser.i18n.getMessage(
         'changelog_2_0_0'
-      )}\n${await I18N.getMessage('changelog_1_8')}`,
+      )}\n${browser.i18n.getMessage('changelog_1_8')}`,
       requireInteraction: true,
     });
   }
