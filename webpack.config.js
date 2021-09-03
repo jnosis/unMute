@@ -6,6 +6,7 @@ const prod = require('./webpack/webpack.prod.js');
 const modify = require('./webpack/manifest-loader.js');
 const path = require('path');
 const loader = path.join(__dirname, `webpack/firefox-api-loader.js`);
+const api = path.join(__dirname, 'src/Api/api.ts');
 
 module.exports = (env) => {
   return merge(!!env.production ? prod : dev, {
@@ -16,7 +17,7 @@ module.exports = (env) => {
               {
                 test: /\.tsx?$/,
                 use: loader,
-                exclude: /node_modules/,
+                resource: api,
               },
             ]
           : [],
