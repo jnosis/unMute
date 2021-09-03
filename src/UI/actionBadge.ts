@@ -10,7 +10,7 @@ export default abstract class ActionBadge {
     console.trace(`Update action badge`);
     switch (option.actionMode) {
       case 'muteCurrentTab':
-        this.updateMuteCurrentTab();
+        this.updateMuteCurrentTab(option.autoState);
         break;
       case 'toggleAllTabs':
         this.updateToggleAllTabs(option.autoState);
@@ -30,12 +30,12 @@ export default abstract class ActionBadge {
     }
   }
 
-  private static async updateMuteCurrentTab() {
+  private static async updateMuteCurrentTab(autoState: boolean) {
     console.trace(`Update action: muteCurrentTab`);
     browser.action.setBadgeText({ text: '' });
     const tabs = await browser.tabs.query({});
     tabs.forEach((tab) => {
-      if (tab.audible) {
+      if (tab.audible && !autoState) {
         tab.id && browser.action.enable(tab.id);
       } else {
         tab.id && browser.action.disable(tab.id);
