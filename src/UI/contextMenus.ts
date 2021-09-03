@@ -38,46 +38,52 @@ export default abstract class ContextMenu {
     id: ContextMenuId,
     updatedProperties?: browser.contextMenus.UpdateProperties
   ) {
-    console.trace(`Update context menu: ${id}`);
-    if (!!updatedProperties) {
-      browser.contextMenus.update(id, updatedProperties);
-    } else if (id === 'autoMute') {
-      browser.contextMenus.update(option.autoState ? 'on' : 'off', {
-        checked: true,
-      });
-      browser.contextMenus.update('muteCurrentTab', {
-        visible: option.autoState ? false : true,
-      });
-      browser.contextMenus.update('toggleAllTabs', {
-        visible: option.autoState ? false : true,
-      });
-    } else if (id === 'autoMode') {
-      browser.contextMenus.update(`${option.autoMode}`, {
-        checked: true,
-      });
-    } else if (id === 'actionMode') {
-      browser.contextMenus.update(`actionMode_${option.actionMode}`, {
-        checked: true,
-      });
-    } else if (id === 'muteCurrentTab') {
-      const tabs = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      const tab = tabs[0];
-      if (tab) {
-        if (tab.audible) {
-          const messageId: ContextMenuId = tab.mutedInfo?.muted
-            ? 'unmuteCurrentTab'
-            : 'muteCurrentTab';
-          browser.contextMenus.update(id, {
-            title: browser.i18n.getMessage(`contextMenu_${messageId}`),
-          });
-          browser.contextMenus.update(id, { visible: true });
-        } else {
-          browser.contextMenus.update(id, { visible: false });
+    try {
+      console.trace(`Update context menu: ${id}`);
+      if (!!updatedProperties) {
+        browser.contextMenus.update(id, updatedProperties);
+      } else if (id === 'autoMute') {
+        browser.contextMenus.update(option.autoState ? 'on' : 'off', {
+          checked: true,
+        });
+        browser.contextMenus.update('muteCurrentTab', {
+          visible: option.autoState ? false : true,
+        });
+        browser.contextMenus.update('toggleAllTabs', {
+          visible: option.autoState ? false : true,
+        });
+      } else if (id === 'autoMode') {
+        browser.contextMenus.update(`${option.autoMode}`, {
+          checked: true,
+        });
+      } else if (id === 'actionMode') {
+        browser.contextMenus.update(`actionMode_${option.actionMode}`, {
+          checked: true,
+        });
+      } else if (id === 'muteCurrentTab') {
+        const tabs = await browser.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+        const tab = tabs[0];
+        if (tab) {
+          if (tab.audible) {
+            const messageId: ContextMenuId = tab.mutedInfo?.muted
+              ? 'unmuteCurrentTab'
+              : 'muteCurrentTab';
+            browser.contextMenus.update(id, {
+              title: browser.i18n.getMessage(`contextMenu_${messageId}`),
+            });
+            browser.contextMenus.update(id, { visible: true });
+          } else {
+            browser.contextMenus.update(id, { visible: false });
+          }
         }
       }
+    } catch (error) {
+      setTimeout(() => {
+        this.update(option, id, updatedProperties);
+      }, 0);
     }
   }
 

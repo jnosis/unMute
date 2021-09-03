@@ -9,25 +9,53 @@ export namespace browser.tabs {
   export type QueryInfo = chrome.tabs.QueryInfo;
 
   export function get(tabId: number): Promise<Tab> {
-    return new Promise((resolve) => chrome.tabs.get(tabId, resolve));
+    return new Promise((resolve, reject) =>
+      chrome.tabs.get(tabId, (tab) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(tab);
+        }
+      })
+    );
   }
 
   export function update(
     tabId: number,
     updateProperties: UpdateProperties
   ): Promise<Tab | undefined> {
-    return new Promise((resolve) =>
-      chrome.tabs.update(tabId, updateProperties, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.tabs.update(tabId, updateProperties, (tab) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(tab);
+        }
+      })
     );
   }
 
   export function query(queryInfo: QueryInfo): Promise<Tab[]> {
-    return new Promise((resolve) => chrome.tabs.query(queryInfo, resolve));
+    return new Promise((resolve, reject) =>
+      chrome.tabs.query(queryInfo, (tabs) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(tabs);
+        }
+      })
+    );
   }
 
   export function create(createProperties: CreateProperties): Promise<Tab> {
-    return new Promise((resolve) =>
-      chrome.tabs.create(createProperties, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.tabs.create(createProperties, (tab) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(tab);
+        }
+      })
     );
   }
 }
@@ -36,7 +64,15 @@ export namespace browser.windows {
   export type Window = chrome.windows.Window;
 
   export function getCurrent(): Promise<Window> {
-    return new Promise((resolve) => chrome.windows.getCurrent(resolve));
+    return new Promise((resolve, reject) =>
+      chrome.windows.getCurrent((window) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(window);
+        }
+      })
+    );
   }
 }
 
@@ -54,11 +90,27 @@ export namespace browser.storage {
     get(
       keys: string | string[] | { [key: string]: any } | null = null
     ): Promise<{ [key: string]: any }> {
-      return new Promise((resolve) => chrome.storage.local.get(keys, resolve));
+      return new Promise((resolve, reject) =>
+        chrome.storage.local.get(keys, (items) => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve(items);
+          }
+        })
+      );
     }
 
     set(items: { [key: string]: any }): Promise<void> {
-      return new Promise((resolve) => chrome.storage.local.set(items, resolve));
+      return new Promise((resolve, reject) =>
+        chrome.storage.local.set(items, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        })
+      );
     }
   }
 
@@ -66,15 +118,39 @@ export namespace browser.storage {
     get(
       keys: string | string[] | { [key: string]: any } | null = null
     ): Promise<{ [key: string]: any }> {
-      return new Promise((resolve) => chrome.storage.sync.get(keys, resolve));
+      return new Promise((resolve, reject) =>
+        chrome.storage.sync.get(keys, (items) => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve(items);
+          }
+        })
+      );
     }
 
     set(items: { [key: string]: any }): Promise<void> {
-      return new Promise((resolve) => chrome.storage.sync.set(items, resolve));
+      return new Promise((resolve, reject) =>
+        chrome.storage.sync.set(items, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        })
+      );
     }
 
     clear(): Promise<void> {
-      return new Promise((resolve) => chrome.storage.sync.clear(resolve));
+      return new Promise((resolve, reject) =>
+        chrome.storage.sync.clear(() => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        })
+      );
     }
   }
 
@@ -86,28 +162,52 @@ export namespace browser.action {
   export function setBadgeText(
     details: chrome.browserAction.BadgeTextDetails
   ): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.browserAction.setBadgeText(details, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.browserAction.setBadgeText(details, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 
   export function setBadgeBackgroundColor(
     details: chrome.browserAction.BadgeBackgroundColorDetails
   ): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.browserAction.setBadgeBackgroundColor(details, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.browserAction.setBadgeBackgroundColor(details, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 
   export function enable(tabId?: number): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.browserAction.enable(tabId, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.browserAction.enable(tabId, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 
   export function disable(tabId?: number): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.browserAction.disable(tabId, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.browserAction.disable(tabId, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 }
@@ -118,8 +218,14 @@ export namespace browser.contextMenus {
   export function create(
     createProperties: chrome.contextMenus.CreateProperties
   ): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.contextMenus.create(createProperties, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.contextMenus.create(createProperties, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 
@@ -127,13 +233,27 @@ export namespace browser.contextMenus {
     id: string,
     updateProperties: chrome.contextMenus.UpdateProperties
   ): Promise<void> {
-    return new Promise((resolve) =>
-      chrome.contextMenus.update(id, updateProperties, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.contextMenus.update(id, updateProperties, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
     );
   }
 
   export function removeAll(): Promise<void> {
-    return new Promise((resolve) => chrome.contextMenus.removeAll(resolve));
+    return new Promise((resolve, reject) =>
+      chrome.contextMenus.removeAll(() => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      })
+    );
   }
 }
 
@@ -144,14 +264,26 @@ export namespace browser.notifications {
     notificationId: string,
     options: NotificationOptions
   ): Promise<string> {
-    return new Promise((resolve) =>
-      chrome.notifications.create(notificationId, options, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.notifications.create(notificationId, options, (notificationId) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(notificationId);
+        }
+      })
     );
   }
 
   export function clear(notificationId: string): Promise<boolean> {
-    return new Promise((resolve) =>
-      chrome.notifications.clear(notificationId, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.notifications.clear(notificationId, (wasCleared) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(wasCleared);
+        }
+      })
     );
   }
 }
@@ -178,8 +310,14 @@ export namespace browser.runtime {
   export function sendMessage(
     message: OptionPageMessage
   ): Promise<OptionPageResponse> {
-    return new Promise((resolve) =>
-      chrome.runtime.sendMessage(message, resolve)
+    return new Promise((resolve, reject) =>
+      chrome.runtime.sendMessage(message, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(response);
+        }
+      })
     );
   }
 }
