@@ -158,6 +158,9 @@
   "option_offBehavior_notRelease": {
     "message": "모든 탭 현상 유지"
   },
+  "option_contextMenus": {
+    "message": "컨택스트 메뉴 보이기"
+  },
   "option_reset": {
     "message": "초기화"
   },

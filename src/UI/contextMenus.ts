@@ -7,6 +7,9 @@ export default abstract class ContextMenu {
     console.trace(`create all context menus`);
     await browser.contextMenus.removeAll();
 
+    if (!option.contextMenus) {
+      return;
+    }
     await this.createByIdAndItsChildren(option, 'muteCurrentTab');
     await this.createByIdAndItsChildren(option, 'autoMute', false, true, [
       'on',
@@ -75,6 +78,16 @@ export default abstract class ContextMenu {
           browser.contextMenus.update(id, { visible: false });
         }
       }
+    }
+  }
+
+  static toggle(option: Option) {
+    console.trace(`toggle context menus`);
+    if (option.contextMenus) {
+      this.createAll(option);
+    } else {
+      console.log('remove all context menus');
+      browser.contextMenus.removeAll();
     }
   }
 

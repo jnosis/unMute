@@ -47,7 +47,14 @@ export function updateContextMenus(
   ]
 ) {
   console.trace(`updateContextMenus: ${ids}`);
-  loadOption((option) => ids.forEach((id) => ContextMenu.update(option, id)));
+  loadOption(
+    (option) =>
+      option.contextMenus && ids.forEach((id) => ContextMenu.update(option, id))
+  );
+}
+
+export function toggleContextMenus() {
+  loadOption((option) => ContextMenu.toggle(option));
 }
 
 export function updateActionBadge() {

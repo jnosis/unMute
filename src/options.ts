@@ -33,6 +33,9 @@ function saveOptionsPage(event: MouseEvent) {
   } else if (name === 'offBehavior') {
     const value = target.value;
     sendMessage('offBehavior', value);
+  } else if (id === 'contextMenus') {
+    const value = target.checked;
+    sendMessage('contextMenus', value);
   } else if (id === 'reset') {
     sendMessage('reset', true);
     location.reload();
@@ -43,23 +46,37 @@ function saveOptionsPage(event: MouseEvent) {
 }
 
 function loadOptionsPage() {
-  loadOption(({ actionMode, autoState, autoMode, offBehavior }) => {
-    const actionModeOption = document.querySelector(
-      `#${actionMode}`
-    ) as HTMLInputElement;
-    const autoSateOption = document.querySelector(
-      `#autoState`
-    ) as HTMLInputElement;
-    const autoModeOption = document.querySelector(
-      `#${autoMode}`
-    ) as HTMLInputElement;
-    const offBehaviorOption = document.querySelector(
-      `#${offBehavior}`
-    ) as HTMLInputElement;
+  loadOption(
+    ({ actionMode, autoState, autoMode, offBehavior, contextMenus }) => {
+      const actionModeOption = document.querySelector(
+        `#${actionMode}`
+      ) as HTMLInputElement;
+      const autoSateOption = document.querySelector(
+        `#autoState`
+      ) as HTMLInputElement;
+      const autoModeOption = document.querySelector(
+        `#${autoMode}`
+      ) as HTMLInputElement;
+      const offBehaviorOption = document.querySelector(
+        `#${offBehavior}`
+      ) as HTMLInputElement;
+      const contextMenusOption = document.querySelector(
+        `#contextMenus`
+      ) as HTMLInputElement;
 
-    actionModeOption.checked = true;
-    autoSateOption.checked = autoState;
-    autoModeOption.checked = true;
-    offBehaviorOption.checked = true;
-  });
+      console.table({
+        actionMode,
+        autoState,
+        autoMode,
+        offBehavior,
+        contextMenus,
+      });
+
+      actionModeOption.checked = true;
+      autoSateOption.checked = autoState;
+      autoModeOption.checked = true;
+      offBehaviorOption.checked = true;
+      contextMenusOption.checked = contextMenus;
+    }
+  );
 }

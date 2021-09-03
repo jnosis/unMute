@@ -6,6 +6,7 @@ export type Option = {
   autoMode: AutoMode;
   autoState: boolean;
   offBehavior: OffBehavior;
+  contextMenus: boolean;
 };
 
 type StorageKeys =
@@ -13,6 +14,7 @@ type StorageKeys =
   | 'autoMode'
   | 'autoState'
   | 'offBehavior'
+  | 'contextMenus'
   | 'recentTabIds'
   | 'fixedTabId'
   | 'wasInit';
@@ -22,6 +24,7 @@ export type StorageProperties = {
   autoMode?: AutoMode;
   autoState?: boolean;
   offBehavior?: OffBehavior;
+  contextMenus?: boolean;
   recentTabIds?: string;
   fixedTabId?: number;
   wasInit?: boolean;
@@ -32,6 +35,7 @@ export const defaultOption: Option = {
   autoMode: 'current',
   autoState: false,
   offBehavior: 'release',
+  contextMenus: true,
 };
 
 export async function saveStorage(
@@ -105,13 +109,14 @@ export async function loadStorage(
 }
 export async function loadOption(callback: (option: Option) => void) {
   loadStorage(
-    ['actionMode', 'autoMode', 'autoState', 'offBehavior'],
+    ['actionMode', 'autoMode', 'autoState', 'offBehavior', 'contextMenus'],
     (items) => {
       const option: Option = {
         actionMode: items.actionMode || defaultOption.actionMode,
         autoMode: items.autoMode || defaultOption.autoMode,
         autoState: !!items.autoState,
         offBehavior: items.offBehavior || defaultOption.offBehavior,
+        contextMenus: !!items.contextMenus,
       };
       callback(option);
     }
@@ -134,6 +139,10 @@ export abstract class ChangeOption {
   static setOffBehavior(offBehavior: OffBehavior, callback?: () => void) {
     console.trace(`Set off behavior: ${offBehavior}`);
     saveStorage({ offBehavior }, callback);
+  }
+  static setContextMenus(contextMenus: boolean, callback?: () => void) {
+    console.trace(`Set context menus: ${contextMenus}`);
+    saveStorage({ contextMenus }, callback);
   }
   static reset() {
     console.trace(`Reset option`);

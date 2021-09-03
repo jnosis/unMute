@@ -155,6 +155,9 @@
   "option_offBehavior_notRelease": {
     "message": "Keep Mute State"
   },
+  "option_contextMenus": {
+    "message": "Show context menus"
+  },
   "option_reset": {
     "message": "RESET"
   },

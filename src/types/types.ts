@@ -28,8 +28,8 @@ export type OptionPageMessageId =
   | 'autoState'
   | 'autoMode'
   | 'offBehavior'
-  | 'reset'
-  | 'language';
+  | 'contextMenus'
+  | 'reset';
 export type OptionPageMessage = {
   id: OptionPageMessageId;
   value: string | boolean;

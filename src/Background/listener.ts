@@ -15,7 +15,7 @@ import {
   OffBehavior,
   OptionPageMessage,
 } from '../types/types';
-import { update } from './update';
+import { toggleContextMenus, update } from './update';
 
 export class Listener {
   constructor() {
@@ -70,6 +70,7 @@ function onStorageChanged(changes: {
     !changes.autoState &&
     !changes.autoMode &&
     !changes.fixedTabId &&
+    !changes.contextMenus &&
     !changes.recentTabIds
   ) {
     return;
@@ -82,6 +83,9 @@ function onStorageChanged(changes: {
     if (!autoState.newValue) {
       checkOffBehavior();
     }
+  }
+  if (changes.contextMenus) {
+    toggleContextMenus();
   }
 
   update();
@@ -110,6 +114,10 @@ function onMessage(
         break;
       case 'offBehavior':
         ChangeOption.setOffBehavior(message.value as OffBehavior);
+        response.response = `${message.id} => ${message.value}`;
+        break;
+      case 'contextMenus':
+        ChangeOption.setContextMenus(!!message.value);
         response.response = `${message.id} => ${message.value}`;
         break;
       case 'reset':
