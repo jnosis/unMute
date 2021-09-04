@@ -70,6 +70,7 @@ function onStorageChanged(changes: {
     !changes.actionMode &&
     !changes.autoState &&
     !changes.autoMode &&
+    !changes.recentBehavior &&
     !changes.fixedTabId &&
     !changes.contextMenus &&
     !changes.recentTabIds
@@ -83,6 +84,15 @@ function onStorageChanged(changes: {
     const autoState = changes.autoState;
     if (!autoState.newValue) {
       checkOffBehavior();
+    }
+  }
+  if (changes.recentBehavior) {
+    const recentBehavior = changes.recentBehavior;
+    if (recentBehavior.newValue === 'notRelease') {
+      loadStorage('recentTabIds', ({ recentTabIds }) => {
+        recentTabIds &&
+          setUpdatedRecentTabIds(-1, recentTabIds, false, false, false);
+      });
     }
   }
   if (changes.contextMenus) {
