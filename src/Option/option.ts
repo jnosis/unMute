@@ -28,7 +28,7 @@ export type StorageProperties = {
   offBehavior?: OffBehavior;
   recentBehavior?: OffBehavior;
   contextMenus?: boolean;
-  recentTabIds?: string;
+  recentTabIds?: number[];
   fixedTabId?: number;
   wasInit?: boolean;
 };

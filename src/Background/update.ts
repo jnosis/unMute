@@ -21,8 +21,7 @@ export function doAutoMute() {
             Mute.doAutoMute(autoMode);
             break;
           case 'recent':
-            recentTabIds &&
-              Mute.doAutoMute(autoMode, JSON.parse(recentTabIds)[0]);
+            recentTabIds && Mute.doAutoMute(autoMode, recentTabIds[0]);
             break;
           case 'fix':
             Mute.doAutoMute(autoMode, fixedTabId);

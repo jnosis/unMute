@@ -36,7 +36,7 @@ export class Load {
   private load(callback: () => void, isUpdated: boolean) {
     loadOption((option) => {
       console.log(`load`);
-      isUpdated || saveStorage({ recentTabIds: JSON.stringify([]) });
+      isUpdated || saveStorage({ recentTabIds: [] });
       ContextMenu.createAll(option);
       doAutoMute();
       updateActionBadge();

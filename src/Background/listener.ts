@@ -301,7 +301,7 @@ function onTabActivated(tabId: number) {
       const tab = await browser.tabs.get(tabId);
       const audible = !!tab.audible;
       const isRelease = recentBehavior === 'release';
-      const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
+      const ids: number[] = recentTabIds ? recentTabIds : [];
       await setUpdatedRecentTabIds(tabId, ids, audible, true, isRelease);
     }
   );
@@ -322,7 +322,7 @@ function onTabUpdated(
       const audible = !!tab.audible;
       const isRecent = tab.active && tab.windowId === window.id;
       const isRelease = recentBehavior === 'release';
-      const ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      const ids: number[] = !!recentTabIds ? recentTabIds : [];
       await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
     }
   );
@@ -344,7 +344,7 @@ function onWindowFocusChanged(windowId: number) {
         const audible = !!tab.audible;
         const isRecent = tab.active && tab.windowId === windowId;
         const isRelease = recentBehavior === 'release';
-        const ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+        const ids: number[] = !!recentTabIds ? recentTabIds : [];
         await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
       }
     }
@@ -357,7 +357,7 @@ function onTabRemoved(tabId: number) {
     ['recentTabIds', 'recentBehavior'],
     async ({ recentTabIds, recentBehavior }) => {
       const isRelease = recentBehavior === 'release';
-      const oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      const oldIds: number[] = !!recentTabIds ? recentTabIds : [];
       await setUpdatedRecentTabIds(tabId, oldIds, false, true, isRelease);
     }
   );
@@ -419,7 +419,7 @@ async function setUpdatedRecentTabIds(
 
   equal(updatedIds, ids)
     ? update(['muteCurrentTab'])
-    : saveStorage({ recentTabIds: JSON.stringify(updatedIds) });
+    : saveStorage({ recentTabIds: updatedIds });
 }
 
 function setFixTab(tabId: number) {
