@@ -19,9 +19,10 @@ import { toggleContextMenus, update } from './update';
 
 export class Listener {
   constructor() {
-    chrome.storage.onChanged.addListener((changes) =>
-      onStorageChanged(changes)
-    );
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'local') onStorageChanged(changes);
+      else if (areaName === 'sync') onSyncChanged(changes);
+    });
 
     chrome.runtime.onMessage.addListener(onMessage);
 
@@ -86,9 +87,51 @@ function onStorageChanged(changes: {
   }
   if (changes.contextMenus) {
     toggleContextMenus();
+  } else {
+    update();
   }
+}
 
-  update();
+function onSyncChanged(changes: {
+  [key: string]: browser.storage.StorageChange;
+}) {
+  if (
+    !changes.actionMode &&
+    !changes.autoState &&
+    !changes.autoMode &&
+    !changes.offBehavior &&
+    !changes.recentBehavior &&
+    !changes.contextMenus
+  ) {
+    return;
+  }
+  console.log(`Sync change: ${changes}`);
+  console.table({ ...changes });
+
+  if (changes.actionMode) {
+    const actionMode = changes.actionMode.newValue;
+    saveStorage({ actionMode });
+  }
+  if (changes.autoState) {
+    const autoState = changes.autoState.newValue;
+    saveStorage({ autoState });
+  }
+  if (changes.autoMode) {
+    const autoMode = changes.autoMode.newValue;
+    saveStorage({ autoMode });
+  }
+  if (changes.offBehavior) {
+    const offBehavior = changes.offBehavior.newValue;
+    saveStorage({ offBehavior });
+  }
+  if (changes.recentBehavior) {
+    const recentBehavior = changes.recentBehavior.newValue;
+    saveStorage({ recentBehavior });
+  }
+  if (changes.contextMenus) {
+    const contextMenus = changes.contextMenus.newValue;
+    saveStorage({ contextMenus });
+  }
 }
 
 function onMessage(

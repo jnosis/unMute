@@ -42,19 +42,22 @@ export const defaultOption: Option = {
   contextMenus: true,
 };
 
-export async function saveStorage(
-  storage: StorageProperties = defaultOption,
-  callback?: () => void
-) {
+export async function saveStorage(storage: StorageProperties) {
   console.trace(`Save storage: ${storage}`);
   console.table({ ...storage });
   await browser.storage.local.set({ ...storage });
-  callback && callback();
+}
+export async function saveOption(
+  storage: StorageProperties = defaultOption,
+  callback?: () => void
+) {
+  browser.storage.sync.set({ ...storage }).then(callback);
 }
 export async function initStorage(callback?: () => void) {
   const initValues = await getPreviousValues();
   console.table({ ...initValues });
-  saveStorage(initValues, callback);
+  saveOption(initValues, callback);
+  saveStorage(initValues);
 }
 async function getPreviousValues(): Promise<StorageProperties> {
   const values: StorageProperties = { ...defaultOption, wasInit: true };
@@ -62,6 +65,9 @@ async function getPreviousValues(): Promise<StorageProperties> {
   if (!previousStorage) {
     console.log(`Not exist previous storage`);
     return values;
+  }
+  if (!!previousStorage.wasInit) {
+    return previousStorage;
   }
 
   if (previousStorage.BROWSER_ACTION_MODE !== undefined) {
@@ -99,7 +105,7 @@ async function getPreviousValues(): Promise<StorageProperties> {
     values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
   }
 
-  browser.storage.sync.clear();
+  await browser.storage.sync.clear();
   return values;
 }
 
@@ -138,31 +144,37 @@ export async function loadOption(callback: (option: Option) => void) {
 export abstract class ChangeOption {
   static setActionMode(actionMode: ActionMode, callback?: () => void) {
     console.trace(`Set action mode: ${actionMode}`);
-    saveStorage({ actionMode }, callback);
+    saveOption({ actionMode }, callback);
+    browser.storage.sync.set({ actionMode });
   }
   static setAutoMode(autoMode: AutoMode, callback?: () => void) {
     console.trace(`Set auto mode: ${autoMode}`);
-    saveStorage({ autoMode }, callback);
+    saveOption({ autoMode }, callback);
+    browser.storage.sync.set({ autoMode });
   }
   static setAutoState(autoState: boolean, callback?: () => void) {
     console.trace(`Set auto state: ${autoState}`);
-    saveStorage({ autoState }, callback);
+    saveOption({ autoState }, callback);
+    browser.storage.sync.set({ autoState });
   }
   static setOffBehavior(offBehavior: OffBehavior, callback?: () => void) {
     console.trace(`Set off behavior: ${offBehavior}`);
-    saveStorage({ offBehavior }, callback);
+    saveOption({ offBehavior }, callback);
+    browser.storage.sync.set({ offBehavior });
   }
   static setRecentBehavior(recentBehavior: OffBehavior, callback?: () => void) {
     console.trace(`Set off behavior: ${recentBehavior}`);
-    saveStorage({ recentBehavior }, callback);
+    saveOption({ recentBehavior }, callback);
+    browser.storage.sync.set({ recentBehavior });
   }
   static setContextMenus(contextMenus: boolean, callback?: () => void) {
     console.trace(`Set context menus: ${contextMenus}`);
-    saveStorage({ contextMenus }, callback);
+    saveOption({ contextMenus }, callback);
+    browser.storage.sync.set({ contextMenus });
   }
   static reset() {
     console.trace(`Reset option`);
-    saveStorage();
+    saveOption();
   }
 
   static toggleAutoMute(callback?: () => void) {
