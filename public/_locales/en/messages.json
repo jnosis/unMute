@@ -155,8 +155,17 @@
   "option_offBehavior_notRelease": {
     "message": "Keep Mute State"
   },
+  "option_recentBehavior": {
+    "message": "Action when Recent-Audible Tab has disappeared"
+  },
+  "option_recentBehavior_release": {
+    "message": "unMute Previous-Audible Tab"
+  },
+  "option_recentBehavior_notRelease": {
+    "message": "Keep Mute State"
+  },
   "option_contextMenus": {
-    "message": "Show context menus"
+    "message": "Show Context Menus"
   },
   "option_reset": {
     "message": "RESET"

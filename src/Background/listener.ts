@@ -116,6 +116,10 @@ function onMessage(
         ChangeOption.setOffBehavior(message.value as OffBehavior);
         response.response = `${message.id} => ${message.value}`;
         break;
+      case 'recentBehavior':
+        ChangeOption.setRecentBehavior(message.value as OffBehavior);
+        response.response = `${message.id} => ${message.value}`;
+        break;
       case 'contextMenus':
         ChangeOption.setContextMenus(!!message.value);
         response.response = `${message.id} => ${message.value}`;
@@ -248,36 +252,44 @@ function onContextMenuClick(menuItemId: ContextMenuId, tabId: number) {
 
 function onTabActivated(tabId: number) {
   console.log(`Tab activated: ${tabId}`);
-  loadStorage(['recentTabIds'], async ({ recentTabIds }: StorageProperties) => {
-    const tab = await browser.tabs.get(tabId);
-    const audible = !!tab.audible;
-    const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
-    await setUpdatedRecentTabIds(tabId, ids, audible, true);
-  });
+  loadStorage(
+    ['recentTabIds', 'recentBehavior'],
+    async ({ recentTabIds, recentBehavior }: StorageProperties) => {
+      const tab = await browser.tabs.get(tabId);
+      const audible = !!tab.audible;
+      const isRelease = recentBehavior === 'release';
+      const ids: number[] = recentTabIds ? JSON.parse(recentTabIds) : [];
+      await setUpdatedRecentTabIds(tabId, ids, audible, true, isRelease);
+    }
+  );
 }
 
 function onTabUpdated(
   tabId: number,
-  _changeInfo: browser.tabs.TabChangeInfo,
+  changeInfo: browser.tabs.TabChangeInfo,
   tab: browser.tabs.Tab
 ) {
-  console.log(`Tab updated: ${tabId}`);
-  loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    const window = await browser.windows.getCurrent();
-    console.log(`WindowId: ${tab.windowId}, ${window.id}`);
+  console.log(`Tab updated: ${tabId} audible: ${changeInfo.status}`);
+  loadStorage(
+    ['recentTabIds', 'recentBehavior'],
+    async ({ recentTabIds, recentBehavior }) => {
+      const window = await browser.windows.getCurrent();
+      console.log(`WindowId: ${tab.windowId}, ${window.id}`);
 
-    const audible = !!tab.audible;
-    const isRecent = tab.active && tab.windowId === window.id;
-    const ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
-    await setUpdatedRecentTabIds(tabId, ids, audible, isRecent);
-  });
+      const audible = !!tab.audible;
+      const isRecent = tab.active && tab.windowId === window.id;
+      const isRelease = recentBehavior === 'release';
+      const ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
+    }
+  );
 }
 
 function onWindowFocusChanged(windowId: number) {
   console.log(`Window focus changed: ${windowId}`);
   loadStorage(
-    ['autoMode', 'recentTabIds'],
-    async ({ autoMode, recentTabIds }) => {
+    ['recentTabIds', 'recentBehavior'],
+    async ({ recentTabIds, recentBehavior }) => {
       const tabs = await browser.tabs.query({
         active: true,
         currentWindow: true,
@@ -288,44 +300,53 @@ function onWindowFocusChanged(windowId: number) {
       if (tab && tabId) {
         const audible = !!tab.audible;
         const isRecent = tab.active && tab.windowId === windowId;
+        const isRelease = recentBehavior === 'release';
         const ids: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
-        await setUpdatedRecentTabIds(tabId, ids, audible, isRecent);
+        await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
       }
-
-      if (autoMode === 'current') update(['muteCurrentTab']);
     }
   );
 }
 
 function onTabRemoved(tabId: number) {
   console.log(`Tab removed: ${tabId}`);
-  loadStorage('recentTabIds', async ({ recentTabIds }) => {
-    const oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
-    await setUpdatedRecentTabIds(tabId, oldIds, false, true);
-  });
+  loadStorage(
+    ['recentTabIds', 'recentBehavior'],
+    async ({ recentTabIds, recentBehavior }) => {
+      const isRelease = recentBehavior === 'release';
+      const oldIds: number[] = !!recentTabIds ? JSON.parse(recentTabIds) : [];
+      await setUpdatedRecentTabIds(tabId, oldIds, false, true, isRelease);
+    }
+  );
 }
 
-async function checkRecentTabIds(ids: number[]): Promise<number[]> {
+async function checkRecentTabIds(
+  ids: number[],
+  isRelease: boolean
+): Promise<number[]> {
   const tabs = await browser.tabs.query({ audible: true });
   const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
-  return ids.filter((id) => recentRecentTabIds.includes(id));
+  return ids
+    .filter((_id, index) => isRelease || index === 0)
+    .filter((id) => recentRecentTabIds.includes(id));
 }
 
 async function updateRecentTabIds(
   tabId: number,
   ids: number[],
   audible: boolean,
-  isRecent: boolean
+  isRecent: boolean,
+  isRelease: boolean
 ): Promise<number[]> {
   let updatedIds: number[] = [...ids];
   if (audible) {
     if (isRecent) {
       updatedIds = [...new Set([tabId, ...ids])];
-    } else {
+    } else if (isRelease) {
       updatedIds = [...new Set([...ids, tabId])];
     }
   }
-  updatedIds = await checkRecentTabIds(updatedIds);
+  updatedIds = await checkRecentTabIds(updatedIds, isRelease);
 
   return updatedIds;
 }
@@ -341,10 +362,17 @@ async function setUpdatedRecentTabIds(
   tabId: number,
   ids: number[],
   audible: boolean,
-  isRecent: boolean
+  isRecent: boolean,
+  isRelease: boolean
 ) {
   console.trace(`SetUpdatedRecentTabIds: ${tabId}`);
-  const updatedIds = await updateRecentTabIds(tabId, ids, audible, isRecent);
+  const updatedIds = await updateRecentTabIds(
+    tabId,
+    ids,
+    audible,
+    isRecent,
+    isRelease
+  );
 
   equal(updatedIds, ids)
     ? update(['muteCurrentTab'])

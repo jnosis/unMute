@@ -6,6 +6,7 @@ export type Option = {
   autoMode: AutoMode;
   autoState: boolean;
   offBehavior: OffBehavior;
+  recentBehavior: OffBehavior;
   contextMenus: boolean;
 };
 
@@ -14,6 +15,7 @@ type StorageKeys =
   | 'autoMode'
   | 'autoState'
   | 'offBehavior'
+  | 'recentBehavior'
   | 'contextMenus'
   | 'recentTabIds'
   | 'fixedTabId'
@@ -24,6 +26,7 @@ export type StorageProperties = {
   autoMode?: AutoMode;
   autoState?: boolean;
   offBehavior?: OffBehavior;
+  recentBehavior?: OffBehavior;
   contextMenus?: boolean;
   recentTabIds?: string;
   fixedTabId?: number;
@@ -35,6 +38,7 @@ export const defaultOption: Option = {
   autoMode: 'current',
   autoState: false,
   offBehavior: 'release',
+  recentBehavior: 'notRelease',
   contextMenus: true,
 };
 
@@ -109,13 +113,21 @@ export async function loadStorage(
 }
 export async function loadOption(callback: (option: Option) => void) {
   loadStorage(
-    ['actionMode', 'autoMode', 'autoState', 'offBehavior', 'contextMenus'],
+    [
+      'actionMode',
+      'autoMode',
+      'autoState',
+      'offBehavior',
+      'recentBehavior',
+      'contextMenus',
+    ],
     (items) => {
       const option: Option = {
         actionMode: items.actionMode || defaultOption.actionMode,
         autoMode: items.autoMode || defaultOption.autoMode,
         autoState: !!items.autoState,
         offBehavior: items.offBehavior || defaultOption.offBehavior,
+        recentBehavior: items.recentBehavior || defaultOption.recentBehavior,
         contextMenus: !!items.contextMenus,
       };
       callback(option);
@@ -139,6 +151,10 @@ export abstract class ChangeOption {
   static setOffBehavior(offBehavior: OffBehavior, callback?: () => void) {
     console.trace(`Set off behavior: ${offBehavior}`);
     saveStorage({ offBehavior }, callback);
+  }
+  static setRecentBehavior(recentBehavior: OffBehavior, callback?: () => void) {
+    console.trace(`Set off behavior: ${recentBehavior}`);
+    saveStorage({ recentBehavior }, callback);
   }
   static setContextMenus(contextMenus: boolean, callback?: () => void) {
     console.trace(`Set context menus: ${contextMenus}`);

@@ -158,6 +158,15 @@
   "option_offBehavior_notRelease": {
     "message": "모든 탭 현상 유지"
   },
+  "option_recentBehavior": {
+    "message": "최근 소리나는 탭의 소리가 사라졌을 시 동작"
+  },
+  "option_recentBehavior_release": {
+    "message": "이전 소리나는 탭 음소거 해제"
+  },
+  "option_recentBehavior_notRelease": {
+    "message": "모든 탭 음소거 유지"
+  },
   "option_contextMenus": {
     "message": "컨택스트 메뉴 보이기"
   },

@@ -28,6 +28,7 @@ export type OptionPageMessageId =
   | 'autoState'
   | 'autoMode'
   | 'offBehavior'
+  | 'recentBehavior'
   | 'contextMenus'
   | 'reset';
 export type OptionPageMessage = {

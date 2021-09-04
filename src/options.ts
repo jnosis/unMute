@@ -11,9 +11,9 @@ document.addEventListener('click', saveOptionsPage);
 chrome.storage.onChanged.addListener(loadOptionsPage);
 
 async function sendMessage(id: OptionPageMessageId, value: string | boolean) {
-  console.trace(id, value);
+  // console.trace(id, value);
   const response = await browser.runtime.sendMessage({ id, value });
-  console.log(`Response: ${response.response}`);
+  // console.log(`Response: ${response.response}`);
   if (response.response === 'reset') location.reload();
 }
 
@@ -21,6 +21,8 @@ function saveOptionsPage(event: MouseEvent) {
   const target = event.target as HTMLInputElement;
   const name = target.getAttribute('name');
   const id = target.id;
+  console.log({ name, id });
+
   if (name === 'actionMode') {
     const value = target.value;
     sendMessage('actionMode', value);
@@ -33,6 +35,9 @@ function saveOptionsPage(event: MouseEvent) {
   } else if (name === 'offBehavior') {
     const value = target.value;
     sendMessage('offBehavior', value);
+  } else if (name === 'recentBehavior') {
+    const value = target.value;
+    sendMessage('recentBehavior', value);
   } else if (id === 'contextMenus') {
     const value = target.checked;
     sendMessage('contextMenus', value);
@@ -47,7 +52,14 @@ function saveOptionsPage(event: MouseEvent) {
 
 function loadOptionsPage() {
   loadOption(
-    ({ actionMode, autoState, autoMode, offBehavior, contextMenus }) => {
+    ({
+      actionMode,
+      autoState,
+      autoMode,
+      offBehavior,
+      recentBehavior,
+      contextMenus,
+    }) => {
       const actionModeOption = document.querySelector(
         `#${actionMode}`
       ) as HTMLInputElement;
@@ -60,6 +72,9 @@ function loadOptionsPage() {
       const offBehaviorOption = document.querySelector(
         `#${offBehavior}`
       ) as HTMLInputElement;
+      const recentBehaviorOption = document.querySelector(
+        `#recent_${recentBehavior}`
+      ) as HTMLInputElement;
       const contextMenusOption = document.querySelector(
         `#contextMenus`
       ) as HTMLInputElement;
@@ -69,6 +84,7 @@ function loadOptionsPage() {
         autoState,
         autoMode,
         offBehavior,
+        recentBehavior,
         contextMenus,
       });
 
@@ -76,6 +92,7 @@ function loadOptionsPage() {
       autoSateOption.checked = autoState;
       autoModeOption.checked = true;
       offBehaviorOption.checked = true;
+      recentBehaviorOption.checked = true;
       contextMenusOption.checked = contextMenus;
     }
   );
