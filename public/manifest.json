@@ -63,12 +63,11 @@
     "open_in_tab": true
   },
 
-  "minimum_chrome_version": "92",
-
   "permissions": ["storage", "contextMenus", "notifications"],
 
   "chrome": {
-    "version_name": "2.0.0 beta"
+    "version_name": "2.0.0 beta",
+    "minimum_chrome_version": "92"
   },
   "firefox": {
     "browser_specific_settings": {
@@ -77,5 +76,6 @@
         "strict_min_version": "42.0"
       }
     }
-  }
+  },
+  "whale": {}
 }

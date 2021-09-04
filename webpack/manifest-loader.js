@@ -2,21 +2,28 @@ module.exports = function makeManifest(content, mode, platform) {
   console.log('manifest loading...');
   let manifest = JSON.parse(content);
 
+  console.log(`load ${platform} manifest...`);
   switch (platform) {
     case 'chrome':
-      console.log('load chrome manifest...');
       const chrome = { ...manifest.chrome };
       delete manifest.chrome;
       delete manifest.firefox;
+      delete manifest.whale;
       manifest = { ...manifest, ...chrome };
       break;
     case 'firefox':
-      console.log('load firefox manifest...');
       const firefox = { ...manifest.firefox };
       delete manifest.chrome;
       delete manifest.firefox;
+      delete manifest.whale;
       manifest = { ...manifest, ...firefox };
       break;
+    case 'whale':
+      const whale = { ...manifest.whale };
+      delete manifest.chrome;
+      delete manifest.firefox;
+      delete manifest.whale;
+      manifest = { ...manifest, ...whale };
 
     default:
       break;

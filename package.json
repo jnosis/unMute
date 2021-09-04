@@ -14,7 +14,10 @@
     "prod:chrome": "webpack --env platform=chrome --env production",
     "dev:firefox": "webpack --env platform=firefox --watch",
     "build:firefox": "webpack --env platform=firefox",
-    "prod:firefox": "webpack --env platform=firefox --env production"
+    "prod:firefox": "webpack --env platform=firefox --env production",
+    "dev:whale": "webpack --env platform=whale --watch",
+    "build:whale": "webpack --env platform=whale",
+    "prod:whale": "webpack --env platform=whale --env production"
   },
   "repository": {
     "type": "git",
