@@ -19,39 +19,39 @@ import { toggleContextMenus, update } from './update';
 
 export class Listener {
   constructor() {
-    chrome.storage.onChanged.addListener((changes, areaName) => {
+    browser.storage.onChanged.addListener((changes, areaName) => {
       if (areaName === 'local') onStorageChanged(changes);
       else if (areaName === 'sync') onSyncChanged(changes);
     });
 
-    chrome.runtime.onMessage.addListener(onMessage);
+    browser.runtime.onMessage.addListener(onMessage);
 
-    chrome.notifications.onClicked.addListener((notificationId) =>
+    browser.notifications.onClicked.addListener((notificationId) =>
       onNotificationClick(notificationId)
     );
 
-    chrome.browserAction.onClicked.addListener(
+    browser.action.onClicked.addListener(
       (tab) => tab.id && onActionClick(tab.id)
     );
 
-    chrome.commands.onCommand.addListener(
+    browser.commands.onCommand.addListener(
       (command, tab) => tab.id && onCommand(command as Command, tab.id)
     );
 
-    chrome.contextMenus.onClicked.addListener(
+    browser.contextMenus.onClicked.addListener(
       ({ menuItemId }, tab) =>
         tab?.id && onContextMenuClick(menuItemId as ContextMenuId, tab.id)
     );
 
-    chrome.tabs.onActivated.addListener(async ({ tabId }) =>
+    browser.tabs.onActivated.addListener(async ({ tabId }) =>
       onTabActivated(tabId)
     );
 
-    chrome.tabs.onUpdated.addListener(onTabUpdated);
+    browser.tabs.onUpdated.addListener(onTabUpdated);
 
-    chrome.windows.onFocusChanged.addListener(onWindowFocusChanged);
+    browser.windows.onFocusChanged.addListener(onWindowFocusChanged);
 
-    chrome.tabs.onRemoved.addListener(onTabRemoved);
+    browser.tabs.onRemoved.addListener(onTabRemoved);
   }
 }
 

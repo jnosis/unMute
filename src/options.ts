@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadOptionsPage();
 });
 document.addEventListener('click', saveOptionsPage);
-chrome.storage.onChanged.addListener(loadOptionsPage);
+browser.storage.onChanged.addListener(loadOptionsPage);
 
 async function sendMessage(id: OptionPageMessageId, value: string | boolean) {
   // console.trace(id, value);

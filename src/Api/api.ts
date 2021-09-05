@@ -58,6 +58,10 @@ export namespace browser.tabs {
       })
     );
   }
+
+  export const onActivated = chrome.tabs.onActivated;
+  export const onUpdated = chrome.tabs.onUpdated;
+  export const onRemoved = chrome.tabs.onRemoved;
 }
 
 export namespace browser.windows {
@@ -74,6 +78,8 @@ export namespace browser.windows {
       })
     );
   }
+
+  export const onFocusChanged = chrome.windows.onFocusChanged;
 }
 
 export namespace browser.storage {
@@ -156,6 +162,8 @@ export namespace browser.storage {
 
   export const sync = new SyncStorageArea();
   export const local = new LocalStorageArea();
+
+  export const onChanged = chrome.storage.onChanged;
 }
 
 export namespace browser.action {
@@ -211,6 +219,12 @@ export namespace browser.action {
       })
     );
   }
+
+  export const onClicked = chrome.browserAction.onClicked;
+}
+
+export namespace browser.commands {
+  export const onCommand = chrome.commands.onCommand;
 }
 
 export namespace browser.contextMenus {
@@ -255,6 +269,8 @@ export namespace browser.contextMenus {
       })
     );
   }
+
+  export const onClicked = chrome.contextMenus.onClicked;
 }
 
 export namespace browser.notifications {
@@ -286,6 +302,8 @@ export namespace browser.notifications {
       })
     );
   }
+
+  export const onClicked = chrome.notifications.onClicked;
 }
 
 export namespace browser.i18n {
@@ -320,4 +338,8 @@ export namespace browser.runtime {
       })
     );
   }
+
+  export const onStartup = chrome.runtime.onStartup;
+  export const onInstalled = chrome.runtime.onInstalled;
+  export const onMessage = chrome.runtime.onMessage;
 }

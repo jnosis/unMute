@@ -4,8 +4,8 @@ import { Load } from './load';
 
 export class Background {
   constructor() {
-    chrome.runtime.onStartup.addListener(onStart);
-    chrome.runtime.onInstalled.addListener(onInstalled);
+    browser.runtime.onStartup.addListener(onStart);
+    browser.runtime.onInstalled.addListener(onInstalled);
   }
 }
 
