@@ -159,9 +159,10 @@ export namespace browser.storage {
 }
 
 export namespace browser.action {
-  export function setBadgeText(
-    details: chrome.browserAction.BadgeTextDetails
-  ): Promise<void> {
+  type BadgeTextDetails = chrome.browserAction.BadgeTextDetails;
+  type BadgeColorDetails = chrome.browserAction.BadgeBackgroundColorDetails;
+
+  export function setBadgeText(details: BadgeTextDetails): Promise<void> {
     return new Promise((resolve, reject) =>
       chrome.browserAction.setBadgeText(details, () => {
         if (chrome.runtime.lastError) {
@@ -174,7 +175,7 @@ export namespace browser.action {
   }
 
   export function setBadgeBackgroundColor(
-    details: chrome.browserAction.BadgeBackgroundColorDetails
+    details: BadgeColorDetails
   ): Promise<void> {
     return new Promise((resolve, reject) =>
       chrome.browserAction.setBadgeBackgroundColor(details, () => {
@@ -213,11 +214,10 @@ export namespace browser.action {
 }
 
 export namespace browser.contextMenus {
+  type CreateProperties = chrome.contextMenus.CreateProperties;
   export type UpdateProperties = chrome.contextMenus.UpdateProperties;
 
-  export function create(
-    createProperties: chrome.contextMenus.CreateProperties
-  ): Promise<void> {
+  export function create(createProperties: CreateProperties): Promise<void> {
     return new Promise((resolve, reject) =>
       chrome.contextMenus.create(createProperties, () => {
         if (chrome.runtime.lastError) {
@@ -231,7 +231,7 @@ export namespace browser.contextMenus {
 
   export function update(
     id: string,
-    updateProperties: chrome.contextMenus.UpdateProperties
+    updateProperties: UpdateProperties
   ): Promise<void> {
     return new Promise((resolve, reject) =>
       chrome.contextMenus.update(id, updateProperties, () => {
