@@ -9,7 +9,7 @@ export default abstract class Notification {
       message: `${browser.i18n.getMessage(
         'changelog_2_0_0'
       )}\n${browser.i18n.getMessage('changelog_1_8')}`,
-      requireInteraction: true,
+      // requireInteraction: true,
     });
   }
 }

@@ -3,7 +3,7 @@ module.exports = function addStorageLoggingCommandCode(content) {
   console.log(`Set ${options.platform} api...`);
   switch (options.platform) {
     case 'firefox':
-      content = 'export const browser = self.browser;\n';
+      content = content.replace('isChromium = true', 'isChromium = false');
       break;
     case 'whale':
       content = content.replace(/chrome/g, 'whale');
