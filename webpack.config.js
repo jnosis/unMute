@@ -5,22 +5,24 @@ const dev = require('./webpack/webpack.dev.js');
 const prod = require('./webpack/webpack.prod.js');
 const modify = require('./webpack/manifest-loader.js');
 const path = require('path');
-const loader = path.join(__dirname, `webpack/firefox-api-loader.js`);
+const loader = path.join(__dirname, `webpack/api-loader.js`);
 const api = path.join(__dirname, 'src/Api/api.ts');
 
 module.exports = (env) => {
   return merge(!!env.production ? prod : dev, {
     module: {
-      rules:
-        env.platform === 'firefox'
-          ? [
-              {
-                test: /\.tsx?$/,
-                use: loader,
-                resource: api,
-              },
-            ]
-          : [],
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: {
+            loader,
+            options: {
+              platform: env.platform,
+            },
+          },
+          resource: api,
+        },
+      ],
     },
     plugins: [
       new CopyPlugin({
