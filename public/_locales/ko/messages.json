@@ -3,7 +3,16 @@
     "message": "unMute(언뮤트)"
   },
   "extensionDescription": {
-    "message": "Manually/Automatically Mute Your Tabs for Chrome"
+    "message": "Manually/Automatically Mute Your Tabs for Google Chrome."
+  },
+  "extensionDescriptionFirefox": {
+    "message": "Manually/Automatically Mute Your Tabs for Firefox."
+  },
+  "extensionDescriptionEdge": {
+    "message": "Manually/Automatically Mute Your Tabs for Microsoft Edge."
+  },
+  "extensionDescriptionWhale": {
+    "message": "Manually/Automatically Mute Your Tabs for Naver Whale."
   },
 
   "command_muteCurrentTab": {

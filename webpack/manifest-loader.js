@@ -8,6 +8,7 @@ module.exports = function makeManifest(content, mode, platform) {
       const chrome = { ...manifest.chrome };
       delete manifest.chrome;
       delete manifest.firefox;
+      delete manifest.edge;
       delete manifest.whale;
       manifest = { ...manifest, ...chrome };
       break;
@@ -15,13 +16,22 @@ module.exports = function makeManifest(content, mode, platform) {
       const firefox = { ...manifest.firefox };
       delete manifest.chrome;
       delete manifest.firefox;
+      delete manifest.edge;
       delete manifest.whale;
       manifest = { ...manifest, ...firefox };
       break;
+    case 'edge':
+      const edge = { ...manifest.edge };
+      delete manifest.chrome;
+      delete manifest.firefox;
+      delete manifest.edge;
+      delete manifest.whale;
+      manifest = { ...manifest, ...edge };
     case 'whale':
       const whale = { ...manifest.whale };
       delete manifest.chrome;
       delete manifest.firefox;
+      delete manifest.edge;
       delete manifest.whale;
       manifest = { ...manifest, ...whale };
 
