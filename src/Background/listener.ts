@@ -14,6 +14,7 @@ import {
   ContextMenuId,
   OffBehavior,
   OptionPageMessage,
+  OptionPageResponse,
 } from '../types/types';
 import { toggleContextMenus, update } from './update';
 
@@ -147,7 +148,7 @@ function onSyncChanged(changes: {
 function onMessage(
   message: OptionPageMessage,
   sender: browser.runtime.MessageSender,
-  sendResponse: (response?: any) => void
+  sendResponse: (response?: OptionPageResponse) => void
 ) {
   console.log(`On message: ${message}`);
   const response = { response: '' };
@@ -180,6 +181,10 @@ function onMessage(
       case 'reset':
         ChangeOption.reset();
         response.response = `${message.id}`;
+        break;
+      case 'hidden':
+        ChangeOption.setAutoMode(message.value as AutoMode);
+        response.response = 'special';
         break;
 
       default:
@@ -435,7 +440,9 @@ async function setUpdatedRecentTabIds(
 function setFixTab(tabId: number) {
   loadOption(
     ({ autoMode, autoState }) =>
-      autoState && autoMode === 'fix' && saveStorage({ fixedTabId: tabId })
+      autoState &&
+      autoMode.slice(0, 3) === 'fix' &&
+      saveStorage({ fixedTabId: tabId })
   );
 }
 

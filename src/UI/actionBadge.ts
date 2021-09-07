@@ -80,6 +80,8 @@ export default abstract class ActionBadge {
         text = 'R';
         break;
       case 'fix':
+      case 'fixOR':
+      case 'fixOC':
         text = 'F';
         break;
       case 'all':
@@ -109,7 +111,7 @@ export default abstract class ActionBadge {
   ) {
     console.trace(`Update action: fixTab: ${fixTabId}`);
     const tabs = await browser.tabs.query({});
-    if (autoState && autoMode === 'fix') {
+    if (autoState && autoMode.slice(0, 3) === 'fix') {
       tabs.forEach((tab) => {
         const tabId = tab.id;
         const color: Color = tabId === fixTabId ? this.green : this.red;

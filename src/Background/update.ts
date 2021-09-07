@@ -16,18 +16,25 @@ export function doAutoMute() {
     ['autoState', 'autoMode', 'recentTabIds', 'fixedTabId'],
     ({ autoState, autoMode, recentTabIds, fixedTabId }: StorageProperties) => {
       if (autoState) {
+        const recentTabId = recentTabIds ? recentTabIds[0] : undefined;
         switch (autoMode) {
           case 'current':
             Mute.doAutoMute(autoMode);
             break;
           case 'recent':
-            recentTabIds && Mute.doAutoMute(autoMode, recentTabIds[0]);
+            Mute.doAutoMute(autoMode, recentTabId);
             break;
           case 'fix':
             Mute.doAutoMute(autoMode, fixedTabId);
             break;
           case 'all':
             Mute.doAutoMute(autoMode);
+            break;
+          case 'fixOR':
+            Mute.doAutoMute(autoMode, fixedTabId, recentTabId);
+            break;
+          case 'fixOC':
+            Mute.doAutoMute(autoMode, fixedTabId);
             break;
           default:
             throw new Error(`Unavailable AutoMode: ${autoMode}`);

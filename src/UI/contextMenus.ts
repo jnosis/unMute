@@ -53,9 +53,13 @@ export default abstract class ContextMenu {
           visible: option.autoState ? false : true,
         });
       } else if (id === 'autoMode') {
-        browser.contextMenus.update(`${option.autoMode}`, {
-          checked: true,
-        });
+        if (option.autoMode !== 'fixOR' && option.autoMode !== 'fixOC') {
+          browser.contextMenus.update(`${option.autoMode}`, {
+            checked: true,
+          });
+        } else {
+          browser.contextMenus.update('fix', { checked: true });
+        }
       } else if (id === 'actionMode') {
         browser.contextMenus.update(`actionMode_${option.actionMode}`, {
           checked: true,

@@ -5,7 +5,8 @@ export type ActionMode =
   | 'autoMode'
   | 'fixTab';
 export type Command = ActionMode | 'dev';
-export type AutoMode = 'current' | 'recent' | 'fix' | 'all';
+export type HiddenMode = 'fixOR' | 'fixOC';
+export type AutoMode = 'current' | 'recent' | 'fix' | 'all' | HiddenMode;
 export type AutoState = 'on' | 'off';
 export type OffBehavior = 'release' | 'notRelease';
 export type ContextMenuId =
@@ -30,7 +31,8 @@ export type OptionPageMessageId =
   | 'offBehavior'
   | 'recentBehavior'
   | 'contextMenus'
-  | 'reset';
+  | 'reset'
+  | 'hidden';
 export type OptionPageMessage = {
   id: OptionPageMessageId;
   value: string | boolean;

@@ -92,20 +92,20 @@ async function getPreviousValues(): Promise<StorageProperties> {
         values.actionMode = 'muteCurrentTab';
         break;
     }
-  }
-  if (previousStorage.AUTO_RECENT) {
-    values.autoMode = 'recent';
-  } else if (previousStorage.AUTO_FIX) {
-    values.autoMode = 'fix';
-  } else {
-    values.autoMode = 'current';
-  }
-  values.autoState = !!previousStorage.AUTO_MUTE;
-  if (previousStorage.AUTO_OFF !== undefined) {
-    values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
+    if (previousStorage.AUTO_RECENT) {
+      values.autoMode = 'recent';
+    } else if (previousStorage.AUTO_FIX) {
+      values.autoMode = 'fix';
+    } else {
+      values.autoMode = 'current';
+    }
+    values.autoState = !!previousStorage.AUTO_MUTE;
+    if (previousStorage.AUTO_OFF !== undefined) {
+      values.offBehavior = previousStorage.AUTO_OFF ? 'release' : 'notRelease';
+    }
+    await browser.storage.sync.clear();
   }
 
-  await browser.storage.sync.clear();
   return values;
 }
 
@@ -195,6 +195,8 @@ export abstract class ChangeOption {
           this.setAutoMode('fix', callback);
           break;
         case 'fix':
+        case 'fixOR':
+        case 'fixOC':
           this.setAutoMode('all', callback);
           break;
         case 'all':

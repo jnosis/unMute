@@ -14,7 +14,7 @@ export default abstract class Mute {
     tabs.forEach((tab) => tab.id && this.toggleMute(tab.id));
   }
 
-  static async doAutoMute(mode: AutoMode, tabId?: number) {
+  static async doAutoMute(mode: AutoMode, tabId?: number, hiddenId?: number) {
     console.trace(`Do auto mute: ${mode}, ${tabId}`);
     switch (mode) {
       case 'current':
@@ -29,6 +29,12 @@ export default abstract class Mute {
       case 'all':
         this.doAllMode();
         break;
+      case 'fixOR':
+        this.doFixOrRecentMode(tabId, hiddenId);
+        break;
+      case 'fixOC':
+        this.doFixOrCurrentMode(tabId);
+        break;
 
       default:
         throw new Error(`Unavailable AutoMode: ${mode}`);
@@ -36,11 +42,11 @@ export default abstract class Mute {
   }
   static async doCurrentMode() {
     const tabs = await browser.tabs.query({ audible: true });
-    const currentTabs = await browser.tabs.query({
+    const _currentTab = await browser.tabs.query({
       active: true,
       currentWindow: true,
     });
-    const currentTab = currentTabs[0];
+    const currentTab = _currentTab[0];
     console.trace(`Do current mode: ${currentTab}`);
     if (currentTab?.id) {
       const currentTabId = currentTab.id;
@@ -81,5 +87,35 @@ export default abstract class Mute {
     tabs.forEach(
       (tab) => tab.id && browser.tabs.update(tab.id, { muted: false })
     );
+  }
+
+  static async doFixOrRecentMode(fixedTabId?: number, recentTabId?: number) {
+    console.trace(`Do fix or recent mode: ${fixedTabId}, ${recentTabId}`);
+    const tabs = await browser.tabs.query({ audible: true });
+    tabs
+      .map((tab) => tab.id)
+      .forEach((id) =>
+        browser.tabs.update(id as number, {
+          muted: id !== fixedTabId && id !== recentTabId,
+        })
+      );
+  }
+  static async doFixOrCurrentMode(fixedTabId?: number) {
+    console.trace(`Do fix or current mode: ${fixedTabId}`);
+    const tabs = await browser.tabs.query({ audible: true });
+    const _currentTab = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const currentTab = _currentTab[0];
+    let currentTabId = currentTab ? currentTab.id : undefined;
+
+    tabs
+      .map((tab) => tab.id)
+      .forEach((id) =>
+        browser.tabs.update(id as number, {
+          muted: id !== fixedTabId && id !== currentTabId,
+        })
+      );
   }
 }
