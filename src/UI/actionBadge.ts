@@ -33,39 +33,35 @@ export default abstract class ActionBadge {
   private static async updateMuteCurrentTab(autoState: boolean) {
     console.trace(`Update action: muteCurrentTab`);
     browser.action.setBadgeText({ text: '' });
-    const tabs = await browser.tabs.query({});
-    tabs.forEach((tab) => {
-      if (tab.audible && !autoState) {
-        tab.id && browser.action.enable(tab.id);
-      } else {
-        tab.id && browser.action.disable(tab.id);
-      }
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
     });
+    const audible = tab?.audible;
+    if (audible && !autoState) {
+      browser.action.enable();
+    } else {
+      browser.action.disable();
+    }
   }
 
   private static async updateToggleAllTabs(autoState: boolean) {
     console.trace(`Update action: toggleAllTabs: ${autoState}`);
     browser.action.setBadgeText({ text: '' });
-    const tabs = await browser.tabs.query({});
     if (!autoState) {
-      tabs.forEach((tab) => tab.id && browser.action.enable(tab.id));
+      browser.action.enable();
     } else {
-      tabs.forEach((tab) => tab.id && browser.action.disable(tab.id));
+      browser.action.disable();
     }
   }
 
   private static async updateAutoMute(autoState: boolean) {
     console.trace(`Update action: autoState: ${autoState}`);
-    const tabs = await browser.tabs.query({});
+    // const tabs = await browser.tabs.query({});
     const color: Color = autoState ? this.green : this.red;
     const text: 'on' | 'off' = autoState ? 'on' : 'off';
-    tabs.forEach((tab) => {
-      const tabId = tab.id;
-      if (tabId) {
-        browser.action.enable(tabId);
-        browser.action.setBadgeBackgroundColor({ color, tabId });
-      }
-    });
+    browser.action.enable();
+    browser.action.setBadgeBackgroundColor({ color });
     browser.action.setBadgeText({ text });
   }
 
@@ -92,15 +88,9 @@ export default abstract class ActionBadge {
         break;
     }
 
-    const tabs = await browser.tabs.query({});
     const color: Color = autoState ? this.green : this.red;
-    tabs.forEach((tab) => {
-      const tabId = tab.id;
-      if (tabId) {
-        browser.action.enable(tabId);
-        browser.action.setBadgeBackgroundColor({ color, tabId });
-      }
-    });
+    browser.action.enable();
+    browser.action.setBadgeBackgroundColor({ color });
     browser.action.setBadgeText({ text });
   }
 
@@ -110,26 +100,21 @@ export default abstract class ActionBadge {
     fixTabId?: number
   ) {
     console.trace(`Update action: fixTab: ${fixTabId}`);
-    const tabs = await browser.tabs.query({});
     if (autoState && autoMode.slice(0, 3) === 'fix') {
-      tabs.forEach((tab) => {
-        const tabId = tab.id;
-        const color: Color = tabId === fixTabId ? this.green : this.red;
-        if (tabId) {
-          browser.action.enable(tabId);
-          browser.action.setBadgeBackgroundColor({ color, tabId });
-        }
+      const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
       });
+      const tabId = tab?.id;
+      const color: Color = tabId && tabId === fixTabId ? this.green : this.red;
+      browser.action.enable();
+      browser.action.setBadgeBackgroundColor({ color });
+      browser.action.setBadgeText({ text: 'fix' });
     } else {
-      tabs.forEach((tab) => {
-        const tabId = tab.id;
-        const color: Color = this.grey;
-        if (tabId) {
-          browser.action.setBadgeBackgroundColor({ color, tabId });
-          browser.action.disable(tabId);
-        }
-      });
+      const color: Color = this.grey;
+      browser.action.setBadgeText({ text: '' });
+      browser.action.setBadgeBackgroundColor({ color });
+      browser.action.disable();
     }
-    browser.action.setBadgeText({ text: 'fix' });
   }
 }
