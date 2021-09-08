@@ -11,17 +11,17 @@ export default abstract class ContextMenu {
       return;
     }
     await this.createByIdAndItsChildren(option, 'muteCurrentTab');
-    await this.createByIdAndItsChildren(option, 'autoMute', false, true, [
+    await this.createByIdAndItsChildren(option, 'autoMute', false, [
       'on',
       'off',
     ]);
-    await this.createByIdAndItsChildren(option, 'autoMode', false, true, [
+    await this.createByIdAndItsChildren(option, 'autoMode', false, [
       'current',
       'recent',
       'fix',
       'all',
     ]);
-    await this.createByIdAndItsChildren(option, 'actionMode', false, true, [
+    await this.createByIdAndItsChildren(option, 'actionMode', false, [
       'actionMode_muteCurrentTab',
       'actionMode_toggleAllTabs',
       'actionMode_autoMute',
@@ -104,7 +104,6 @@ export default abstract class ContextMenu {
     option: Option,
     id: ContextMenuId,
     isUI: boolean = false,
-    hasChildId: boolean = false,
     childIds?: Array<ContextMenuId>
   ) {
     console.trace(`Create context menu: ${id}`);
@@ -115,7 +114,7 @@ export default abstract class ContextMenu {
         ? ['browser_action']
         : ['page', 'video', 'audio', 'browser_action'],
     });
-    if (hasChildId && childIds) {
+    if (!!childIds) {
       childIds.forEach(async (childId) => {
         console.trace(`Create child context menu: ${childId}`);
         browser.contextMenus.create({

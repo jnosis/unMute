@@ -92,7 +92,11 @@ function onStorageChanged(changes: {
     if (recentBehavior.newValue === 'notRelease') {
       loadStorage('recentTabIds', ({ recentTabIds }) => {
         recentTabIds &&
-          setUpdatedRecentTabIds(-1, recentTabIds, false, false, false);
+          setUpdatedRecentTabIds(-1, recentTabIds, {
+            audible: false,
+            isRecent: false,
+            isRelease: false,
+          });
       });
     }
   }
@@ -317,7 +321,11 @@ function onTabActivated(tabId: number) {
       const audible = !!tab.audible;
       const isRelease = recentBehavior === 'release';
       const ids: number[] = recentTabIds ? recentTabIds : [];
-      await setUpdatedRecentTabIds(tabId, ids, audible, true, isRelease);
+      await setUpdatedRecentTabIds(tabId, ids, {
+        audible,
+        isRelease,
+        isRecent: true,
+      });
     }
   );
 }
@@ -337,8 +345,9 @@ function onTabUpdated(
       const audible = !!tab.audible;
       const isRecent = tab.active && tab.windowId === window.id;
       const isRelease = recentBehavior === 'release';
+      const conditions = { audible, isRecent, isRelease };
       const ids: number[] = !!recentTabIds ? recentTabIds : [];
-      await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
+      await setUpdatedRecentTabIds(tabId, ids, conditions);
     }
   );
 }
@@ -358,8 +367,9 @@ function onWindowFocusChanged(windowId: number) {
         const audible = !!tab.audible;
         const isRecent = tab.active && tab.windowId === windowId;
         const isRelease = recentBehavior === 'release';
+        const conditions = { audible, isRecent, isRelease };
         const ids: number[] = !!recentTabIds ? recentTabIds : [];
-        await setUpdatedRecentTabIds(tabId, ids, audible, isRecent, isRelease);
+        await setUpdatedRecentTabIds(tabId, ids, conditions);
       }
     }
   );
@@ -371,11 +381,18 @@ function onTabRemoved(tabId: number) {
     ['recentTabIds', 'recentBehavior'],
     async ({ recentTabIds, recentBehavior }) => {
       const isRelease = recentBehavior === 'release';
+      const conditions = { isRelease, audible: false, isRecent: true };
       const oldIds: number[] = !!recentTabIds ? recentTabIds : [];
-      await setUpdatedRecentTabIds(tabId, oldIds, false, true, isRelease);
+      await setUpdatedRecentTabIds(tabId, oldIds, conditions);
     }
   );
 }
+
+type RecentConditions = {
+  audible: boolean;
+  isRecent: boolean;
+  isRelease: boolean;
+};
 
 async function checkRecentTabIds(
   ids: number[],
@@ -391,19 +408,17 @@ async function checkRecentTabIds(
 async function updateRecentTabIds(
   tabId: number,
   ids: number[],
-  audible: boolean,
-  isRecent: boolean,
-  isRelease: boolean
+  conditions: RecentConditions
 ): Promise<number[]> {
   let updatedIds: number[] = [...ids];
-  if (audible) {
-    if (isRecent) {
+  if (conditions.audible) {
+    if (conditions.isRecent) {
       updatedIds = [...new Set([tabId, ...ids])];
-    } else if (isRelease) {
+    } else if (conditions.isRelease) {
       updatedIds = [...new Set([...ids, tabId])];
     }
   }
-  updatedIds = await checkRecentTabIds(updatedIds, isRelease);
+  updatedIds = await checkRecentTabIds(updatedIds, conditions.isRelease);
 
   return updatedIds;
 }
@@ -418,18 +433,10 @@ function equal<T>(arr1: T[], arr2: T[]): boolean {
 async function setUpdatedRecentTabIds(
   tabId: number,
   ids: number[],
-  audible: boolean,
-  isRecent: boolean,
-  isRelease: boolean
+  conditions: RecentConditions
 ) {
   console.trace(`SetUpdatedRecentTabIds: ${tabId}`);
-  const updatedIds = await updateRecentTabIds(
-    tabId,
-    ids,
-    audible,
-    isRecent,
-    isRelease
-  );
+  const updatedIds = await updateRecentTabIds(tabId, ids, conditions);
 
   equal(updatedIds, ids)
     ? update(['muteCurrentTab'])
