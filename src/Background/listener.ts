@@ -321,6 +321,7 @@ function onTabActivated(tabId: number) {
       const audible = !!tab.audible;
       const isRelease = recentBehavior === 'release';
       const ids: number[] = recentTabIds ? recentTabIds : [];
+
       await setUpdatedRecentTabIds(tabId, ids, {
         audible,
         isRelease,
@@ -340,13 +341,12 @@ function onTabUpdated(
     ['recentTabIds', 'recentBehavior'],
     async ({ recentTabIds, recentBehavior }) => {
       const window = await browser.windows.getCurrent();
-      console.log(`WindowId: ${tab.windowId}, ${window.id}`);
-
       const audible = !!tab.audible;
       const isRecent = tab.active && tab.windowId === window.id;
       const isRelease = recentBehavior === 'release';
       const conditions = { audible, isRecent, isRelease };
       const ids: number[] = !!recentTabIds ? recentTabIds : [];
+
       await setUpdatedRecentTabIds(tabId, ids, conditions);
     }
   );
@@ -361,15 +361,15 @@ function onWindowFocusChanged(windowId: number) {
         active: true,
         currentWindow: true,
       });
-      const tabId = tab?.id;
 
-      if (tab && tabId) {
+      if (tab && tab.id) {
         const audible = !!tab.audible;
         const isRecent = tab.active && tab.windowId === windowId;
         const isRelease = recentBehavior === 'release';
         const conditions = { audible, isRecent, isRelease };
         const ids: number[] = !!recentTabIds ? recentTabIds : [];
-        await setUpdatedRecentTabIds(tabId, ids, conditions);
+
+        await setUpdatedRecentTabIds(tab.id, ids, conditions);
       }
     }
   );
@@ -383,6 +383,7 @@ function onTabRemoved(tabId: number) {
       const isRelease = recentBehavior === 'release';
       const conditions = { isRelease, audible: false, isRecent: true };
       const oldIds: number[] = !!recentTabIds ? recentTabIds : [];
+
       await setUpdatedRecentTabIds(tabId, oldIds, conditions);
     }
   );
@@ -400,6 +401,7 @@ async function checkRecentTabIds(
 ): Promise<number[]> {
   const tabs = await browser.tabs.query({ audible: true });
   const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
+
   return ids
     .filter((_id, index) => isRelease || index === 0)
     .filter((id) => recentRecentTabIds.includes(id));
@@ -410,15 +412,17 @@ async function updateRecentTabIds(
   ids: number[],
   conditions: RecentConditions
 ): Promise<number[]> {
+  const { audible, isRecent, isRelease } = conditions;
   let updatedIds: number[] = [...ids];
-  if (conditions.audible) {
-    if (conditions.isRecent) {
+
+  if (audible) {
+    if (isRecent) {
       updatedIds = [...new Set([tabId, ...ids])];
-    } else if (conditions.isRelease) {
+    } else if (isRelease) {
       updatedIds = [...new Set([...ids, tabId])];
     }
   }
-  updatedIds = await checkRecentTabIds(updatedIds, conditions.isRelease);
+  updatedIds = await checkRecentTabIds(updatedIds, isRelease);
 
   return updatedIds;
 }
