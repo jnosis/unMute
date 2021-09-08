@@ -15,6 +15,9 @@
     "dev:firefox": "webpack --env platform=firefox --watch",
     "build:firefox": "webpack --env platform=firefox",
     "prod:firefox": "webpack --env platform=firefox --env production",
+    "dev:edge": "webpack --env platform=edge --watch",
+    "build:edge": "webpack --env platform=edge",
+    "prod:edge": "webpack --env platform=edge --env production",
     "dev:whale": "webpack --env platform=whale --watch",
     "build:whale": "webpack --env platform=whale",
     "prod:whale": "webpack --env platform=whale --env production"
