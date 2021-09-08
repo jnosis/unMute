@@ -66,8 +66,9 @@ function loadOptionsPage() {
       const autoSateOption = document.querySelector(
         `#autoState`
       ) as HTMLInputElement;
+      const isFix = autoMode.slice(0, 3) === 'fix';
       const autoModeOption = document.querySelector(
-        `#${autoMode}`
+        isFix ? '#fix' : `#${autoMode}`
       ) as HTMLInputElement;
       const offBehaviorOption = document.querySelector(
         `#${offBehavior}`
