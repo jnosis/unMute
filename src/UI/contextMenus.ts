@@ -65,11 +65,10 @@ export default abstract class ContextMenu {
           checked: true,
         });
       } else if (id === 'muteCurrentTab') {
-        const tabs = await browser.tabs.query({
+        const [tab] = await browser.tabs.query({
           active: true,
           currentWindow: true,
         });
-        const tab = tabs[0];
         if (tab) {
           if (tab.audible) {
             const messageId: ContextMenuId = tab.mutedInfo?.muted

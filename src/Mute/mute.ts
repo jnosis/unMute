@@ -42,11 +42,10 @@ export default abstract class Mute {
   }
   static async doCurrentMode() {
     const tabs = await browser.tabs.query({ audible: true });
-    const _currentTab = await browser.tabs.query({
+    const [currentTab] = await browser.tabs.query({
       active: true,
       currentWindow: true,
     });
-    const currentTab = _currentTab[0];
     console.trace(`Do current mode: ${currentTab}`);
     if (currentTab?.id) {
       const currentTabId = currentTab.id;
@@ -103,11 +102,10 @@ export default abstract class Mute {
   static async doFixOrCurrentMode(fixedTabId?: number) {
     console.trace(`Do fix or current mode: ${fixedTabId}`);
     const tabs = await browser.tabs.query({ audible: true });
-    const _currentTab = await browser.tabs.query({
+    const [currentTab] = await browser.tabs.query({
       active: true,
       currentWindow: true,
     });
-    const currentTab = _currentTab[0];
     let currentTabId = currentTab ? currentTab.id : undefined;
 
     tabs

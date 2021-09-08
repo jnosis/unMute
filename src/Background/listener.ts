@@ -348,11 +348,10 @@ function onWindowFocusChanged(windowId: number) {
   loadStorage(
     ['recentTabIds', 'recentBehavior'],
     async ({ recentTabIds, recentBehavior }) => {
-      const tabs = await browser.tabs.query({
+      const [tab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       });
-      const tab = tabs[0];
       const tabId = tab?.id;
 
       if (tab && tabId) {
