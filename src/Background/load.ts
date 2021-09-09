@@ -5,8 +5,8 @@ import {
   loadStorage,
   saveStorage,
 } from '../Option/option';
-import ContextMenu from '../UI/contextMenus';
-import Notification from '../UI/notification';
+import * as ContextMenu from '../UI/contextMenus';
+import * as Notification from '../UI/notification';
 import { doAutoMute, updateActionBadge } from './update';
 
 export class Load {
@@ -25,15 +25,15 @@ export class Load {
     loadStorage('wasInit', ({ wasInit }) => {
       console.log(`Initialize: ${!!wasInit}`);
       if (wasInit) {
-        this.load(callback, isUpdated);
+        this.load(isUpdated, callback);
       } else {
-        initStorage(() => this.load(callback, isUpdated));
+        initStorage(() => this.load(isUpdated, callback));
       }
     });
     if (isUpdated) Notification.create();
   }
 
-  private load(callback: () => void, isUpdated: boolean) {
+  private load(isUpdated: boolean, callback: () => void) {
     loadOption((option) => {
       console.log(`load`);
       isUpdated || saveStorage({ recentTabIds: [] });

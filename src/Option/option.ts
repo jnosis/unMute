@@ -1,5 +1,6 @@
 import { browser } from '../Api/api';
 import { ActionMode, AutoMode, OffBehavior } from '../types/types';
+import * as Change from './changeOption';
 
 export type Option = {
   actionMode: ActionMode;
@@ -141,71 +142,4 @@ export async function loadOption(callback: (option: Option) => void) {
   );
 }
 
-export abstract class ChangeOption {
-  static setActionMode(actionMode: ActionMode, callback?: () => void) {
-    console.trace(`Set action mode: ${actionMode}`);
-    saveOption({ actionMode }, callback);
-    browser.storage.sync.set({ actionMode });
-  }
-  static setAutoMode(autoMode: AutoMode, callback?: () => void) {
-    console.trace(`Set auto mode: ${autoMode}`);
-    saveOption({ autoMode }, callback);
-    browser.storage.sync.set({ autoMode });
-  }
-  static setAutoState(autoState: boolean, callback?: () => void) {
-    console.trace(`Set auto state: ${autoState}`);
-    saveOption({ autoState }, callback);
-    browser.storage.sync.set({ autoState });
-  }
-  static setOffBehavior(offBehavior: OffBehavior, callback?: () => void) {
-    console.trace(`Set off behavior: ${offBehavior}`);
-    saveOption({ offBehavior }, callback);
-    browser.storage.sync.set({ offBehavior });
-  }
-  static setRecentBehavior(recentBehavior: OffBehavior, callback?: () => void) {
-    console.trace(`Set off behavior: ${recentBehavior}`);
-    saveOption({ recentBehavior }, callback);
-    browser.storage.sync.set({ recentBehavior });
-  }
-  static setContextMenus(contextMenus: boolean, callback?: () => void) {
-    console.trace(`Set context menus: ${contextMenus}`);
-    saveOption({ contextMenus }, callback);
-    browser.storage.sync.set({ contextMenus });
-  }
-  static reset() {
-    console.trace(`Reset option`);
-    saveOption();
-  }
-
-  static toggleAutoMute(callback?: () => void) {
-    console.trace(`Toggle auto mute`);
-    loadOption(({ autoState }) => {
-      this.setAutoState(!autoState, callback);
-    });
-  }
-
-  static rotateAutoMode(callback?: () => void) {
-    console.trace(`Rotate auto mode`);
-    loadOption(({ autoMode }) => {
-      switch (autoMode) {
-        case 'current':
-          this.setAutoMode('recent', callback);
-          break;
-        case 'recent':
-          this.setAutoMode('fix', callback);
-          break;
-        case 'fix':
-        case 'fixOR':
-        case 'fixOC':
-          this.setAutoMode('all', callback);
-          break;
-        case 'all':
-          this.setAutoMode('current', callback);
-          break;
-
-        default:
-          throw Error(`Unavailable auto mode ${autoMode}`);
-      }
-    });
-  }
-}
+export const ChangeOption = Change;

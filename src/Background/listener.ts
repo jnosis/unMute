@@ -1,5 +1,5 @@
 import { browser } from '../Api/api';
-import Mute from '../Mute/mute';
+import * as Mute from '../Mute/mute';
 import {
   ChangeOption,
   loadOption,
@@ -236,7 +236,7 @@ export class Listener {
           Mute.toggleMute(tabId);
           break;
         case 'toggleAllTabs':
-          Mute.toggleAllTab();
+          Mute.toggleAllTabs();
           break;
         case 'autoMute':
           ChangeOption.toggleAutoMute(() => this.setFixTab(tabId));
@@ -261,7 +261,7 @@ export class Listener {
         Mute.toggleMute(tabId);
         break;
       case 'toggleAllTabs':
-        Mute.toggleAllTab();
+        Mute.toggleAllTabs();
         break;
       case 'autoMute':
         ChangeOption.toggleAutoMute(() => this.setFixTab(tabId));
@@ -326,7 +326,7 @@ export class Listener {
         ChangeOption.setActionMode('toggleAllTabs');
         break;
       case 'toggleAllTabs':
-        Mute.toggleAllTab();
+        Mute.toggleAllTabs();
         break;
       case 'shortcuts':
         browser.tabs.create({ url: 'chrome://extensions/shortcuts' });

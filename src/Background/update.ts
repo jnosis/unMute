@@ -1,8 +1,8 @@
-import Mute from '../Mute/mute';
+import * as Mute from '../Mute/mute';
 import { loadOption, loadStorage, StorageProperties } from '../Option/option';
 import { ContextMenuId } from '../types/types';
-import ActionBadge from '../UI/actionBadge';
-import ContextMenu from '../UI/contextMenus';
+import * as ActionBadge from '../UI/actionBadge';
+import * as ContextMenu from '../UI/contextMenus';
 
 export function update(ids?: ContextMenuId[]) {
   console.trace(`update`);
