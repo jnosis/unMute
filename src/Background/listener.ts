@@ -26,10 +26,9 @@ type RecentConditions = {
 
 export class Listener {
   constructor() {
-    browser.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === 'local') this.onLocalChanged(changes);
-      else if (areaName === 'sync') this.onSyncChanged(changes);
-    });
+    browser.storage.onChanged.addListener((changes, areaName) =>
+      this.onStorageChanged(changes, areaName)
+    );
 
     browser.runtime.onMessage.addListener((message, sender, sendResponse) =>
       this.onMessage(message, sender, sendResponse)
@@ -73,6 +72,25 @@ export class Listener {
       browser.tabs.create({ url });
     }
     browser.notifications.clear(notificationId);
+  }
+
+  private onStorageChanged(
+    changes: {
+      [key: string]: browser.storage.StorageChange;
+    },
+    areaName: 'sync' | 'local' | 'managed'
+  ) {
+    switch (areaName) {
+      case 'local':
+        this.onLocalChanged(changes);
+        break;
+      case 'sync':
+        this.onSyncChanged(changes);
+        break;
+
+      default:
+        break;
+    }
   }
 
   private onLocalChanged(changes: {
