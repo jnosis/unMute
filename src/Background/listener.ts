@@ -66,14 +66,6 @@ export class Listener {
     browser.tabs.onRemoved.addListener((tabId) => this.onTabRemoved(tabId));
   }
 
-  private onNotificationClick(notificationId: string) {
-    if (notificationId === 'updated') {
-      let url = browser.runtime.getURL('changelog.html');
-      browser.tabs.create({ url });
-    }
-    browser.notifications.clear(notificationId);
-  }
-
   private onStorageChanged(
     changes: {
       [key: string]: browser.storage.StorageChange;
@@ -226,6 +218,14 @@ export class Listener {
       }
       sendResponse(response);
     }
+  }
+
+  private onNotificationClick(notificationId: string) {
+    if (notificationId === 'updated') {
+      let url = browser.runtime.getURL('changelog.html');
+      browser.tabs.create({ url });
+    }
+    browser.notifications.clear(notificationId);
   }
 
   private onActionClick(tabId: number) {
@@ -418,16 +418,17 @@ export class Listener {
     );
   }
 
-  private async checkRecentTabIds(
+  private async setUpdatedRecentTabIds(
+    tabId: number,
     ids: number[],
-    isRelease: boolean
-  ): Promise<number[]> {
-    const tabs = await browser.tabs.query({ audible: true });
-    const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
+    conditions: RecentConditions
+  ) {
+    console.trace(`SetUpdatedRecentTabIds: ${tabId}`);
+    const updatedIds = await this.updateRecentTabIds(tabId, ids, conditions);
 
-    return ids
-      .filter((_id, index) => isRelease || index === 0)
-      .filter((id) => recentRecentTabIds.includes(id));
+    this.equal(updatedIds, ids)
+      ? update(['muteCurrentTab'])
+      : saveStorage({ recentTabIds: updatedIds });
   }
 
   private async updateRecentTabIds(
@@ -450,24 +451,23 @@ export class Listener {
     return updatedIds;
   }
 
+  private async checkRecentTabIds(
+    ids: number[],
+    isRelease: boolean
+  ): Promise<number[]> {
+    const tabs = await browser.tabs.query({ audible: true });
+    const recentRecentTabIds: number[] = tabs.map((tab) => tab.id as number);
+
+    return ids
+      .filter((_id, index) => isRelease || index === 0)
+      .filter((id) => recentRecentTabIds.includes(id));
+  }
+
   private equal<T>(arr1: T[], arr2: T[]): boolean {
     return (
       arr1.length === arr2.length &&
       arr1.every((item, index) => item === arr2[index])
     );
-  }
-
-  private async setUpdatedRecentTabIds(
-    tabId: number,
-    ids: number[],
-    conditions: RecentConditions
-  ) {
-    console.trace(`SetUpdatedRecentTabIds: ${tabId}`);
-    const updatedIds = await this.updateRecentTabIds(tabId, ids, conditions);
-
-    this.equal(updatedIds, ids)
-      ? update(['muteCurrentTab'])
-      : saveStorage({ recentTabIds: updatedIds });
   }
 
   private setFixTab(tabId: number) {
