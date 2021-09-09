@@ -4,19 +4,21 @@ import { Load } from './load';
 
 export class Background {
   constructor() {
-    browser.runtime.onStartup.addListener(onStart);
-    browser.runtime.onInstalled.addListener(onInstalled);
+    browser.runtime.onStartup.addListener(() => this.onStart());
+    browser.runtime.onInstalled.addListener((details) =>
+      this.onInstalled(details)
+    );
   }
-}
 
-function onStart() {
-  new Load(addListener);
-}
+  private onStart() {
+    new Load(this.addListener);
+  }
 
-function onInstalled(details?: browser.runtime.InstalledDetails) {
-  new Load(addListener, details);
-}
+  private onInstalled(details?: browser.runtime.InstalledDetails) {
+    new Load(this.addListener, details);
+  }
 
-function addListener() {
-  new Listener();
+  private addListener() {
+    new Listener();
+  }
 }
