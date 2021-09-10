@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 
 export async function create() {
   browser.notifications.create('updated', {

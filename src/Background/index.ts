@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { Listener } from './listener';
 import { Load } from './load';
 

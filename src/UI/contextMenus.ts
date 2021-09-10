@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
 

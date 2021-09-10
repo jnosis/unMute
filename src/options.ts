@@ -1,4 +1,4 @@
-import { browser } from './Api/api';
+import * as browser from './Api/api';
 import localizeHtmlPage from './locale';
 import { loadOption } from './Option/option';
 import { OptionPageMessageId } from './types/types';
@@ -11,9 +11,9 @@ document.addEventListener('click', saveOptionsPage);
 browser.storage.onChanged.addListener(loadOptionsPage);
 
 async function sendMessage(id: OptionPageMessageId, value: string | boolean) {
-  // console.trace(id, value);
+  console.trace(id, value);
   const response = await browser.runtime.sendMessage({ id, value });
-  // console.log(`Response: ${response.response}`);
+  console.log(`Response: ${response.response}`);
   if (response.response === 'reset') location.reload();
 }
 

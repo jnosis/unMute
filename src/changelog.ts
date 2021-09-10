@@ -1,4 +1,4 @@
-import { browser } from './Api/api';
+import * as browser from './Api/api';
 import localizeHtmlPage from './locale';
 import { HiddenMode } from './types/types';
 

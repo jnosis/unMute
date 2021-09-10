@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 

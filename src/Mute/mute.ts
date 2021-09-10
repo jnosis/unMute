@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { AutoMode } from '../types/types';
 
 export async function toggleMute(tabId: number) {

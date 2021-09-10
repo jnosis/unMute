@@ -1,4 +1,4 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { ActionMode, AutoMode, OffBehavior } from '../types/types';
 import { loadOption, saveOption } from './option';
 

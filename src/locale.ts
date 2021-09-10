@@ -1,4 +1,4 @@
-import { browser } from './Api/api';
+import * as browser from './Api/api';
 
 export default function localizeHtmlPage() {
   const elements = document.querySelectorAll('.locale-text');

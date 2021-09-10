@@ -1,6 +1,5 @@
-import { browser } from '../Api/api';
+import * as browser from '../Api/api';
 import { ActionMode, AutoMode, OffBehavior } from '../types/types';
-import * as Change from './changeOption';
 
 export type Option = {
   actionMode: ActionMode;
@@ -142,4 +141,4 @@ export async function loadOption(callback: (option: Option) => void) {
   );
 }
 
-export const ChangeOption = Change;
+export * as ChangeOption from './changeOption';
