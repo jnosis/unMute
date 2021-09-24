@@ -3,46 +3,29 @@ module.exports = function makeManifest(content, mode, platform) {
   let manifest = JSON.parse(content);
 
   console.log(`load ${platform} manifest...`);
+  const { chrome, firefox, edge, whale, ...common } = manifest;
   switch (platform) {
     case 'chrome':
-      const chrome = { ...manifest.chrome };
-      delete manifest.chrome;
-      delete manifest.firefox;
-      delete manifest.edge;
-      delete manifest.whale;
-      manifest = { ...manifest, ...chrome };
+      manifest = { ...common, ...chrome };
       break;
     case 'firefox':
-      const firefox = { ...manifest.firefox };
-      delete manifest.chrome;
-      delete manifest.firefox;
-      delete manifest.edge;
-      delete manifest.whale;
-      manifest = { ...manifest, ...firefox };
+      manifest = { ...common, ...firefox };
       break;
     case 'edge':
-      const edge = { ...manifest.edge };
-      delete manifest.chrome;
-      delete manifest.firefox;
-      delete manifest.edge;
-      delete manifest.whale;
-      manifest = { ...manifest, ...edge };
+      manifest = { ...common, ...edge };
     case 'whale':
-      const whale = { ...manifest.whale };
-      delete manifest.chrome;
-      delete manifest.firefox;
-      delete manifest.edge;
-      delete manifest.whale;
-      manifest = { ...manifest, ...whale };
+      manifest = { ...common, ...whale };
 
     default:
       break;
   }
 
+  const { commands, options_ui, ...rest } = manifest;
   if (mode) {
     console.log('load production manifest...');
-    delete manifest.commands.dev;
-    delete manifest.options_ui.open_in_tab;
+    const { dev, ...prod } = commands;
+    const { open_in_tab, ...options } = options_ui;
+    manifest = { ...rest, commands: prod, options_ui: options };
   }
 
   console.log('manifest loaded');
