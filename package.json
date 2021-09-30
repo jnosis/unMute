@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "",
   "scripts": {
+    "start": "npm run dev",
     "dev": "webpack --env platform=chrome --watch",
     "build": "webpack --env platform=chrome",
     "prod": "webpack --env platform=chrome --env production",
