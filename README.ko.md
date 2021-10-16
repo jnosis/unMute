@@ -21,7 +21,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 - V2
 
-  - 2.0.0: 매니페스트 V3으로 변경 및 모든 코드 새로 작성
+  - 2.0.0: 모든 코드를 새로 작성. 모든 알려진 이슈 해결 및 매니페스트 v3 준비
 
 - Legacy
 
@@ -37,16 +37,18 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 ## Known Issues
 
-- 간혈적으로 확정자가 멈춤 (탭을 새로고침 하면 정상 작동 됨)
+-
 
 ## ToDo
 
 - improve Options UI
+- porting for firefox, edge, whale
 - and more...
 
 ## ScreenShot
 
-![](image/screenshot/screenshot_shortcut_ko.png)
+![](image/screenshot/screenshot_ko.png)
+![](image/screenshot/screenshot_options_ko.png)
 ![](image/screenshot/screenshot_context_menus_ko.png)
 
 ## License

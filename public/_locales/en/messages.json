@@ -225,7 +225,11 @@
   },
 
   "changelog_2_0_0": {
-    "message": "2.0.0: Migrate to manifest V3"
+    "message": "2.0.0: Rewrite whole code. every known issues fixed"
+  },
+
+  "welcome_v2": {
+    "message": "The all-new unMute V2 has been released."
   },
 
   "knownIssue1": {

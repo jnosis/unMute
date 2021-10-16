@@ -228,7 +228,11 @@
   },
 
   "changelog_2_0_0": {
-    "message": "2.0.0: 매니페스트 V3으로 변경"
+    "message": "2.0.0: 모든 알려진 이슈를 해결"
+  },
+
+  "welcome_v2": {
+    "message": "완전 새로운 언뮤트 V2가 출시 되었습니다."
   },
 
   "knownIssue1": {

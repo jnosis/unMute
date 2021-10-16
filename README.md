@@ -21,7 +21,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 - V2
 
-  - 2.0.0: Migrate to manifest V3 and rewrite whole code
+  - 2.0.0: Rewrite whole code. Fix all known issues and prepare for manifest v3
 
 - Legacy
 
@@ -37,16 +37,18 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 ## Known Issues
 
-- Sometimes extensions freezing (If you change or refresh tab, it will be work)
+-
 
 ## ToDo
 
 - improve Options UI
+- porting for firefox, edge, whale
 - and more...
 
 ## ScreenShot
 
-![](image/screenshot/screenshot_shortcut.png)
+![](image/screenshot/screenshot.png)
+![](image/screenshot/screenshot_options.png)
 ![](image/screenshot/screenshot_context_menus.png)
 
 ## License
