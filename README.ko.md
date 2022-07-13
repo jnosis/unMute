@@ -21,6 +21,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 - V2
 
+  - 2.0.1: 액션 뱃지 색상을 가시성 있게 변경
   - 2.0.0: 모든 코드를 새로 작성. 모든 알려진 이슈 해결 및 매니페스트 v3 준비
 
 - Legacy

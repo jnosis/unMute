@@ -228,6 +228,10 @@
     "message": "2.0.0: Rewrite whole code. every known issues fixed"
   },
 
+  "changelog_2_0_1": {
+    "message": "2.0.1: Fix action badge color to be visible"
+  },
+
   "welcome_v2": {
     "message": "The all-new unMute V2 has been released."
   },

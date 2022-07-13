@@ -8,8 +8,8 @@ export async function create() {
     message: `${browser.i18n.getMessage(
       'welcome_v2'
     )}\n${browser.i18n.getMessage(
-      'changelog_2_0_0'
-    )}\n${browser.i18n.getMessage('changelog_1_8')}`,
+      'changelog_2_0_1'
+    )}\n${browser.i18n.getMessage('changelog_2_0_0')}`,
     // requireInteraction: true,
   });
 }

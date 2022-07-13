@@ -21,6 +21,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 - V2
 
+  - 2.0.1: Fix action badge color to be visible
   - 2.0.0: Rewrite whole code. Fix all known issues and prepare for manifest v3
 
 - Legacy
