@@ -2,7 +2,7 @@ import * as browser from '../Api/api';
 import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 
-const green: Color = '#579242';
+const green: Color = '#50873d';
 const red: Color = '#9c2829';
 const grey: Color = '#5f6368';
 export function update(option: Option, fixTabId?: number) {

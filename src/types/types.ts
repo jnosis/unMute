@@ -23,7 +23,7 @@ export type ContextMenuId =
   | OffBehavior
   | 'shortcuts'
   | 'changelog';
-export type Color = '#579242' | '#9c2829' | '#5f6368';
+export type Color = '#50873d' | '#9c2829' | '#5f6368';
 export type OptionPageMessageId =
   | 'actionMode'
   | 'autoState'
