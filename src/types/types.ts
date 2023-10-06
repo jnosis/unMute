@@ -5,7 +5,8 @@ export type ActionMode =
   | 'autoMode'
   | 'fixTab';
 export type Command = ActionMode | 'dev';
-export type AutoMode = 'current' | 'recent' | 'fix' | 'all';
+export type HiddenMode = 'fixOR' | 'fixOC';
+export type AutoMode = 'current' | 'recent' | 'fix' | 'all' | HiddenMode;
 export type AutoState = 'on' | 'off';
 export type OffBehavior = 'release' | 'notRelease';
 export type ContextMenuId =
@@ -22,15 +23,20 @@ export type ContextMenuId =
   | OffBehavior
   | 'shortcuts'
   | 'changelog';
-export type Color = '#579242' | '#9c2829' | '#5f6368';
-export type OptionPageMessage =
+export type Color = '#50873d' | '#9c2829' | '#5f6368';
+export type OptionPageMessageId =
   | 'actionMode'
   | 'autoState'
   | 'autoMode'
   | 'offBehavior'
+  | 'recentBehavior'
+  | 'contextMenus'
   | 'reset'
-  | 'language';
-export type OptionPageResponse = {
-  message: OptionPageMessage;
+  | 'hidden';
+export type OptionPageMessage = {
+  id: OptionPageMessageId;
   value: string | boolean;
+};
+export type OptionPageResponse = {
+  response: string;
 };

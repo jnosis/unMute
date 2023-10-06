@@ -1,15 +1,15 @@
-import I18N from '../I18N/i18n';
+import * as browser from '../Api/api';
 
-export default abstract class Notification {
-  static async create() {
-    chrome.notifications.create('updated', {
-      type: 'basic',
-      iconUrl: './icons/icon128.png',
-      title: await I18N.getMessage('notificationTitle'),
-      message: `${await I18N.getMessage(
-        'changelog_2_0_0'
-      )}\n${await I18N.getMessage('changelog_1_8')}`,
-      requireInteraction: true,
-    });
-  }
+export async function create() {
+  browser.notifications.create('updated', {
+    type: 'basic',
+    iconUrl: './icons/icon128.png',
+    title: browser.i18n.getMessage('notificationTitle'),
+    message: `${browser.i18n.getMessage(
+      'welcome_v2'
+    )}\n${browser.i18n.getMessage(
+      'changelog_2_0_1'
+    )}\n${browser.i18n.getMessage('changelog_2_0_0')}`,
+    // requireInteraction: true,
+  });
 }

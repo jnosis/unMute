@@ -3,7 +3,16 @@
     "message": "unMute(언뮤트)"
   },
   "extensionDescription": {
-    "message": "Manually/Automatically Mute Your Tabs for Chrome"
+    "message": "Manually/Automatically Mute Your Tabs for Google Chrome."
+  },
+  "extensionDescriptionFirefox": {
+    "message": "Manually/Automatically Mute Your Tabs for Firefox."
+  },
+  "extensionDescriptionEdge": {
+    "message": "Manually/Automatically Mute Your Tabs for Microsoft Edge."
+  },
+  "extensionDescriptionWhale": {
+    "message": "Manually/Automatically Mute Your Tabs for Naver Whale."
   },
 
   "command_muteCurrentTab": {
@@ -158,6 +167,18 @@
   "option_offBehavior_notRelease": {
     "message": "모든 탭 현상 유지"
   },
+  "option_recentBehavior": {
+    "message": "최근 소리나는 탭의 소리가 사라졌을 시 동작"
+  },
+  "option_recentBehavior_release": {
+    "message": "이전 소리나는 탭 음소거 해제"
+  },
+  "option_recentBehavior_notRelease": {
+    "message": "모든 탭 음소거 유지"
+  },
+  "option_contextMenus": {
+    "message": "컨택스트 메뉴 보이기"
+  },
   "option_reset": {
     "message": "초기화"
   },
@@ -207,7 +228,15 @@
   },
 
   "changelog_2_0_0": {
-    "message": "2.0.0: 매니페스트 V3으로 변경"
+    "message": "2.0.0: 모든 알려진 이슈를 해결"
+  },
+
+  "changelog_2_0_1": {
+    "message": "2.0.1: 액션 뱃지 색상을 가시성 있게 변경"
+  },
+
+  "welcome_v2": {
+    "message": "완전 새로운 언뮤트 V2가 출시 되었습니다."
   },
 
   "knownIssue1": {

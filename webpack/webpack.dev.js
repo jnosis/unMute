@@ -7,10 +7,7 @@ module.exports = merge(common, {
   mode: 'development',
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: './image/icons/dev', to: './icons' },
-        { from: './public/manifest.json', to: './' },
-      ],
+      patterns: [{ from: './image/icons/dev', to: './icons' }],
     }),
   ],
 });

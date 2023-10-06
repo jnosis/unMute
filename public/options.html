@@ -151,17 +151,65 @@
           </label>
         </section>
       </article>
+
+      <article>
+        <header>
+          <label
+            class="locale-text setting-category not-first"
+            id="recentBehavior"
+          >
+            __MSG_option_recentBehavior__
+          </label>
+          <br />
+        </header>
+
+        <section>
+          <input
+            type="radio"
+            id="recent_release"
+            name="recentBehavior"
+            value="release"
+          />
+          <label
+            class="locale-text"
+            for="recent_release"
+            id="recentBehavior_release"
+          >
+            __MSG_option_recentBehavior_release__
+          </label>
+          <input
+            type="radio"
+            id="recent_notRelease"
+            name="recentBehavior"
+            value="notRelease"
+          />
+          <label
+            class="locale-text"
+            for="recent_notRelease"
+            id="recentBehavior_notRelease"
+          >
+            __MSG_option_recentBehavior_notRelease__
+          </label>
+        </section>
+      </article>
+
+      <article>
+        <input type="checkbox" id="contextMenus" />
+        <label class="locale-text" for="contextMenus" id="contextMenus_show">
+          __MSG_option_contextMenus__
+        </label>
+      </article>
     </section>
     <footer>
       <button
         class="locale-text"
         id="reset"
-        style="margin: 2px; width: 80px; height: 20px;"
+        style="margin: 2px; width: 80px; height: 20px"
       >
         __MSG_option_reset__
       </button>
       <br />
-      <button id="changelog" style="margin: 2px; width: 80px; height: 20px;">
+      <button id="changelog" style="margin: 2px; width: 80px; height: 20px">
         changelog
       </button>
     </footer>

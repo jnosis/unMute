@@ -1,8 +1,8 @@
-import Mute from '../Mute/mute';
+import * as Mute from '../Mute/mute';
 import { loadOption, loadStorage, StorageProperties } from '../Option/option';
 import { ContextMenuId } from '../types/types';
-import ActionBadge from '../UI/actionBadge';
-import ContextMenu from '../UI/contextMenus';
+import * as ActionBadge from '../UI/actionBadge';
+import * as ContextMenu from '../UI/contextMenus';
 
 export function update(ids?: ContextMenuId[]) {
   console.trace(`update`);
@@ -16,19 +16,25 @@ export function doAutoMute() {
     ['autoState', 'autoMode', 'recentTabIds', 'fixedTabId'],
     ({ autoState, autoMode, recentTabIds, fixedTabId }: StorageProperties) => {
       if (autoState) {
+        const recentTabId = recentTabIds ? recentTabIds[0] : undefined;
         switch (autoMode) {
           case 'current':
             Mute.doAutoMute(autoMode);
             break;
           case 'recent':
-            recentTabIds &&
-              Mute.doAutoMute(autoMode, JSON.parse(recentTabIds)[0]);
+            Mute.doAutoMute(autoMode, recentTabId);
             break;
           case 'fix':
             Mute.doAutoMute(autoMode, fixedTabId);
             break;
           case 'all':
             Mute.doAutoMute(autoMode);
+            break;
+          case 'fixOR':
+            Mute.doAutoMute(autoMode, fixedTabId, recentTabId);
+            break;
+          case 'fixOC':
+            Mute.doAutoMute(autoMode, fixedTabId);
             break;
           default:
             throw new Error(`Unavailable AutoMode: ${autoMode}`);
@@ -47,7 +53,14 @@ export function updateContextMenus(
   ]
 ) {
   console.trace(`updateContextMenus: ${ids}`);
-  loadOption((option) => ids.forEach((id) => ContextMenu.update(option, id)));
+  loadOption(
+    (option) =>
+      option.contextMenus && ids.forEach((id) => ContextMenu.update(option, id))
+  );
+}
+
+export function toggleContextMenus() {
+  loadOption((option) => ContextMenu.toggle(option));
 }
 
 export function updateActionBadge() {

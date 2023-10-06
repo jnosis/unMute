@@ -1,3 +1,5 @@
+import * as browser from './Api/api';
+
 export default function localizeHtmlPage() {
   const elements = document.querySelectorAll('.locale-text');
   const msgRegex = /__MSG_(\w+)__/g;
@@ -5,7 +7,7 @@ export default function localizeHtmlPage() {
     const text = element.textContent;
     if (typeof text === 'string') {
       const localizedText = text.replace(msgRegex, (_match, key: string) => {
-        return key ? chrome.i18n.getMessage(key) : text;
+        return key ? browser.i18n.getMessage(key) : text;
       });
 
       if (localizedText !== text) {

@@ -1,132 +1,117 @@
+import * as browser from '../Api/api';
 import { Option } from '../Option/option';
 import { AutoMode, Color } from '../types/types';
 
-export default abstract class ActionBadge {
-  private static green: Color = '#579242';
-  private static red: Color = '#9c2829';
-  private static grey: Color = '#5f6368';
-  static update(option: Option, fixTabId?: number) {
-    console.trace(`Update action badge`);
-    switch (option.actionMode) {
-      case 'muteCurrentTab':
-        this.updateMuteCurrentTab();
-        break;
-      case 'toggleAllTabs':
-        this.updateToggleAllTabs(option.autoState);
-        break;
-      case 'autoMute':
-        this.updateAutoMute(option.autoState);
-        break;
-      case 'autoMode':
-        this.updateAutoMode(option.autoMode, option.autoState);
-        break;
-      case 'fixTab':
-        this.updateFixTab(option.autoMode, option.autoState, fixTabId);
-        break;
+const green: Color = '#50873d';
+const red: Color = '#9c2829';
+const grey: Color = '#5f6368';
+export function update(option: Option, fixTabId?: number) {
+  console.trace(`Update action badge`);
+  switch (option.actionMode) {
+    case 'muteCurrentTab':
+      updateMuteCurrentTab(option.autoState);
+      break;
+    case 'toggleAllTabs':
+      updateToggleAllTabs(option.autoState);
+      break;
+    case 'autoMute':
+      updateAutoMute(option.autoState);
+      break;
+    case 'autoMode':
+      updateAutoMode(option.autoMode, option.autoState);
+      break;
+    case 'fixTab':
+      updateFixTab(option.autoMode, option.autoState, fixTabId);
+      break;
 
-      default:
-        throw new Error(`Unavailable actionMode: ${option.actionMode}`);
-    }
+    default:
+      throw new Error(`Unavailable actionMode: ${option.actionMode}`);
+  }
+}
+
+export async function updateMuteCurrentTab(autoState: boolean) {
+  console.trace(`Update action: muteCurrentTab`);
+  browser.action.setBadgeText({ text: '' });
+  const [tab] = await browser.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  const audible = tab?.audible;
+  if (audible && !autoState) {
+    browser.action.enable();
+  } else {
+    browser.action.disable();
+  }
+}
+
+export async function updateToggleAllTabs(autoState: boolean) {
+  console.trace(`Update action: toggleAllTabs: ${autoState}`);
+  browser.action.setBadgeText({ text: '' });
+  if (!autoState) {
+    browser.action.enable();
+  } else {
+    browser.action.disable();
+  }
+}
+
+export async function updateAutoMute(autoState: boolean) {
+  console.trace(`Update action: autoState: ${autoState}`);
+  const color: Color = autoState ? green : red;
+  const text: 'on' | 'off' = autoState ? 'on' : 'off';
+  browser.action.enable();
+  browser.action.setBadgeBackgroundColor({ color });
+  browser.action.setBadgeText({ text });
+}
+
+export async function updateAutoMode(autoMode: AutoMode, autoState: boolean) {
+  console.trace(`Update action: autoMode: ${autoMode}`);
+  let text: string;
+  switch (autoMode) {
+    case 'current':
+      text = 'C';
+      break;
+    case 'recent':
+      text = 'R';
+      break;
+    case 'fix':
+    case 'fixOR':
+    case 'fixOC':
+      text = 'F';
+      break;
+    case 'all':
+      text = 'A';
+      break;
+    default:
+      text = '';
+      break;
   }
 
-  private static async updateMuteCurrentTab() {
-    console.trace(`Update action: muteCurrentTab`);
-    chrome.action.setBadgeText({ text: '' });
-    const tabs = await chrome.tabs.query({});
-    tabs.forEach((tab) => {
-      if (tab.audible) {
-        tab.id && chrome.action.enable(tab.id);
-      } else {
-        tab.id && chrome.action.disable(tab.id);
-      }
+  const color: Color = autoState ? green : red;
+  browser.action.enable();
+  browser.action.setBadgeBackgroundColor({ color });
+  browser.action.setBadgeText({ text });
+}
+
+export async function updateFixTab(
+  autoMode: AutoMode,
+  autoState: boolean,
+  fixTabId?: number
+) {
+  console.trace(`Update action: fixTab: ${fixTabId}`);
+  if (autoState && autoMode.slice(0, 3) === 'fix') {
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
     });
-  }
-
-  private static async updateToggleAllTabs(autoState: boolean) {
-    console.trace(`Update action: toggleAllTabs: ${autoState}`);
-    chrome.action.setBadgeText({ text: '' });
-    const tabs = await chrome.tabs.query({});
-    if (!autoState) {
-      tabs.forEach((tab) => tab.id && chrome.action.enable(tab.id));
-    } else {
-      tabs.forEach((tab) => tab.id && chrome.action.disable(tab.id));
-    }
-  }
-
-  private static async updateAutoMute(autoState: boolean) {
-    console.trace(`Update action: autoState: ${autoState}`);
-    const tabs = await chrome.tabs.query({});
-    const color: Color = autoState ? this.green : this.red;
-    const text: 'on' | 'off' = autoState ? 'on' : 'off';
-    tabs.forEach((tab) => {
-      const tabId = tab.id;
-      if (tabId) {
-        chrome.action.enable(tabId);
-        chrome.action.setBadgeBackgroundColor({ color, tabId });
-      }
-    });
-    chrome.action.setBadgeText({ text });
-  }
-
-  private static async updateAutoMode(autoMode: AutoMode, autoState: boolean) {
-    console.trace(`Update action: autoMode: ${autoMode}`);
-    let text: string;
-    switch (autoMode) {
-      case 'current':
-        text = 'C';
-        break;
-      case 'recent':
-        text = 'R';
-        break;
-      case 'fix':
-        text = 'F';
-        break;
-      case 'all':
-        text = 'A';
-        break;
-      default:
-        text = '';
-        break;
-    }
-
-    const tabs = await chrome.tabs.query({});
-    const color: Color = autoState ? this.green : this.red;
-    tabs.forEach((tab) => {
-      const tabId = tab.id;
-      if (tabId) {
-        chrome.action.enable(tabId);
-        chrome.action.setBadgeBackgroundColor({ color, tabId });
-      }
-    });
-    chrome.action.setBadgeText({ text });
-  }
-
-  private static async updateFixTab(
-    autoMode: AutoMode,
-    autoState: boolean,
-    fixTabId?: number
-  ) {
-    console.trace(`Update action: fixTab: ${fixTabId}`);
-    const tabs = await chrome.tabs.query({});
-    if (autoState && autoMode === 'fix') {
-      tabs.forEach((tab) => {
-        const tabId = tab.id;
-        const color: Color = tabId === fixTabId ? this.green : this.red;
-        if (tabId) {
-          chrome.action.enable(tabId);
-          chrome.action.setBadgeBackgroundColor({ color, tabId });
-        }
-      });
-    } else {
-      tabs.forEach((tab) => {
-        const tabId = tab.id;
-        const color: Color = this.grey;
-        if (tabId) {
-          chrome.action.setBadgeBackgroundColor({ color, tabId });
-          chrome.action.disable(tabId);
-        }
-      });
-    }
-    chrome.action.setBadgeText({ text: 'fix' });
+    const tabId = tab?.id;
+    const color: Color = tabId && tabId === fixTabId ? green : red;
+    browser.action.enable();
+    browser.action.setBadgeBackgroundColor({ color });
+    browser.action.setBadgeText({ text: 'fix' });
+  } else {
+    const color: Color = grey;
+    browser.action.setBadgeText({ text: '' });
+    browser.action.setBadgeBackgroundColor({ color });
+    browser.action.disable();
   }
 }

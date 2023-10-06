@@ -3,7 +3,16 @@
     "message": "unMute"
   },
   "extensionDescription": {
-    "message": "Manually/Automatically Mute Your Tabs for Chrome."
+    "message": "Manually/Automatically Mute Your Tabs for Google Chrome."
+  },
+  "extensionDescriptionFirefox": {
+    "message": "Manually/Automatically Mute Your Tabs for Firefox."
+  },
+  "extensionDescriptionEdge": {
+    "message": "Manually/Automatically Mute Your Tabs for Microsoft Edge."
+  },
+  "extensionDescriptionWhale": {
+    "message": "Manually/Automatically Mute Your Tabs for Naver Whale."
   },
 
   "command_muteCurrentTab": {
@@ -155,6 +164,18 @@
   "option_offBehavior_notRelease": {
     "message": "Keep Mute State"
   },
+  "option_recentBehavior": {
+    "message": "Action when Recent-Audible Tab has disappeared"
+  },
+  "option_recentBehavior_release": {
+    "message": "unMute Previous-Audible Tab"
+  },
+  "option_recentBehavior_notRelease": {
+    "message": "Keep Mute State"
+  },
+  "option_contextMenus": {
+    "message": "Show Context Menus"
+  },
   "option_reset": {
     "message": "RESET"
   },
@@ -204,7 +225,15 @@
   },
 
   "changelog_2_0_0": {
-    "message": "2.0.0: Migrate to manifest V3"
+    "message": "2.0.0: Rewrite whole code. every known issues fixed"
+  },
+
+  "changelog_2_0_1": {
+    "message": "2.0.1: Fix action badge color to be visible"
+  },
+
+  "welcome_v2": {
+    "message": "The all-new unMute V2 has been released."
   },
 
   "knownIssue1": {

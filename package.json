@@ -3,12 +3,25 @@
   "version": "2.0.0",
   "description": "",
   "scripts": {
-    "dev": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.dev.js",
-    "prod": "webpack --config webpack/webpack.prod.js",
-    "clean": "rimraf dist unmute.zip",
+    "start": "npm run dev",
+    "dev": "webpack --env platform=chrome --watch",
+    "build": "webpack --env platform=chrome",
+    "prod": "webpack --env platform=chrome --env production",
+    "clean": "rimraf dist *.zip",
     "zip": "node zip.js",
-    "delete-zip": "rimraf unmute.zip"
+    "delete-zip": "rimraf *.zip",
+    "dev:chrome": "webpack --env platform=chrome --watch",
+    "build:chrome": "webpack --env platform=chrome",
+    "prod:chrome": "webpack --env platform=chrome --env production",
+    "dev:firefox": "webpack --env platform=firefox --watch",
+    "build:firefox": "webpack --env platform=firefox",
+    "prod:firefox": "webpack --env platform=firefox --env production",
+    "dev:edge": "webpack --env platform=edge --watch",
+    "build:edge": "webpack --env platform=edge",
+    "prod:edge": "webpack --env platform=edge --env production",
+    "dev:whale": "webpack --env platform=whale --watch",
+    "build:whale": "webpack --env platform=whale",
+    "prod:whale": "webpack --env platform=whale --env production"
   },
   "repository": {
     "type": "git",
@@ -23,11 +36,13 @@
   "private": "true",
   "devDependencies": {
     "@types/chrome": "^0.0.154",
+    "@types/firefox-webext-browser": "^82.0.1",
+    "@types/naver-whale": "^0.0.2",
     "archiver": "^5.3.0",
     "copy-webpack-plugin": "^9.0.1",
     "ts-loader": "^9.2.5",
     "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.8.0",
     "webpack-merge": "^5.8.0"
   }
