@@ -106,9 +106,7 @@ export async function createByIdAndItsChildren(
   await browser.contextMenus.create({
     id,
     title: browser.i18n.getMessage(`contextMenu_${id}`),
-    contexts: isUI
-      ? ['browser_action']
-      : ['page', 'video', 'audio', 'browser_action'],
+    contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
   });
   if (!!childIds) {
     childIds.forEach(async (childId) => {
@@ -117,9 +115,7 @@ export async function createByIdAndItsChildren(
         id: `${childId}`,
         parentId: id,
         title: browser.i18n.getMessage(`contextMenu_${childId}`),
-        contexts: isUI
-          ? ['browser_action']
-          : ['page', 'video', 'audio', 'browser_action'],
+        contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
         type: 'radio',
         checked:
           id === 'autoMute'
