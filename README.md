@@ -19,6 +19,10 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 ## ChangeLog
 
+- V3
+
+  - 3.0.0: Migrate t0 MV3 (wip)
+
 - V2
 
   - 2.0.1: Fix action badge color to be visible
