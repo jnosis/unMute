@@ -1,6 +1,7 @@
 import { isChromium } from './platform';
 
-export type NotificationOptions = chrome.notifications.NotificationOptions;
+export type NotificationOptions =
+  chrome.notifications.NotificationOptions<true>;
 
 export function create(
   notificationId: string,
@@ -17,10 +18,7 @@ export function create(
       })
     );
   }
-  return browser.notifications.create(
-    notificationId,
-    options as browser.notifications.CreateNotificationOptions
-  );
+  return browser.notifications.create(notificationId, options);
 }
 
 export function clear(notificationId: string): Promise<boolean> {

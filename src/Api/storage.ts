@@ -13,34 +13,15 @@ class LocalStorageArea implements StorageArea {
   get(
     keys: string | string[] | { [key: string]: any } | null = null
   ): Promise<{ [key: string]: any }> {
-    if (isChromium) {
-      return new Promise((resolve, reject) =>
-        chrome.storage.local.get(keys, (items) => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(items);
-          }
-        })
-      );
-    }
-    if (keys === null) return browser.storage.local.get();
-    return browser.storage.local.get(keys);
+    return isChromium
+      ? chrome.storage.local.get(keys)
+      : browser.storage.local.get(keys === null ? undefined : keys);
   }
 
   set(items: { [key: string]: any }): Promise<void> {
-    if (isChromium) {
-      return new Promise((resolve, reject) =>
-        chrome.storage.local.set(items, () => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve();
-          }
-        })
-      );
-    }
-    return browser.storage.local.set(items);
+    return isChromium
+      ? chrome.storage.local.set(items)
+      : browser.storage.local.set(items);
   }
 }
 
@@ -48,49 +29,21 @@ class SyncStorageArea implements StorageArea {
   get(
     keys: string | string[] | { [key: string]: any } | null = null
   ): Promise<{ [key: string]: any }> {
-    if (isChromium) {
-      return new Promise((resolve, reject) =>
-        chrome.storage.sync.get(keys, (items) => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(items);
-          }
-        })
-      );
-    }
-    if (keys === null) return globalThis.browser.storage.sync.get();
-    return browser.storage.sync.get(keys);
+    return isChromium
+      ? chrome.storage.sync.get(keys)
+      : browser.storage.sync.get(keys === null ? undefined : keys);
   }
 
   set(items: { [key: string]: any }): Promise<void> {
-    if (isChromium) {
-      return new Promise((resolve, reject) =>
-        chrome.storage.sync.set(items, () => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve();
-          }
-        })
-      );
-    }
-    return browser.storage.sync.set(items);
+    return isChromium
+      ? chrome.storage.sync.set(items)
+      : browser.storage.sync.set(items);
   }
 
   clear(): Promise<void> {
-    if (isChromium) {
-      return new Promise((resolve, reject) =>
-        chrome.storage.sync.clear(() => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve();
-          }
-        })
-      );
-    }
-    return browser.storage.sync.clear();
+    return isChromium
+      ? chrome.storage.sync.clear()
+      : browser.storage.sync.clear();
   }
 }
 

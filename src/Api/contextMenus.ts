@@ -14,8 +14,8 @@ export function create(createProperties: CreateProperties): Promise<void> {
         }
       });
     } else {
-      browser.contextMenus.create(
-        createProperties as browser.contextMenus._CreateCreateProperties,
+      browser.menus.create(
+        createProperties as browser.menus._CreateCreateProperties,
         () => {
           if (browser.runtime.lastError) {
             reject(browser.runtime.lastError);
@@ -43,9 +43,9 @@ export function update(
       })
     );
   }
-  return browser.contextMenus.update(
+  return browser.menus.update(
     id,
-    updateProperties as browser.contextMenus._UpdateUpdateProperties
+    updateProperties as browser.menus._UpdateUpdateProperties
   );
 }
 
@@ -61,7 +61,7 @@ export function removeAll(): Promise<void> {
       })
     );
   }
-  return browser.contextMenus.removeAll();
+  return browser.menus.removeAll();
 }
 
 export const onClicked = chrome.contextMenus.onClicked;

@@ -20,18 +20,9 @@ export function getURL(path: string) {
 export function sendMessage(
   message: OptionPageMessage
 ): Promise<OptionPageResponse> {
-  if (isChromium) {
-    return new Promise((resolve, reject) =>
-      chrome.runtime.sendMessage(message, (response) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve(response);
-        }
-      })
-    );
-  }
-  return browser.runtime.sendMessage(message);
+  return isChromium
+    ? chrome.runtime.sendMessage(message)
+    : browser.runtime.sendMessage(message);
 }
 
 export const onStartup = chrome.runtime.onStartup;
