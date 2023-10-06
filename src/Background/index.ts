@@ -4,6 +4,7 @@ import { Load } from './load';
 
 export class Background {
   constructor() {
+    this.addListener();
     browser.runtime.onStartup.addListener(() => this.onStart());
     browser.runtime.onInstalled.addListener((details) =>
       this.onInstalled(details)
@@ -11,11 +12,13 @@ export class Background {
   }
 
   private onStart() {
-    new Load(this.addListener);
+    console.log('onStart');
+    new Load();
   }
 
   private onInstalled(details?: browser.runtime.InstalledDetails) {
-    new Load(this.addListener, details);
+    console.log('onInstalled');
+    new Load(details);
   }
 
   private addListener() {
