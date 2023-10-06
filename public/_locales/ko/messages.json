@@ -35,7 +35,7 @@
   },
 
   "notificationTitle": {
-    "message": "Updated"
+    "message": "업데이트"
   },
 
   "contextMenu_muteCurrentTab": {
@@ -235,8 +235,16 @@
     "message": "2.0.1: 액션 뱃지 색상을 가시성 있게 변경"
   },
 
+  "changelog_3_0_0": {
+    "message": "3.0.0: 매니페스트 버전3로 변경"
+  },
+
   "welcome_v2": {
     "message": "완전 새로운 언뮤트 V2가 출시 되었습니다."
+  },
+
+  "welcome_v3": {
+    "message": "완전 새로운 언뮤트 V3가 출시 되었습니다."
   },
 
   "knownIssue1": {

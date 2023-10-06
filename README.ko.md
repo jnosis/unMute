@@ -19,6 +19,10 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 ## ChangeLog
 
+- V3
+
+  - 3.0.0: 매니페스트 버전3로 변경
+
 - V2
 
   - 2.0.1: 액션 뱃지 색상을 가시성 있게 변경

@@ -21,7 +21,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 - V3
 
-  - 3.0.0: Migrate t0 MV3 (wip)
+  - 3.0.0: Migrate to Manifest V3
 
 - V2
 
