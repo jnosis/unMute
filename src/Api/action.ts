@@ -31,4 +31,6 @@ export function disable(tabId?: number): Promise<void> {
     : browser.action.disable(tabId);
 }
 
-export const onClicked = chrome.action.onClicked;
+export const onClicked = isChromium
+  ? chrome.action.onClicked
+  : browser.action.onClicked;

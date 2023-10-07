@@ -6,8 +6,8 @@ export type UpdateProperties = chrome.contextMenus.UpdateProperties;
 export function create(createProperties: CreateProperties): string | number {
   return isChromium
     ? chrome.contextMenus.create(createProperties)
-    : browser.menus.create(
-        createProperties as browser.menus._CreateCreateProperties
+    : browser.contextMenus.create(
+        createProperties as browser.contextMenus._CreateCreateProperties
       );
 }
 
@@ -26,9 +26,9 @@ export function update(
       })
     );
   }
-  return browser.menus.update(
+  return browser.contextMenus.update(
     id,
-    updateProperties as browser.menus._UpdateUpdateProperties
+    updateProperties as browser.contextMenus._UpdateUpdateProperties
   );
 }
 
@@ -44,7 +44,9 @@ export function removeAll(): Promise<void> {
       })
     );
   }
-  return browser.menus.removeAll();
+  return browser.contextMenus.removeAll();
 }
 
-export const onClicked = chrome.contextMenus.onClicked;
+export const onClicked = isChromium
+  ? chrome.contextMenus.onClicked
+  : browser.contextMenus.onClicked;

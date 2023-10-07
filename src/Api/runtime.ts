@@ -1,9 +1,11 @@
 import { OptionPageMessage, OptionPageResponse } from '../types/types';
 import { isChromium } from './platform';
 
-export const id = chrome.runtime.id;
+export const id = isChromium ? chrome.runtime.id : browser.runtime.id;
 export type MessageSender = chrome.runtime.MessageSender;
-export type InstalledDetails = chrome.runtime.InstalledDetails;
+export type InstalledDetails =
+  | chrome.runtime.InstalledDetails
+  | browser.runtime._OnInstalledDetails;
 
 export function getManifest() {
   return isChromium
@@ -25,6 +27,12 @@ export function sendMessage(
     : browser.runtime.sendMessage(message);
 }
 
-export const onStartup = chrome.runtime.onStartup;
-export const onInstalled = chrome.runtime.onInstalled;
-export const onMessage = chrome.runtime.onMessage;
+export const onStartup = isChromium
+  ? chrome.runtime.onStartup
+  : browser.runtime.onStartup;
+export const onInstalled = isChromium
+  ? chrome.runtime.onInstalled
+  : browser.runtime.onInstalled;
+export const onMessage = isChromium
+  ? chrome.runtime.onMessage
+  : (browser.runtime.onMessage as typeof chrome.runtime.onMessage);

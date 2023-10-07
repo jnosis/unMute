@@ -35,6 +35,12 @@ export function create(createProperties: CreateProperties): Promise<Tab> {
     : (browser.tabs.create(createProperties) as Promise<Tab>);
 }
 
-export const onActivated = chrome.tabs.onActivated;
-export const onUpdated = chrome.tabs.onUpdated;
-export const onRemoved = chrome.tabs.onRemoved;
+export const onActivated = isChromium
+  ? chrome.tabs.onActivated
+  : browser.tabs.onActivated;
+export const onUpdated = isChromium
+  ? chrome.tabs.onUpdated
+  : (browser.tabs.onUpdated as typeof chrome.tabs.onUpdated);
+export const onRemoved = isChromium
+  ? chrome.tabs.onRemoved
+  : browser.tabs.onRemoved;

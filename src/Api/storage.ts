@@ -50,4 +50,6 @@ class SyncStorageArea implements StorageArea {
 export const sync = new SyncStorageArea();
 export const local = new LocalStorageArea();
 
-export const onChanged = chrome.storage.onChanged;
+export const onChanged = isChromium
+  ? chrome.storage.onChanged
+  : (browser.storage.onChanged as typeof chrome.storage.onChanged);

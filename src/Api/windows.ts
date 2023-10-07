@@ -8,4 +8,6 @@ export function getCurrent(): Promise<Window> {
     : (browser.windows.getCurrent() as Promise<Window>);
 }
 
-export const onFocusChanged = chrome.windows.onFocusChanged;
+export const onFocusChanged = isChromium
+  ? chrome.windows.onFocusChanged
+  : browser.windows.onFocusChanged;

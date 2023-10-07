@@ -36,4 +36,6 @@ export function clear(notificationId: string): Promise<boolean> {
   return browser.notifications.clear(notificationId);
 }
 
-export const onClicked = chrome.notifications.onClicked;
+export const onClicked = isChromium
+  ? chrome.notifications.onClicked
+  : browser.notifications.onClicked;
