@@ -28,7 +28,7 @@ Manually/Automatically Mute your tabs for Google Chrome™.
   - 2.0.1: Fix action badge color to be visible
   - 2.0.0: Rewrite whole code. Fix all known issues and prepare for manifest v3
 
-- Legacy
+- V1
 
   - 1.8: Add auto mute all tabs except the specified tab
   - 1.7: Add always mute all tabs
