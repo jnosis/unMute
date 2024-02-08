@@ -1,7 +1,7 @@
 {
   "name": "unmute",
   "version": "3.0.0",
-  "description": "",
+  "description": "Manually/Automatically Mute Your Tabs for Web Browser",
   "scripts": {
     "start": "npm run dev",
     "dev": "webpack --env platform=chrome --watch",
