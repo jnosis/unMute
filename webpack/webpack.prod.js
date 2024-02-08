@@ -23,6 +23,7 @@ module.exports = merge(common, {
         terserOptions: {
           compress: {
             drop_console: true,
+            passes: 3,
           },
         },
       }),

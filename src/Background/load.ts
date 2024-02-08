@@ -10,37 +10,30 @@ import * as Notification from '../UI/notification';
 import { doAutoMute, updateActionBadge } from './update';
 
 export class Load {
-  constructor(
-    callback: () => void,
-    details?: browser.runtime.InstalledDetails
-  ) {
-    this.onLoad(callback, details);
+  constructor(details?: browser.runtime.InstalledDetails) {
+    this.onLoad(details);
   }
 
-  private onLoad(
-    callback: () => void,
-    details?: browser.runtime.InstalledDetails
-  ) {
+  private onLoad(details?: browser.runtime.InstalledDetails) {
     const isUpdated = details?.reason === 'update';
     loadStorage('wasInit', ({ wasInit }) => {
       console.log(`Initialize: ${!!wasInit}`);
       if (wasInit) {
-        this.load(isUpdated, callback);
+        this.load(isUpdated);
       } else {
-        initStorage(() => this.load(isUpdated, callback));
+        initStorage(() => this.load(isUpdated));
       }
     });
     if (isUpdated) Notification.create();
   }
 
-  private load(isUpdated: boolean, callback: () => void) {
+  private load(isUpdated: boolean) {
     loadOption((option) => {
       console.log(`load`);
       isUpdated || saveStorage({ recentTabIds: [] });
       ContextMenu.createAll(option);
       doAutoMute();
       updateActionBadge();
-      setTimeout(callback, 100);
     });
   }
 }

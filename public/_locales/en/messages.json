@@ -232,12 +232,20 @@
     "message": "2.0.1: Fix action badge color to be visible"
   },
 
+  "changelog_3_0_0": {
+    "message": "3.0.0: Migrate to Manifest V3"
+  },
+
   "welcome_v2": {
     "message": "The all-new unMute V2 has been released."
   },
 
+  "welcome_v3": {
+    "message": "The all-new unMute V3 has been released."
+  },
+
   "knownIssue1": {
-    "message": "Sometimes extensions freezing (If you change or refresh tab, it will be work)"
+    "message": ""
   },
 
   "todo1": {

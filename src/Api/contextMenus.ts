@@ -3,29 +3,12 @@ import { isChromium } from './platform';
 type CreateProperties = chrome.contextMenus.CreateProperties;
 export type UpdateProperties = chrome.contextMenus.UpdateProperties;
 
-export function create(createProperties: CreateProperties): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (isChromium) {
-      chrome.contextMenus.create(createProperties, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      });
-    } else {
-      browser.contextMenus.create(
-        createProperties as browser.contextMenus._CreateCreateProperties,
-        () => {
-          if (browser.runtime.lastError) {
-            reject(browser.runtime.lastError);
-          } else {
-            resolve();
-          }
-        }
+export function create(createProperties: CreateProperties): string | number {
+  return isChromium
+    ? chrome.contextMenus.create(createProperties)
+    : browser.contextMenus.create(
+        createProperties as browser.contextMenus._CreateCreateProperties
       );
-    }
-  });
 }
 
 export function update(
@@ -64,4 +47,6 @@ export function removeAll(): Promise<void> {
   return browser.contextMenus.removeAll();
 }
 
-export const onClicked = chrome.contextMenus.onClicked;
+export const onClicked = isChromium
+  ? chrome.contextMenus.onClicked
+  : browser.contextMenus.onClicked;

@@ -1,70 +1,36 @@
 import { isChromium } from './platform';
 
-type BadgeTextDetails = chrome.browserAction.BadgeTextDetails;
-type BadgeColorDetails = chrome.browserAction.BadgeBackgroundColorDetails;
+type BadgeTextDetails = chrome.action.BadgeTextDetails;
+type BadgeColorDetails = chrome.action.BadgeColorDetails;
 
 export function setBadgeText(details: BadgeTextDetails): Promise<void> {
-  if (isChromium) {
-    return new Promise((resolve, reject) =>
-      chrome.browserAction.setBadgeText(details, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      })
-    );
-  }
-  return browser.browserAction
-    .setBadgeText(details as browser.browserAction._SetBadgeTextDetails)
-    .then(() => browser.browserAction.setBadgeTextColor({ color: 'white' }));
+  return isChromium
+    ? chrome.action.setBadgeText(details)
+    : browser.action
+        .setBadgeText(details)
+        .then(() => browser.action.setBadgeTextColor({ color: 'white' }));
 }
 
 export function setBadgeBackgroundColor(
   details: BadgeColorDetails
 ): Promise<void> {
-  if (isChromium) {
-    return new Promise((resolve, reject) =>
-      chrome.browserAction.setBadgeBackgroundColor(details, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      })
-    );
-  }
-  return browser.browserAction.setBadgeBackgroundColor(details);
+  return isChromium
+    ? chrome.action.setBadgeBackgroundColor(details)
+    : browser.action.setBadgeBackgroundColor(details);
 }
 
 export function enable(tabId?: number): Promise<void> {
-  if (isChromium) {
-    return new Promise((resolve, reject) =>
-      chrome.browserAction.enable(tabId, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      })
-    );
-  }
-  return browser.browserAction.enable(tabId);
+  return isChromium
+    ? chrome.action.enable(tabId)
+    : browser.action.enable(tabId);
 }
 
 export function disable(tabId?: number): Promise<void> {
-  if (isChromium) {
-    return new Promise((resolve, reject) =>
-      chrome.browserAction.disable(tabId, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      })
-    );
-  }
-  return browser.browserAction.disable(tabId);
+  return isChromium
+    ? chrome.action.disable(tabId)
+    : browser.action.disable(tabId);
 }
 
-export const onClicked = chrome.browserAction.onClicked;
+export const onClicked = isChromium
+  ? chrome.action.onClicked
+  : browser.action.onClicked;

@@ -1,10 +1,11 @@
-<h1 align="center"><img src="./image/icons/prod/icon32.png" alt="icon"> unMute</h1></p>
+<h1 align="center"><img align="center" src="./image/icons/prod/icon32.png" alt="icon" /> unMute</h1>
 
 <p align="center">
-Manually/Automatically Mute your tabs for Google Chrome™.
+Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
 </p>
 <p align="center">
-<a href="https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige"><img src="./image/chrome-web-store.png" alt="Chrome Web Store"></a>
+<a href="https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige"><img src="./image/chrome-web-store.png" alt="Chrome Web Store" /></a>
+<a href="https://addons.mozilla.org/en-US/firefox/addon/unmute/"><img src="./image/get-the-addon.png" alt="Get the Firefox Add-on" /></a>
 </p><hr>
 
 <span style="font-size:0.75em">_Read this in other languages: [English](README.md), [한국어](README.ko.md)._</span>
@@ -19,12 +20,16 @@ Manually/Automatically Mute your tabs for Google Chrome™.
 
 ## ChangeLog
 
+- V3
+
+  - 3.0.0: Migrate to Manifest V3
+
 - V2
 
   - 2.0.1: Fix action badge color to be visible
   - 2.0.0: Rewrite whole code. Fix all known issues and prepare for manifest v3
 
-- Legacy
+- V1
 
   - 1.8: Add auto mute all tabs except the specified tab
   - 1.7: Add always mute all tabs

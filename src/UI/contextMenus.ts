@@ -2,31 +2,31 @@ import * as browser from '../Api/api';
 import { Option } from '../Option/option';
 import { ContextMenuId } from '../types/types';
 
-export async function createAll(option: Option) {
+export function createAll(option: Option) {
   console.trace(`create all context menus`);
-  await browser.contextMenus.removeAll();
+  browser.contextMenus.removeAll();
 
   if (!option.contextMenus) {
     return;
   }
-  await createByIdAndItsChildren(option, 'muteCurrentTab');
-  await createByIdAndItsChildren(option, 'autoMute', false, ['on', 'off']);
-  await createByIdAndItsChildren(option, 'autoMode', false, [
+  createByIdAndItsChildren(option, 'muteCurrentTab');
+  createByIdAndItsChildren(option, 'autoMute', false, ['on', 'off']);
+  createByIdAndItsChildren(option, 'autoMode', false, [
     'current',
     'recent',
     'fix',
     'all',
   ]);
-  await createByIdAndItsChildren(option, 'actionMode', false, [
+  createByIdAndItsChildren(option, 'actionMode', false, [
     'actionMode_muteCurrentTab',
     'actionMode_toggleAllTabs',
     'actionMode_autoMute',
     'actionMode_autoMode',
     'actionMode_fixTab',
   ]);
-  await createByIdAndItsChildren(option, 'toggleAllTabs', false);
-  await createByIdAndItsChildren(option, 'shortcuts', true);
-  await createByIdAndItsChildren(option, 'changelog', true);
+  createByIdAndItsChildren(option, 'toggleAllTabs', false);
+  createByIdAndItsChildren(option, 'shortcuts', true);
+  createByIdAndItsChildren(option, 'changelog', true);
 }
 
 export async function update(
@@ -96,19 +96,17 @@ export function toggle(option: Option) {
   }
 }
 
-export async function createByIdAndItsChildren(
+export function createByIdAndItsChildren(
   option: Option,
   id: ContextMenuId,
   isUI: boolean = false,
   childIds?: ContextMenuId[]
 ) {
   console.trace(`Create context menu: ${id}`);
-  await browser.contextMenus.create({
+  browser.contextMenus.create({
     id,
     title: browser.i18n.getMessage(`contextMenu_${id}`),
-    contexts: isUI
-      ? ['browser_action']
-      : ['page', 'video', 'audio', 'browser_action'],
+    contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
   });
   if (!!childIds) {
     childIds.forEach(async (childId) => {
@@ -117,9 +115,7 @@ export async function createByIdAndItsChildren(
         id: `${childId}`,
         parentId: id,
         title: browser.i18n.getMessage(`contextMenu_${childId}`),
-        contexts: isUI
-          ? ['browser_action']
-          : ['page', 'video', 'audio', 'browser_action'],
+        contexts: isUI ? ['action'] : ['page', 'video', 'audio', 'action'],
         type: 'radio',
         checked:
           id === 'autoMute'

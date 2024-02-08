@@ -70,7 +70,7 @@ export class Listener {
     changes: {
       [key: string]: browser.storage.StorageChange;
     },
-    areaName: 'sync' | 'local' | 'managed'
+    areaName: 'sync' | 'local' | 'managed' | 'session'
   ) {
     switch (areaName) {
       case 'local':
