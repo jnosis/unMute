@@ -2,9 +2,7 @@
 
 Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
 
-[![Chrome Web Store](./image/chrome-web-store.png)](https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige) [![Get the Firefox Add-on](./image/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/unmute/)
-
-<hr>
+# [![Chrome Web Store](./image/chrome-web-store.png)](https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige) [![Get the Firefox Add-on](./image/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/unmute/)
 
 <span style="font-size:0.75em">_Read this in other languages: [English](README.md), [한국어](README.ko.md)._</span>
 
