@@ -1,12 +1,10 @@
-<h1 align="center"><img align="center" src="./image/icons/prod/icon32.png" alt="icon" /> unMute</h1>
+# ![icon](./image/icons/prod/icon32.png) unMute
 
-<p align="center">
 Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
-</p>
-<p align="center">
-<a href="https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige"><img src="./image/chrome-web-store.png" alt="Chrome Web Store" /></a>
-<a href="https://addons.mozilla.org/en-US/firefox/addon/unmute/"><img src="./image/get-the-addon.png" alt="Get the Firefox Add-on" /></a>
-</p><hr>
+
+[![Chrome Web Store](./image/chrome-web-store.png)](https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige) [![Get the Firefox Add-on](./image/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/unmute/)
+
+<hr>
 
 <span style="font-size:0.75em">_Read this in other languages: [English](README.md), [한국어](README.ko.md)._</span>
 
