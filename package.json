@@ -6,7 +6,7 @@
     "start": "npm run dev",
     "dev": "webpack --env platform=chrome --watch",
     "build": "webpack --env platform=chrome",
-    "prod": "webpack --env platform=chrome --env production",
+    "prod": "pnpm run --parallel /prod:*/",
     "clean": "rimraf dist *.zip",
     "zip": "node zip.js",
     "delete-zip": "rimraf *.zip",
