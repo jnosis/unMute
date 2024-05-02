@@ -18,6 +18,8 @@ Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
 
 - V3
 
+  - 3.0.2: Rerelease 3.0.0
+  - 3.0.1: Rollback to 2.0.1
   - 3.0.0: Migrate to Manifest V3
 
 - V2

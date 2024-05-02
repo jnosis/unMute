@@ -1,6 +1,6 @@
 {
   "name": "unmute",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Manually/Automatically Mute Your Tabs for Web Browser",
   "scripts": {
     "start": "npm run dev",
