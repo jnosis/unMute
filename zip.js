@@ -4,7 +4,7 @@ const archiver = require('archiver');
 
 const platform = process.argv[2];
 const zipPath = path.join(__dirname, `/unmute-${platform}.zip`);
-const distPath = path.join(__dirname, '/dist');
+const distPath = path.join(__dirname, `/dist/${platform}`);
 console.log(`Checking unmute-${platform}.zip...`);
 fs.rm(zipPath, async (err) => {
   if (!err) {

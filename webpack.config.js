@@ -9,7 +9,7 @@ const loader = path.join(__dirname, `webpack/api-loader.js`);
 const api = path.join(__dirname, 'src/Api/platform.ts');
 
 module.exports = (env) => {
-  return merge(!!env.production ? prod : dev, {
+  return merge(!!env.production ? prod(env.platform) : dev(env.platform), {
     module: {
       rules: [
         {
