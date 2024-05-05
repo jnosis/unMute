@@ -2,7 +2,7 @@
 
 Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
 
-# [![Chrome Web Store](./image/chrome-web-store.png)](https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige) [![Get the Firefox Add-on](./image/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/unmute/)
+# [![Chrome Web Store](./image/chrome-web-store.png)](https://chrome.google.com/webstore/detail/unmute/lfedioibcednammacdoioeonimdbpige) [![Get the Firefox Add-on](./image/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/unmute/) [![Whale Store](./image/whale-store.png)](https://store.whale.naver.com/detail/fmnjhofpabekgmlggfmfemmeolbghafh)
 
 <span style="font-size:0.75em">_Read this in other languages: [English](README.md), [한국어](README.ko.md)._</span>
 
@@ -46,7 +46,7 @@ Manually/Automatically Mute your tabs for Google Chrome™ and Mozilla Firefox.
 ## ToDo
 
 - improve Options UI
-- porting for firefox, edge, whale
+- porting for firefox, edge
 - and more...
 
 ## ScreenShot
